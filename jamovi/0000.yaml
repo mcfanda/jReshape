@@ -1,0 +1,24 @@
+---
+title: Reshape datasets
+name: jReshape
+version: 0.0.1
+jms: '1.0'
+authors:
+  - Marcello Gallucci
+maintainer: The package maintainer <yourself@somewhere.net>
+date: '2024-01-01'
+type: R
+description: >-
+  Reshape datasets from wide to long format or from long to  wide format. The
+  module offers a simple interface for  simple reshaping, and a more complex
+  interface for  more elaborated forms of reshaping.
+analyses:
+  - title: 'jReshape: Wide to Long format'
+    name: simple2long
+    ns: jReshape
+    menuGroup: jReshape
+    menuTitle: 'jReshape: Wide to Long format'
+usesNative: true
+minApp: 2.3.12
+
+...

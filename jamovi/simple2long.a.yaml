@@ -1,0 +1,40 @@
+---
+name:  simple2long
+title: "jReshape: Wide to Long format"
+menuGroup: jReshape
+version: '1.0.0'
+jas: '1.2'
+
+options:
+    - name: data
+      type: Data
+
+
+    - name: colstorows
+      title: Columns to row
+      type: Variables
+
+    - name: covs
+      title: Non-varying variables
+      type: Variables
+
+
+    - name: rmlevels
+      title: Repeated measures levels (time var)
+      type: String
+      default: "time"
+      
+    - name: dep
+      title: Target variable  
+      type: String
+      default: "y"
+
+    - name: filename
+      title: Filename (.csv)  
+      type: String
+
+    - name: save
+      title: Save the dataset
+      type: Bool
+      default: false
+...
