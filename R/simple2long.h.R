@@ -10,8 +10,11 @@ simple2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             covs = NULL,
             rmlevels = "time",
             dep = "y",
-            filename = NULL,
-            save = FALSE, ...) {
+            filename = "longdata.csv",
+            open = TRUE,
+            button = NULL,
+            create = FALSE,
+            toggle = FALSE, ...) {
 
             super$initialize(
                 package="jReshape",
@@ -35,18 +38,36 @@ simple2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 default="y")
             private$..filename <- jmvcore::OptionString$new(
                 "filename",
-                filename)
-            private$..save <- jmvcore::OptionBool$new(
-                "save",
-                save,
-                default=FALSE)
+                filename,
+                default="longdata.csv")
+            private$..open <- jmvcore::OptionBool$new(
+                "open",
+                open,
+                default=TRUE)
+            private$..button <- jmvcore::OptionString$new(
+                "button",
+                button,
+                hidden=TRUE)
+            private$..create <- jmvcore::OptionBool$new(
+                "create",
+                create,
+                default=FALSE,
+                hidden=TRUE)
+            private$..toggle <- jmvcore::OptionBool$new(
+                "toggle",
+                toggle,
+                default=FALSE,
+                hidden=TRUE)
 
             self$.addOption(private$..colstorows)
             self$.addOption(private$..covs)
             self$.addOption(private$..rmlevels)
             self$.addOption(private$..dep)
             self$.addOption(private$..filename)
-            self$.addOption(private$..save)
+            self$.addOption(private$..open)
+            self$.addOption(private$..button)
+            self$.addOption(private$..create)
+            self$.addOption(private$..toggle)
         }),
     active = list(
         colstorows = function() private$..colstorows$value,
@@ -54,14 +75,20 @@ simple2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
         rmlevels = function() private$..rmlevels$value,
         dep = function() private$..dep$value,
         filename = function() private$..filename$value,
-        save = function() private$..save$value),
+        open = function() private$..open$value,
+        button = function() private$..button$value,
+        create = function() private$..create$value,
+        toggle = function() private$..toggle$value),
     private = list(
         ..colstorows = NA,
         ..covs = NA,
         ..rmlevels = NA,
         ..dep = NA,
         ..filename = NA,
-        ..save = NA)
+        ..open = NA,
+        ..button = NA,
+        ..create = NA,
+        ..toggle = NA)
 )
 
 simple2longResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -72,7 +99,8 @@ simple2longResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
         save = function() private$.items[["save"]],
         info = function() private$.items[["info"]],
         features = function() private$.items[["features"]],
-        showdata = function() private$.items[["showdata"]]),
+        showdata = function() private$.items[["showdata"]],
+        store = function() private$.items[["store"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -88,7 +116,6 @@ simple2longResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 options=options,
                 name="save",
                 title="The new data file has been saved as",
-                visible="(save)",
                 columns=list(
                     list(
                         `name`="text", 
@@ -102,6 +129,7 @@ simple2longResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 options=options,
                 name="info",
                 title="Info Table",
+                clearWith=NULL,
                 columns=list(
                     list(
                         `name`="text", 
@@ -127,7 +155,16 @@ simple2longResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             self$add(jmvcore::Preformatted$new(
                 options=options,
                 name="showdata",
-                title="Data Preview"))}))
+                title="Data Preview"))
+            self$add(jmvcore::Table$new(
+                options=options,
+                name="store",
+                clearWith=list(
+                    "toggle"),
+                columns=list(
+                    list(
+                        `name`="x", 
+                        `type`="number"))))}))
 
 simple2longBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "simple2longBase",
@@ -145,7 +182,7 @@ simple2longBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 analysisId = analysisId,
                 revision = revision,
                 pause = NULL,
-                completeWhenFilled = FALSE,
+                completeWhenFilled = TRUE,
                 requiresMissings = FALSE,
                 weightsSupport = 'auto')
         }))
@@ -159,7 +196,10 @@ simple2longBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param rmlevels .
 #' @param dep .
 #' @param filename .
-#' @param save .
+#' @param open .
+#' @param button .
+#' @param create .
+#' @param toggle .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$help} \tab \tab \tab \tab \tab a html \cr
@@ -167,6 +207,7 @@ simple2longBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$info} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$features} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$showdata} \tab \tab \tab \tab \tab a preformatted \cr
+#'   \code{results$store} \tab \tab \tab \tab \tab a table \cr
 #' }
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
@@ -182,8 +223,11 @@ simple2long <- function(
     covs,
     rmlevels = "time",
     dep = "y",
-    filename,
-    save = FALSE) {
+    filename = "longdata.csv",
+    open = TRUE,
+    button,
+    create = FALSE,
+    toggle = FALSE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("simple2long requires jmvcore to be installed (restart may be required)")
@@ -203,7 +247,10 @@ simple2long <- function(
         rmlevels = rmlevels,
         dep = dep,
         filename = filename,
-        save = save)
+        open = open,
+        button = button,
+        create = create,
+        toggle = toggle)
 
     analysis <- simple2longClass$new(
         options = options,

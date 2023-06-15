@@ -3,18 +3,20 @@
 
 'use strict';
 
-const options = [{"name":"data","type":"Data"},{"name":"colstorows","title":"Columns to row","type":"Variables"},{"name":"covs","title":"Non-varying variables","type":"Variables"},{"name":"rmlevels","title":"Repeated measures levels (time var)","type":"String","default":"time"},{"name":"dep","title":"Target variable","type":"String","default":"y"},{"name":"filename","title":"Filename (.csv)","type":"String"},{"name":"save","title":"Save the dataset","type":"Bool","default":false}];
+const options = [{"name":"data","type":"Data"},{"name":"colstorows","title":"Columns to row","type":"Variables"},{"name":"covs","title":"Non-varying variables","type":"Variables"},{"name":"rmlevels","title":"Repeated measures levels (time var)","type":"String","default":"time"},{"name":"dep","title":"Target variable","type":"String","default":"y"},{"name":"filename","title":"Filename (.csv)","type":"String","default":"longdata.csv"},{"name":"open","title":"Open the dataset","type":"Bool","default":true},{"name":"button","type":"String","hidden":true},{"name":"create","type":"Bool","default":false,"hidden":true},{"name":"toggle","type":"Bool","default":false,"hidden":true}];
 
 const view = function() {
     
-    this.handlers = { }
+    this.handlers = require('./simple2long')
 
     View.extend({
         jus: "3.0",
 
         events: [
 
-	]
+	],
+
+	update: require('./main').update
 
     }).call(this);
 }
@@ -104,7 +106,16 @@ view.layout = ui.extend({
 				{
 					type: DefaultControls.CheckBox,
 					typeName: 'CheckBox',
-					name: "save"
+					name: "open"
+				},
+				{
+					type: DefaultControls.CustomControl,
+					typeName: 'CustomControl',
+					stretchFactor: 3,
+					name: "button",
+					events: [
+						{ onEvent: 'creating', execute: require('./main').button_creating }
+					]
 				}
 			]
 		}

@@ -1,8 +1,10 @@
-title: "jReshape: Wide to Long format"
+title: 'jReshape: Wide to Long format'
 name: simple2long
 jus: '3.0'
 stage: 0
 compilerMode: tame
+events:
+    update: './main::update'
 children:
   - type: VariableSupplier
     persistentItems: false
@@ -43,4 +45,10 @@ children:
     margin: large
     children:
       - type: CheckBox
-        name: save
+        name: open
+      - type: CustomControl
+        stretchFactor: 3
+        name: button
+        events:
+          creating: './main::button_creating'
+          

@@ -4,7 +4,7 @@ title: "jReshape: Wide to Long format"
 menuGroup: jReshape
 version: '1.0.0'
 jas: '1.2'
-
+completeWhenFilled: true
 options:
     - name: data
       type: Data
@@ -32,9 +32,22 @@ options:
     - name: filename
       title: Filename (.csv)  
       type: String
+      default: "longdata.csv"
 
-    - name: save
-      title: Save the dataset
+    - name: open
+      title: Open the dataset
+      type: Bool
+      default: true
+    - name: button
+      type: String
+      hidden: true      
+    - name: create
       type: Bool
       default: false
+      hidden: true      
+    - name: toggle
+      type: Bool
+      default: false
+      hidden: true     
+
 ...

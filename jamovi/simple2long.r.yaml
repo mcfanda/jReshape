@@ -12,7 +12,6 @@ items:
     - name: save
       title: The new data file has been saved as
       type: Table
-      visible: (save)
       columns:
                     - name: text
                       title: ""
@@ -24,6 +23,7 @@ items:
     - name: info
       title:  Info Table
       type: Table
+      clearWith:
       columns:
                     - name: text
                       title: "Info"
@@ -31,6 +31,7 @@ items:
                     - name: var
                       title: "Value"
                       type: text
+                      
     - name: features
       title:  Repeated measures levels
       type: Table
@@ -46,6 +47,14 @@ items:
     - name:  showdata
       title: Data Preview
       type:  Preformatted
+      
 
+    - name: store
+      type: Table
+      clearWith:
+           - toggle
+      columns:
+                    - name: x
+                      type: number
 
 ...
