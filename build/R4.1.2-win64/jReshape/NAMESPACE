@@ -1,0 +1,4 @@
+exportPattern("^[[:alpha:]]+")
+
+export(simple2longClass)
+export(simple2longOptions)

@@ -73,13 +73,14 @@ simple2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       },
       .savedata=function() {
 
-  
+
+        
         if (!self$options$create) {
           atab<-list(list(text="Action:",info="Press 'Create' when ready to save the dataset"))
           return(atab)
         }
 
-        fileok<-TRUE
+        where<-Sys.info()["sysname"]
         afilename<-self$options$filename
         
         if (!is.something(afilename))
@@ -94,11 +95,15 @@ simple2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         if (ext!="csv")
           aname<-paste0(aname,".csv")
         
-        if (apath==".") apath<-getwd()
-        
-  
-        afilename<-paste0(apath,"/",aname)
-        
+        if (apath==".") {
+          switch (where,
+            Windows = {apath<-paste0("C:/Users/",Sys.getenv("USERNAME"),"/Documents")},
+            Linux = {apath<-tempdir()}
+          )
+        }
+        afilename<-file.path(apath,aname)
+        afilename<-path.expand(afilename)
+
         if (dir.exists(apath)) 
             write.csv(private$.rdata,file = afilename,row.names = FALSE,sep = ";")
         else 
@@ -107,10 +112,27 @@ simple2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         atab<-list(list(text="Filename:",info=aname),
                    list(text="Folder:",info=apath),
                    list(text="Pathname:",info=afilename)
-        )          
+        )
+        
+        
+        
         if (self$options$open) {
-         cmd<-paste("/app/bin/jamovi ",afilename)
-         system(cmd,ignore.stdout = F,ignore.stderr = F)
+
+         switch (where,
+           Windows = {
+             dirs<-dir("C://Program Files")
+             w<-grep("jamovi",dirs,fixed=T)
+             j<-dirs[w]
+             cmd<-paste0('C:\\Program Files\\',j,'\\bin\\jamovi')
+             system2(cmd,args=afilename)     
+           },
+           Linux= {
+             cmd<-paste("/app/bin/jamovi ",afilename)
+             system(cmd,ignore.stdout = F,ignore.stderr = F)
+             #system2(cmd,args=afilename)     
+             
+           }
+         ) # end of switch
         }
         
         return(atab)
