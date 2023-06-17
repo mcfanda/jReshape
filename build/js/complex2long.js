@@ -30,14 +30,6 @@ const events = {
   
    colstorows_changed: function(ui) {
      ui.create.setValue(false);
-     const newvals=ui.colstorows.value().map(e) => 
-     { 
-       if (typeof element === 'undefined') {
-            return replacement;
-        }
-       return element;
-     }
-     console.log(newvals);
    },
    covs_changed: function(ui) {
      ui.create.setValue(false);
