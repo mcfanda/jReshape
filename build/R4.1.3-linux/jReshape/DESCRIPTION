@@ -1,13 +1,14 @@
 Package: jReshape
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.0.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Title: Reshape datasets from long to wide and back
+Version: 0.0.2
+Author: Marcello Gallucci
+Maintainer: <mcfanda@gmail.com>
+Description: Reshape datasets from long to wide or from 
+             wide to long. It offers a simple interface for simple cases
+             and a more elaborated interface for more complex reshaping tasks
+License: GPL
 Encoding: UTF-8
 LazyData: true
 Imports: jmvcore (>= 0.8.5), R6
-Built: R 4.1.3; ; 2023-06-16 10:57:24 UTC; unix
+Built: R 4.1.3; ; 2023-06-17 22:58:49 UTC; unix

@@ -1,26 +1,78 @@
 
 # This file is a generated template, your changes will not be overwritten
 
-simple2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
-    "simple2longClass",
-    inherit = simple2longBase,
+complex2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
+    "complex2longClass",
+    inherit = complex2longBase,
     private = list(
       # this is a list that contains all the SmartTables
       .tables=list(),
       .runcreate=FALSE,
       .rdata=NULL,
-      .time="time",
+      .time="index",
+      .index=NULL,
       .on=NULL,
       .ov=NULL,
       .nn=NULL,
       .nv=NULL,
+      .ndep=NULL,
+      .notrun=FALSE,
       .init= function() {
+
+        self$results$help$setContent("  ")
         
-        if (!is.something(self$options$colstorows)) {
-          self$results$help$setContent(HELP_simple2long)
+        test<-any(unlist(lapply(self$options$colstorows, function(x) !is.something(x$vars))))
+        if (test) {
+          help<-"<h1>Help</h1><div>Please fill in the columns variables that will go in the long format target variables</div>"
+          self$results$help$setContent(help)
+          private$.notrun=TRUE
           return()
-        } else
-          self$results$help$setContent("  ")
+        }
+        test<-any(unlist(lapply(self$options$colstorows, function(x) !is.something(x$label))))
+        if (test)  {
+          help<-"<h1>Help</h1><div>Please give a name to each long format target variable</div>"
+          self$results$help$setContent(help)
+          private$.notrun=TRUE
+          return()
+        }  
+        ns<-unlist(lapply(self$options$colstorows, function(x) length(x$vars)))
+        if (length(self$options$colstorows)>1)
+                if (var(ns)!=0)  {
+                             help<-"<h1>Help</h1><div>Levels should be the same across target variables. 
+                              </div>"
+                              self$results$help$setContent(help)
+                              private$.notrun=TRUE
+                             return()
+                }  
+        index<-self$options$index
+        index<-index[unlist(lapply(index,function(x) is.something(trimws(x$var))))]
+        index<-index[unlist(lapply(index,function(x) is.something(x$levels)))]
+        
+        private$.index<-index
+
+        if (length(index)==1 & index[[1]]$levels>0) {
+          help<-paste("<h1>Help</h1><div>Index variable",index[[1]]$var,"defined levels are ignored. The number of 
+                               Columns to rows variables is used instead.
+                              </div>")
+          self$results$help$setContent(help)
+        }
+          
+        if (length(index)>1) {
+          tot<-prod(unlist(lapply(index,function(x) as.numeric(x$levels))))
+          ref<-ns[1]
+          if (tot!=ref) {
+          help<-paste("<h1>Help</h1><div>The combination (product) of the index variables levels should be equal
+                            to the number of levels defined in the `Columns to rows` setup.
+                              </div>")
+          self$results$help$setContent(help)
+          private$.notrun=TRUE
+          return()
+          
+          }
+        }
+        
+        
+        
         
 
 
@@ -42,8 +94,7 @@ simple2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
     
         jinfo("MODULE: run phase started")
 
-        if (!is.something(self$options$colstorows))
-          return()
+        if (private$.notrun)    return()
         
         private$.reshape()
         private$.tables[["info"]]$runSource<-private$.infotable
@@ -72,6 +123,7 @@ simple2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         ladd(atab)<-list(text="# of original variables",var=private$.ov)
         ladd(atab)<-list(text="# of new varariables",var=private$.nv)
         ladd(atab)<-list(text="Cols to rows",var=length(self$options$colstorows))
+        ladd(atab)<-list(text="Target variables",var=private$.ndep)
         ladd(atab)<-list(text="Fixed variables",var=length(self$options$covs))
         
         return(atab)
@@ -130,7 +182,6 @@ simple2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
              j<-dirs[w]
              cmd<-paste0('C:\\Program Files\\',j,'\\bin\\jamovi')
              q<-system2(cmd,args=afilename,stderr = T,stdout = T)     
-             mark(q)
            },
            Linux= {
              cmd<-paste("/app/bin/jamovi ",afilename)
@@ -147,25 +198,37 @@ simple2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         private$.on<-dim(self$data)[1]
         private$.ov<-dim(self$data)[2]
         
-        dep<-self$options$dep
-        if (!is.something(dep))
-            dep<-"y"
-        if (trimws(dep)=="")
-            dep<-"y"
+        dep<-unlist(lapply(self$options$colstorows,function(x) x$label))
+        colstorows<-unlist(lapply(self$options$colstorows,function(x) x$vars))
         
-        time<-self$options$rmlevels
+        time="index"
+        index<-private$.index
+        if (length(index)==1)
+             time<-index[[1]]$var
+        
         if (!is.something(time))
-           time<-"time"
-        if (trimws(time)=="")
-           time<-"time"
+            time<-"index"
+        if (length(index)>1)
+              time<-".index."
+        
+            
         id<-"id"
         private$.time<-time
-        private$.rdata<-reshape(self$data,varying = self$options$colstorows, v.names=dep,direction="long", timevar = time)
+        private$.rdata<-reshape(self$data,varying = colstorows, v.names=dep,direction="long", timevar = time)
         private$.rdata<-private$.rdata[order(private$.rdata[[id]]),]
-        private$.on<-dim(self$data)[1]
-        private$.ov<-dim(self$data)[2]
+        
+        if (length(index)>1) {
+          grid<-expand.grid(lapply(index,function(x) 1:as.numeric(x$levels)))
+          .names<-unlist(lapply(index,function(x) x$var))
+          if (length(grep(".index.",.names,fixed=T))>0) stop("'.index.' is a reserved word, please choose another name for your index variables")
+          names(grid)<-.names
+          tdata<-as.data.frame(do.call(rbind,lapply(1:private$.on,function(i) grid)))
+          private$.rdata<-as.data.frame(cbind(tdata,private$.rdata))
+        }
+        
         private$.nn<-dim(private$.rdata)[1]
         private$.nv<-dim(private$.rdata)[2]
+        private$.ndep<-length(dep)
         
       },
       .features=function() {

@@ -4,6 +4,7 @@ const events = {
       ui.create.setValue(false);
     },
     button_creating: function(ui) {
+     ui.create.setValue(false);
      let $contents=ui.button.$el;
   		$contents.append(`
 		    <div id="createbutton" style="padding: 10px">

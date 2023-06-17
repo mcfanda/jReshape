@@ -1,6 +1,6 @@
 ---
-name:  simple2long
-title: "Wide to Long format (simple)"
+name:  complex2long
+title: "Wide to Long format (complex)"
 menuGroup: jReshape
 version: '1.0.0'
 jas: '1.2'
@@ -11,23 +11,37 @@ options:
 
 
     - name: colstorows
-      title: Columns to rows
-      type: Variables
+      type: Array
+      default:
+        - label: long_y
+          vars: []
+      template:
+          type: Group
+          elements:
+            - name: label
+              type: String
+            - name: vars
+              type: Variables
 
     - name: covs
       title: Non-varying variables
       type: Variables
 
 
-    - name: rmlevels
-      title: Repeated measures levels (time var)
-      type: String
-      default: "time"
+    - name: index
+      title: Index variables
+      type: Array
+      default:
+        - var: index1
+          levels: 0
+      template:
+          type: Group
+          elements:
+            - name: var
+              type: String
+            - name: levels
+              type: Integer
       
-    - name: dep
-      title: Target variable  
-      type: String
-      default: "y"
 
     - name: filename
       title: Filename (.csv)  
