@@ -1,78 +1,46 @@
 
 # This file is a generated template, your changes will not be overwritten
 
-complex2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
-    "complex2longClass",
-    inherit = complex2longBase,
+long2wideClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
+    "long2wideClass",
+    inherit = long2wideBase,
     private = list(
       # this is a list that contains all the SmartTables
       .tables=list(),
       .runcreate=FALSE,
       .rdata=NULL,
-      .time="index",
-      .index=NULL,
+      .time="time",
       .on=NULL,
       .ov=NULL,
       .nn=NULL,
       .nv=NULL,
-      .ndep=NULL,
+      .nc=NULL,
       .notrun=FALSE,
       .init= function() {
 
         self$results$help$setContent("  ")
         
-        test<-any(unlist(lapply(self$options$colstorows, function(x) !is.something(x$vars))))
+        test<-(!is.something(self$options$rowstocols))
         if (test) {
-          help<-"<h1>Help</h1><div>Please fill in the columns variables that will go in the long format target variables</div>"
-          self$results$help$setContent(help)
+          self$results$help$setContent(HELP_long2wide[[1]])
           private$.notrun=TRUE
           return()
         }
-        test<-any(unlist(lapply(self$options$colstorows, function(x) !is.something(x$label))))
-        if (test)  {
-          help<-"<h1>Help</h1><div>Please give a name to each long format target variable</div>"
-          self$results$help$setContent(help)
+        
+        test<-(!is.something(self$options$index))
+        if (test) {
+          HELP_long2wide
+          self$results$help$setContent(HELP_long2wide[[2]])
           private$.notrun=TRUE
           return()
-        }  
-        ns<-unlist(lapply(self$options$colstorows, function(x) length(x$vars)))
-        if (length(self$options$colstorows)>1)
-                if (var(ns)!=0)  {
-                             help<-"<h1>Help</h1><div>Levels should be the same across target variables. 
-                              </div>"
-                              self$results$help$setContent(help)
-                              private$.notrun=TRUE
-                             return()
-                }  
-        index<-self$options$index
-        index<-index[unlist(lapply(index,function(x) is.something(trimws(x$var))))]
-        index<-index[unlist(lapply(index,function(x) is.something(x$levels)))]
-        
-        private$.index<-index
-
-        if (length(index)==1 & index[[1]]$levels>0) {
-          help<-paste("<h1>Help</h1><div>Index variable",index[[1]]$var,"defined levels are ignored. The number of 
-                               Columns to rows variables is used instead.
-                              </div>")
-          self$results$help$setContent(help)
         }
-          
-        if (length(index)>1) {
-          tot<-prod(unlist(lapply(index,function(x) as.numeric(x$levels))))
-          ref<-ns[1]
-          if (tot!=ref) {
-          help<-paste("<h1>Help</h1><div>The combination (product) of the index variables levels should be equal
-                            to the number of levels defined in the `Columns to rows` setup.
-                              </div>")
-          self$results$help$setContent(help)
+        test<-(!is.something(self$options$id))
+        if (test) {
+          HELP_long2wide
+          self$results$help$setContent(HELP_long2wide[[3]])
           private$.notrun=TRUE
           return()
-          
-          }
         }
-        
-        
-        
         
 
 
@@ -94,7 +62,8 @@ complex2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
     
         jinfo("MODULE: run phase started")
 
-        if (private$.notrun)    return()
+        if (private$.notrun)
+          return()
         
         private$.reshape()
         private$.tables[["info"]]$runSource<-private$.infotable
@@ -122,8 +91,7 @@ complex2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         ladd(atab)<-list(text="New N",var=private$.nn)
         ladd(atab)<-list(text="# of original variables",var=private$.ov)
         ladd(atab)<-list(text="# of new varariables",var=private$.nv)
-        ladd(atab)<-list(text="Cols to rows",var=length(self$options$colstorows))
-        ladd(atab)<-list(text="Target variables",var=private$.ndep)
+        ladd(atab)<-list(text="New columns",var=private$.nc)
         ladd(atab)<-list(text="Fixed variables",var=length(self$options$covs))
         
         return(atab)
@@ -162,7 +130,7 @@ complex2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         afilename<-path.expand(afilename)
 
         if (dir.exists(apath)) 
-            jmvReadWrite::write_omv(private$.rdata,afilename)
+           jmvReadWrite::write_omv(private$.rdata,afilename)
         else 
             stop("Folder",apath,"does not exist")
 
@@ -182,6 +150,7 @@ complex2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
              j<-dirs[w]
              cmd<-paste0('C:\\Program Files\\',j,'\\bin\\jamovi')
              q<-system2(cmd,args=afilename,stderr = T,stdout = T)     
+             mark(q)
            },
            Linux= {
              cmd<-paste("/app/bin/jamovi ",afilename)
@@ -195,47 +164,59 @@ complex2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       
       .reshape=function() {
         
-        private$.on<-dim(self$data)[1]
-        private$.ov<-dim(self$data)[2]
+        data<-self$data
+        private$.on<-dim(data)[1]
+        private$.ov<-dim(data)[2]
         
-        dep<-unlist(lapply(self$options$colstorows,function(x) x$label))
-        colstorows<-unlist(lapply(self$options$colstorows,function(x) x$vars))
+        deps<-self$options$rowstocols
+
+        index<-self$options$index
+        nl<-lapply(index, function(x) levels(factor(data[[x]])))
         
-        time="index"
-        index<-private$.index
-        if (length(index)==1)
-             time<-index[[1]]$var
-        
-        if (!is.something(time))
-            time<-"index"
-        if (length(index)>1)
-              time<-".index."
-        
-            
-        id<-"id"
+        id<-self$options$id
         private$.time<-time
-        private$.rdata<-reshape(self$data,varying = colstorows, v.names=dep,direction="long", timevar = time)
-        private$.rdata<-private$.rdata[order(private$.rdata[[id]]),]
         
-        if (length(index)>1) {
-          grid<-expand.grid(lapply(index,function(x) 1:as.numeric(x$levels)))
-          .names<-unlist(lapply(index,function(x) x$var))
-          if (length(grep(".index.",.names,fixed=T))>0) stop("'.index.' is a reserved word, please choose another name for your index variables")
-          names(grid)<-.names
-          tdata<-as.data.frame(do.call(rbind,lapply(1:private$.on,function(i) grid)))
-          private$.rdata<-as.data.frame(cbind(tdata,private$.rdata))
+        wnames<-combine(nl,prefix = deps)
+        private$.nc<-length(wnames)
+        # do some checking on the data
+        nlevs<-length(wnames)
+        checklevs<-tapply(data[[deps[[1]]]],data[[id]],length)
+        modeval<-getmode(checklevs)
+        mark(modeval,nlevs,as.numeric(modeval) %% as.numeric(nlevs) )
+        if (modeval>nlevs)
+            self$results$help$setContent("<h2>Warning</h2>
+                                         <div>
+                                         The number of rows for each case does not equal the number
+                                         of columns required. Only the first instance of each level 
+                                         is used.
+                                         </div>")
+        if ((modeval %% nlevs )>0) {
+           self$results$help$setContent("<h2>Warning</h2>
+                                         <div>
+                                         The number of rows for each case cannot be evenly divided
+                                         by the number of required columns. Missing data are generated.
+                                         </div>")
+          
         }
         
+        data$int.index.<-apply(data[,index],1,paste0,collapse="_")
+        
+
+        private$.rdata<-reshape(data,
+                                varying = wnames, 
+                                v.names=deps,
+                                direction="wide", 
+                                timevar = "int.index.",
+                                drop=index)
+        
+        private$.on<-dim(self$data)[1]
+        private$.ov<-dim(self$data)[2]
         private$.nn<-dim(private$.rdata)[1]
         private$.nv<-dim(private$.rdata)[2]
-        private$.ndep<-length(dep)
         
       },
       .features=function() {
-        atab<-table(private$.rdata[[private$.time]])
-        tab<-as.data.frame(atab)
-        attr(tab,"titles")<-c(Var1=private$.time)
-        tab
+        
       }
       
       )

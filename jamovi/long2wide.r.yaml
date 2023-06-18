@@ -1,0 +1,56 @@
+---
+name:  long2wide
+title: "Long to wide"
+jrs:   '1.1'
+
+items:
+
+    - name: help
+      title: Getting started
+      type: Html
+
+    - name: save
+      title: The new data file has been saved as
+      type: Table
+      columns:
+                    - name: text
+                      title: ""
+                      type: text
+                    - name: info
+                      title: ""
+                      type: text
+
+    - name: info
+      title:  Info Table
+      type: Table
+      clearWith:
+      columns:
+                    - name: text
+                      title: "Info"
+                      type: text
+                    - name: var
+                      title: "Value"
+                      type: text
+                      
+    - name: features
+      title:  Repeated measures levels
+      type: Table
+      columns:
+                    - name: Var1
+                      title: "rmlevels"
+                      type: text
+                    - name: Freq
+                      title: "Freq"
+                      type: number
+
+
+    - name:  showdata
+      title: Data Preview
+      type:  Preformatted
+      
+    - name:  showdatanote
+      title: ""
+      type:  Preformatted
+
+
+...
