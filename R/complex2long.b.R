@@ -9,8 +9,8 @@ complex2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       .tables=list(),
       .runcreate=FALSE,
       .rdata=NULL,
-      .time="index",
-      .index=NULL,
+      .indexes=NULL,
+      .indexes_name=NULL,
       .on=NULL,
       .ov=NULL,
       .nn=NULL,
@@ -44,21 +44,22 @@ complex2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                               private$.notrun=TRUE
                              return()
                 }  
-        index<-self$options$index
-        index<-index[unlist(lapply(index,function(x) is.something(trimws(x$var))))]
-        index<-index[unlist(lapply(index,function(x) is.something(x$levels)))]
+        indexes<-self$options$index
+        indexes<-indexes[unlist(lapply(indexes,function(x) is.something(trimws(x$var))))]
+        indexes<-indexes[unlist(lapply(indexes,function(x) is.something(x$levels)))]
         
-        private$.index<-index
-
-        if (length(index)==1 & index[[1]]$levels>0) {
-          help<-paste("<h1>Help</h1><div>Index variable",index[[1]]$var,"defined levels are ignored. The number of 
+        private$.indexes<-indexes
+        private$.indexes_name<-unlist(lapply(indexes,function(x) x$var))
+                                 
+        if (length(indexes)==1 & indexes[[1]]$levels>0) {
+          help<-paste("<h1>Help</h1><div>Index variable",indexes[[1]]$var,"defined levels are ignored. The number of 
                                Columns to rows variables is used instead.
                               </div>")
           self$results$help$setContent(help)
         }
           
-        if (length(index)>1) {
-          tot<-prod(unlist(lapply(index,function(x) as.numeric(x$levels))))
+        if (length(indexes)>1) {
+          tot<-prod(unlist(lapply(indexes,function(x) as.numeric(x$levels))))
           ref<-ns[1]
           if (tot!=ref) {
           help<-paste("<h1>Help</h1><div>The combination (product) of the index variables levels should be equal
@@ -71,11 +72,6 @@ complex2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
           }
         }
         
-        
-        
-        
-
-
         jinfo("MODULE: init phase started")
         # set up the coefficients SmartTable
         atable<-SmartTable$new(self$results$info)
@@ -83,6 +79,7 @@ complex2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         atable<-SmartTable$new(self$results$save)
         private$.tables[["save"]]<-atable
         atable<-SmartTable$new(self$results$features)
+        atable$expandOnRun<-TRUE
         private$.tables[["features"]]<-atable
         
         
@@ -98,7 +95,7 @@ complex2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         
         private$.reshape()
         private$.tables[["info"]]$runSource<-private$.infotable
-        private$.tables[["save"]]$runSource<-private$.savedata
+        private$.tables[["save"]]$runSource<-savedata(self,private$.rdata)
         private$.tables[["features"]]$runSource<-private$.features
 
         lapply(private$.tables,function(x) x$runTable())          
@@ -128,71 +125,7 @@ complex2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         
         return(atab)
       },
-      .savedata=function() {
 
-
-        
-        if (!self$options$create) {
-          atab<-list(list(text="Action:",info="Press 'Create' when ready to save the dataset"))
-          return(atab)
-        }
-
-        where<-Sys.info()["sysname"]
-        afilename<-self$options$filename
-        
-        if (!is.something(afilename))
-          stop("Please define a filename to store the new dataset")
-        if (trimws(afilename)=="")
-          stop("Please define a filename to store the new dataset")
-
-        aname<-basename(afilename)
-        aname<-gsub(" ","_",aname,fixed = T)
-        apath<-dirname(afilename)
-        ext<- file_ext(aname)
-        if (ext!="csv")
-          aname<-paste0(aname,".csv")
-        
-        if (apath==".") {
-          switch (where,
-            Windows = {apath<-paste0("C:/Users/",Sys.getenv("USERNAME"),"/Documents")},
-            Linux = {apath<-tempdir()}
-          )
-        }
-        afilename<-file.path(apath,aname)
-        afilename<-path.expand(afilename)
-
-        if (dir.exists(apath)) 
-            jmvReadWrite::write_omv(private$.rdata,afilename)
-        else 
-            stop("Folder",apath,"does not exist")
-
-        atab<-list(list(text="Filename:",info=aname),
-                   list(text="Folder:",info=apath),
-                   list(text="Pathname:",info=afilename)
-        )
-        
-        
-        
-        if (self$options$open) {
-
-         switch (where,
-           Windows = {
-             dirs<-dir("C://Program Files")
-             w<-grep("jamovi",dirs,fixed=T)
-             j<-dirs[w]
-             cmd<-paste0('C:\\Program Files\\',j,'\\bin\\jamovi')
-             q<-system2(cmd,args=afilename,stderr = T,stdout = T)     
-           },
-           Linux= {
-             cmd<-paste("/app/bin/jamovi ",afilename)
-             system(cmd,ignore.stdout = F,ignore.stderr = F)
-           }
-         ) # end of switch
-        }
-        
-        return(atab)
-      },
-      
       .reshape=function() {
         
         private$.on<-dim(self$data)[1]
@@ -200,31 +133,20 @@ complex2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         
         dep<-unlist(lapply(self$options$colstorows,function(x) x$label))
         colstorows<-unlist(lapply(self$options$colstorows,function(x) x$vars))
-        
-        time="index"
-        index<-private$.index
-        if (length(index)==1)
-             time<-index[[1]]$var
-        
-        if (!is.something(time))
-            time<-"index"
-        if (length(index)>1)
-              time<-".index."
-        
-            
+        indexes<-private$.indexes
+
         id<-"id"
-        private$.time<-time
-        private$.rdata<-reshape(self$data,varying = colstorows, v.names=dep,direction="long", timevar = time)
+        private$.rdata<-reshape(self$data,varying = colstorows, v.names=dep,direction="long", timevar = "int.index.")
         private$.rdata<-private$.rdata[order(private$.rdata[[id]]),]
-        
-        if (length(index)>1) {
-          grid<-expand.grid(lapply(index,function(x) 1:as.numeric(x$levels)))
-          .names<-unlist(lapply(index,function(x) x$var))
-          if (length(grep(".index.",.names,fixed=T))>0) stop("'.index.' is a reserved word, please choose another name for your index variables")
-          names(grid)<-.names
+        if (length(indexes)>1) {
+          grid<-expand.grid(lapply(indexes,function(x) 1:as.numeric(x$levels)))
+          if (length(grep("int.index.",private$.indexes_name,fixed=T))>0) stop("'int.index.' is a reserved word, please choose another name for your index variables")
           tdata<-as.data.frame(do.call(rbind,lapply(1:private$.on,function(i) grid)))
           private$.rdata<-as.data.frame(cbind(tdata,private$.rdata))
-        }
+          names(private$.rdata)[1:length(private$.indexes_name)]<-private$.indexes_name
+          private$.rdata[["int.index."]]<-NULL
+        } else   names(private$.rdata)[1]<-private$.indexes_name
+
         
         private$.nn<-dim(private$.rdata)[1]
         private$.nv<-dim(private$.rdata)[2]
@@ -232,9 +154,10 @@ complex2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         
       },
       .features=function() {
-        atab<-table(private$.rdata[[private$.time]])
-        tab<-as.data.frame(atab)
-        attr(tab,"titles")<-c(Var1=private$.time)
+
+        tab<-aggregate(private$.rdata[[1]],lapply(private$.indexes_name,function(i) private$.rdata[,i]),length)
+        names(tab)[1:length(private$.indexes)]<-private$.indexes_name
+        names(tab)[ncol(tab)]<-"Freq"
         tab
       }
       

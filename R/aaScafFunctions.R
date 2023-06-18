@@ -48,8 +48,7 @@ is.something <- function(x, ...) UseMethod(".is.something")
 
 .is.something.numeric <- function(obj) (length(obj) > 0)
 
-.is.something.character <- function(obj) (length(obj) > 0 && obj!="")
-
+.is.something.character <- function(obj) (length(obj) > 0)
 
 .is.something.logical <- function(obj) !is.na(obj)
 
@@ -242,11 +241,6 @@ ebind_square<-function(...) {
 
 ###########
 
-file_ext<-function (x) 
-{
-  pos <- regexpr("\\.([[:alnum:]]+)$", x)
-  ifelse(pos > -1L, substring(x, pos + 1L), "")
-}
 
 sourcifyOption<- function(x,...) UseMethod(".sourcifyOption")
 

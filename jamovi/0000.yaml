@@ -23,6 +23,11 @@ analyses:
     ns: jReshape
     menuGroup: jReshape
     menuTitle: Wide to Long format (complex)
+  - title: Long to wide
+    name: long2wide
+    ns: jReshape
+    menuGroup: jReshape
+    menuTitle: Long to wide
 usesNative: true
 minApp: 2.3.12
 

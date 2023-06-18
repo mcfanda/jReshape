@@ -1,6 +1,6 @@
 ---
-name:  complex2long
-title: "jReshape: Wide to Long format"
+name:  long2wide
+title: "Long to wide"
 jrs:   '1.1'
 
 items:
@@ -33,12 +33,15 @@ items:
                       type: text
                       
     - name: features
-      title:  Repeated measures levels
+      title:  New created variables
       type: Table
       columns:
-                    - name: Freq
-                      title: "Freq"
-                      type: number
+                    - name: var
+                      title: "New Variables"
+                      type: text
+                    - name: lab
+                      title: "Original Levels"
+                      type: text
 
 
     - name:  showdata

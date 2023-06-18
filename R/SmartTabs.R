@@ -279,8 +279,7 @@ SmartTable <- R6::R6Class("SmartTable",
                                 fun<-private$.init_source
                               else
                                 fun<-private$.run_source
-                              private$.debug_msg("function is ",class(fun))
-                              
+
                               ### check how to retrieve the data
                               if (inherits(fun,"character") ) {
                                 
