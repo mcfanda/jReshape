@@ -30,6 +30,25 @@ const events = {
   
    colstorows_changed: function(ui) {
      ui.create.setValue(false);
+     console.log(ui.colstorows.value())
+   },
+   
+   onChange_items_changed: function(ui) {
+  
+     const newvals=ui.colstorows.value().map((e, i) => { 
+       if (e===null) {
+            return {label: "long_y"+(i+1), vars: []};
+        }
+       if (e.label===null) {
+            return e.label= "long_y"+(i+1);
+        }
+        
+       return e;
+
+     });
+    console.log(newvals)
+
+//     ui.colstorows.setValue(newvals);
    },
    covs_changed: function(ui) {
      ui.create.setValue(false);

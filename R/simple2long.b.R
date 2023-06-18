@@ -97,8 +97,8 @@ simple2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         aname<-gsub(" ","_",aname,fixed = T)
         apath<-dirname(afilename)
         ext<- file_ext(aname)
-        if (ext!="csv")
-          aname<-paste0(aname,".csv")
+        if (ext!="omv")
+          aname<-paste0(aname,".omv")
         
         if (apath==".") {
           switch (where,
@@ -110,7 +110,7 @@ simple2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         afilename<-path.expand(afilename)
 
         if (dir.exists(apath)) 
-            write.csv(private$.rdata,file = afilename,row.names = FALSE,sep = ";")
+           jmvReadWrite::write_omv(private$.rdata,afilename)
         else 
             stop("Folder",apath,"does not exist")
 

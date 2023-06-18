@@ -10,4 +10,4 @@ Description: Reshape datasets from long to wide or from
 License: GPL
 Encoding: UTF-8
 LazyData: true
-Imports: jmvcore (>= 0.8.5), R6
+Imports: jmvcore (>= 0.8.5), R6, jmvReadWrite

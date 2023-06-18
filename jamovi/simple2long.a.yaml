@@ -22,7 +22,7 @@ options:
     - name: rmlevels
       title: Repeated measures levels (time var)
       type: String
-      default: "time"
+      default: "index"
       
     - name: dep
       title: Target variable  
@@ -32,7 +32,7 @@ options:
     - name: filename
       title: Filename (.csv)  
       type: String
-      default: "longdata.csv"
+      default: "longdata.omv"
 
     - name: open
       title: Open the dataset

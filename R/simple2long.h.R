@@ -8,9 +8,9 @@ simple2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
         initialize = function(
             colstorows = NULL,
             covs = NULL,
-            rmlevels = "time",
+            rmlevels = "index",
             dep = "y",
-            filename = "longdata.csv",
+            filename = "longdata.omv",
             open = TRUE,
             button = NULL,
             create = FALSE,
@@ -31,7 +31,7 @@ simple2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             private$..rmlevels <- jmvcore::OptionString$new(
                 "rmlevels",
                 rmlevels,
-                default="time")
+                default="index")
             private$..dep <- jmvcore::OptionString$new(
                 "dep",
                 dep,
@@ -39,7 +39,7 @@ simple2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             private$..filename <- jmvcore::OptionString$new(
                 "filename",
                 filename,
-                default="longdata.csv")
+                default="longdata.omv")
             private$..open <- jmvcore::OptionBool$new(
                 "open",
                 open,
@@ -216,9 +216,9 @@ simple2long <- function(
     data,
     colstorows,
     covs,
-    rmlevels = "time",
+    rmlevels = "index",
     dep = "y",
-    filename = "longdata.csv",
+    filename = "longdata.omv",
     open = TRUE,
     button,
     create = FALSE,

@@ -3,7 +3,7 @@
 
 'use strict';
 
-const options = [{"name":"data","type":"Data"},{"name":"colstorows","title":"Columns to rows","type":"Variables"},{"name":"covs","title":"Non-varying variables","type":"Variables"},{"name":"rmlevels","title":"Repeated measures levels (time var)","type":"String","default":"time"},{"name":"dep","title":"Target variable","type":"String","default":"y"},{"name":"filename","title":"Filename (.csv)","type":"String","default":"longdata.csv"},{"name":"open","title":"Open the dataset","type":"Bool","default":true},{"name":"button","type":"String","hidden":true},{"name":"create","type":"Bool","default":false,"hidden":true},{"name":"toggle","type":"Bool","default":false,"hidden":true}];
+const options = [{"name":"data","type":"Data"},{"name":"colstorows","title":"Columns to rows","type":"Variables"},{"name":"covs","title":"Non-varying variables","type":"Variables"},{"name":"rmlevels","title":"Repeated measures levels (time var)","type":"String","default":"index"},{"name":"dep","title":"Target variable","type":"String","default":"y"},{"name":"filename","title":"Filename (.csv)","type":"String","default":"longdata.omv"},{"name":"open","title":"Open the dataset","type":"Bool","default":true},{"name":"button","type":"String","hidden":true},{"name":"create","type":"Bool","default":false,"hidden":true},{"name":"toggle","type":"Bool","default":false,"hidden":true}];
 
 const view = function() {
     

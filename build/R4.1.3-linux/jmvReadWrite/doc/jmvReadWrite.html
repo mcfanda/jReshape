@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Sebastian Jentschke" />
+
+<meta name="date" content="2022-08-08" />
+
+<title>R package jmvReadWrite</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">R package <code>jmvReadWrite</code></h1>
+<h4 class="author">Sebastian Jentschke</h4>
+<h4 class="date">2022-08-08</h4>
+
+
+
+<p>The R-package <code>jmvReadWrite</code> reads and writes the .omv-files that are used by the statistical spreadsheet <code>jamovi</code> (<a href="https://www.jamovi.org" class="uri">https://www.jamovi.org</a>). It is supposed to ease using syntax for statistical analyses created using the GUI in <code>jamovi</code> in connection with the R-library <code>jmv</code>.</p>
+<div id="installation" class="section level2">
+<h2>Installation</h2>
+<p>You can either install a stable version of <code>jmvReadWrite</code> which is available on <a href="https://cran.r-project.org/package=jmvReadWrite">CRAN</a> using the following command:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true"></a><span class="kw">install.packages</span>(<span class="st">&quot;jmvReadWrite&quot;</span>)</span></code></pre></div>
+<p>or you can install the development version of the <code>jmvReadWrite</code> package from <a href="https://github.com/sjentsch/jmvReadWrite/">GitHub</a>:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true"></a><span class="cf">if</span>(<span class="op">!</span><span class="kw">require</span>(devtools)) <span class="kw">install.packages</span>(<span class="st">&quot;devtools&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true"></a>devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;sjentsch/jmvReadWrite&quot;</span>)</span></code></pre></div>
+</div>
+<div id="how-to-use-the-package" class="section level2">
+<h2>How to use the package?</h2>
+<p><br /></p>
+<p><a href="https://sjentsch.github.io/jmvReadWrite/reference/read_omv.html"><strong>read_omv</strong></a></p>
+<p>The following code uses the ToothGrowth-data set that is part of the data sets included in R (the current file contains some modifications though for testing the reading and writing routines: <code>read_omv</code> and <code>write_omv</code>). With this data set, a syntax to conduct an ANOVA is run.</p>
+<p>The results should be similar to those obtained when running the same analysis in jamovi (using the GUI). To do so, open the file menu (☰) choose <code>Open</code>, <code>Data Library</code> and <code>ToothGrowth</code>. Afterwards, click on the <code>ANOVA</code>-button in the <code>Analyses</code>-tab and choose <code>ANOVA</code>. There, you assign the variable <code>len</code> to <code>Dependent Variable</code> and <code>supp</code> and <code>dose</code> to <code>Fixed Factors</code>. Afterwards, you choose / tick <code>Overall Model Test</code> and <code>ω²</code>. Open the drop-down menu <code>Assumption Checks</code> and tick <code>Homogeneity test</code> and <code>Normality test</code>. The results should be identical apart from that the table output looks nicer in <code>jamovi</code> (not only text, as below), numbers are rounded and maybe one or two other cosmetic differences.</p>
+<p>If you want to copy the syntax generated in jamovi, you have to switch on the <a href="https://jamovi.readthedocs.io/en/latest/usermanual/um_6_syntax_mode.html"><code>Syntax Mode</code></a>. Afterwards, the syntax is shown at the top of the analysis and can be copied from there.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true"></a><span class="kw">library</span>(jmvReadWrite);</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true"></a><span class="kw">library</span>(jmv);</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true"></a>fleOMV =<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;ToothGrowth.omv&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;jmvReadWrite&quot;</span>);</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true"></a>data =<span class="st"> </span><span class="kw">read_omv</span>(fleOMV);</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true"></a><span class="co"># if the &quot;jmv&quot;-package is installed, we can run a test analysis with the data</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true"></a><span class="cf">if</span> (<span class="st">&quot;jmv&quot;</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">rownames</span>(<span class="kw">installed.packages</span>())) {</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true"></a>    jmv<span class="op">::</span><span class="kw">ANOVA</span>(</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true"></a>        <span class="dt">formula =</span> len <span class="op">~</span><span class="st"> </span>supp <span class="op">+</span><span class="st"> </span>dose <span class="op">+</span><span class="st"> </span>supp<span class="op">:</span>dose,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true"></a>        <span class="dt">data =</span> data,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true"></a>        <span class="dt">effectSize =</span> <span class="kw">c</span>(<span class="st">&quot;omega&quot;</span>),</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true"></a>        <span class="dt">modelTest =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true"></a>        <span class="dt">homo =</span> <span class="ot">TRUE</span>,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true"></a>        <span class="dt">norm =</span> <span class="ot">TRUE</span>);</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true"></a>    }</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true"></a><span class="co">#&gt; </span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true"></a><span class="co">#&gt;  ANOVA</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true"></a><span class="co">#&gt; </span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true"></a><span class="co">#&gt;  ANOVA - len                                                                                      </span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true"></a><span class="co">#&gt;  ──────────────────────────────────────────────────────────────────────────────────────────────── </span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true"></a><span class="co">#&gt;                     Sum of Squares    df    Mean Square    F            p             ω²          </span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true"></a><span class="co">#&gt;  ──────────────────────────────────────────────────────────────────────────────────────────────── </span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true"></a><span class="co">#&gt;    Overall model         2740.1033     5      548.02067    41.557178    &lt; .0000001                </span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true"></a><span class="co">#&gt;    supp                   205.3500     1      205.35000    15.571979     0.0002312    0.0554519   </span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true"></a><span class="co">#&gt;    dose                  2426.4343     2     1213.21717    91.999965    &lt; .0000001    0.6925788   </span></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true"></a><span class="co">#&gt;    supp:dose              108.3190     2       54.15950     4.106991     0.0218603    0.0236466   </span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true"></a><span class="co">#&gt;    Residuals              712.1060    54       13.18715                                           </span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true"></a><span class="co">#&gt;  ──────────────────────────────────────────────────────────────────────────────────────────────── </span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true"></a><span class="co">#&gt; </span></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true"></a><span class="co">#&gt; </span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true"></a><span class="co">#&gt;  ASSUMPTION CHECKS</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true"></a><span class="co">#&gt; </span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true"></a><span class="co">#&gt;  Homogeneity of Variances Test (Levene&#39;s) </span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true"></a><span class="co">#&gt;  ──────────────────────────────────────── </span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true"></a><span class="co">#&gt;    F           df1    df2    p           </span></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true"></a><span class="co">#&gt;  ──────────────────────────────────────── </span></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true"></a><span class="co">#&gt;    1.940130      5     54    0.1027298   </span></span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true"></a><span class="co">#&gt;  ──────────────────────────────────────── </span></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true"></a><span class="co">#&gt; </span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true"></a><span class="co">#&gt; </span></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true"></a><span class="co">#&gt;  Normality Test (Shapiro-Wilk) </span></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true"></a><span class="co">#&gt;  ───────────────────────────── </span></span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true"></a><span class="co">#&gt;    Statistic    p           </span></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true"></a><span class="co">#&gt;  ───────────────────────────── </span></span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true"></a><span class="co">#&gt;    0.9849884    0.6694242   </span></span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true"></a><span class="co">#&gt;  ─────────────────────────────</span></span></code></pre></div>
+<p>Since version 0.2.0, <a href="https://sjentsch.github.io/jmvReadWrite/reference/read_omv.html"><code>read_omv</code></a> also extracts the syntax from analyses that you may have conducted in the jamovi-GUI and that are stored in the .omv-file. To extract them, you have to set the parameter <code>getSyn = TRUE</code> when calling <a href="https://sjentsch.github.io/jmvReadWrite/reference/read_omv.html"><code>read_omv</code></a> (default is <code>FALSE</code>). When the parameter is set, the analyses are stored in the attribute <code>syntax</code>. They can be used as shown in the following examples:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true"></a><span class="kw">library</span>(jmvReadWrite);</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true"></a>fleOMV =<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;ToothGrowth.omv&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;jmvReadWrite&quot;</span>);</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true"></a>data =<span class="st"> </span><span class="kw">read_omv</span>(fleOMV, <span class="dt">getSyn =</span> <span class="ot">TRUE</span>);</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true"></a><span class="co"># shows the syntax of the analyses from the .omv-file</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true"></a><span class="co"># please note that syntax extraction may not work on all systems</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true"></a><span class="co"># if the syntax couldn&#39;t be extracted, an empty list (length = 0) is returned,</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true"></a><span class="co"># otherwise, the syntax of the analyses from the .omv-file is shown and  </span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true"></a><span class="co"># the commands of the first and the second analysis are run, with the</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true"></a><span class="co"># output of the second analysis assigned to the variable result2</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true"></a><span class="cf">if</span> (<span class="kw">length</span>(<span class="kw">attr</span>(data, <span class="st">&quot;syntax&quot;</span>)) <span class="op">&gt;=</span><span class="st"> </span><span class="dv">2</span>) {</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true"></a>    <span class="kw">attr</span>(data, <span class="st">&quot;syntax&quot;</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true"></a>    <span class="co"># if the &quot;jmv&quot;-package is installed, we can run the analyses in &quot;syntax&quot;     </span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true"></a>    <span class="cf">if</span> (<span class="st">&quot;jmv&quot;</span> <span class="op">%in%</span><span class="st"> </span><span class="kw">rownames</span>(<span class="kw">installed.packages</span>())) {</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true"></a>        <span class="kw">eval</span>(<span class="kw">parse</span>(<span class="dt">text=</span><span class="kw">attr</span>(data, <span class="st">&quot;syntax&quot;</span>)[[<span class="dv">1</span>]]))</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true"></a>        <span class="kw">eval</span>(<span class="kw">parse</span>(<span class="dt">text=</span><span class="kw">paste0</span>(<span class="st">&quot;result2 = &quot;</span>, <span class="kw">attr</span>(data, <span class="st">&quot;syntax&quot;</span>)[[<span class="dv">2</span>]])))</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true"></a>        <span class="kw">names</span>(result2)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true"></a>        <span class="co"># -&gt; &quot;main&quot;      &quot;assump&quot;    &quot;contrasts&quot; &quot;postHoc&quot;   &quot;emm&quot;</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true"></a>        <span class="co"># (the names of the five output tables)</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true"></a>    }</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true"></a>}</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;main&quot;      &quot;assump&quot;    &quot;contrasts&quot; &quot;postHoc&quot;   &quot;emm&quot;       &quot;residsOV&quot;</span></span></code></pre></div>
+<p><br /></p>
+<p><a href="https://sjentsch.github.io/jmvReadWrite/reference/write_omv.html"><strong>write_omv</strong></a></p>
+<p>The <code>jmvReadWrite</code>-package also enables you to write <code>.omv</code>-files in order to use them in <code>jamovi</code>. Let’s assume that you have a large collection of log-files (e.g., from an experiment) that you compile and process (summarize, filter, etc.) in R in order to later analyse them in <code>jamovi</code>. You will have those processed log-files stored in a data frame (called, e.g., <code>data</code>) which you then write to a file that you can open in jamovi afterwards.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true"></a><span class="kw">library</span>(jmvReadWrite)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true"></a><span class="co"># use the data set &quot;ToothGrowth&quot; and, if it exists, write it as jamovi-file</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true"></a><span class="co"># using write_omv()</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true"></a><span class="kw">data</span>(<span class="st">&quot;ToothGrowth&quot;</span>);</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true"></a><span class="co"># &quot;retDbg&quot; has to be set in order to return debug information to wrtDta</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true"></a>wrtDta =<span class="st"> </span><span class="kw">write_omv</span>(ToothGrowth, <span class="st">&quot;Trial.omv&quot;</span>, <span class="dt">retDbg =</span> <span class="ot">TRUE</span>);</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true"></a><span class="kw">names</span>(wrtDta);</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;mtaDta&quot; &quot;xtdDta&quot; &quot;dtaFrm&quot;</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true"></a><span class="co"># -&gt; &quot;mtaDta&quot; &quot;xtdDta&quot; &quot;dtaFrm&quot;</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true"></a><span class="co"># this debug information contains a list with the metadata (&quot;mtaDta&quot;, e.g.,</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true"></a><span class="co"># column and data type), the extended data (&quot;xtdDta&quot;, e.g., variable lables),</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true"></a><span class="co"># and the data frame (dtaFrm) for checking (understanding the file format) and</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true"></a><span class="co"># debugging</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true"></a></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true"></a><span class="co"># check whether the file was written to the disk, get the file information (size, etc.)</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true"></a><span class="co"># and delete the file afterwards</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true"></a><span class="kw">list.files</span>(<span class="st">&quot;.&quot;</span>, <span class="st">&quot;Trial.omv&quot;</span>);</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;Trial.omv&quot;</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true"></a><span class="kw">file.info</span>(<span class="st">&quot;Trial.omv&quot;</span>);</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true"></a><span class="co">#&gt;           size isdir mode               mtime               ctime</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true"></a><span class="co">#&gt; Trial.omv 1563 FALSE  644 2022-08-08 13:10:27 2022-08-08 13:10:27</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true"></a><span class="co">#&gt;                         atime  uid  gid    uname   grname</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true"></a><span class="co">#&gt; Trial.omv 2022-08-08 13:10:27 1000 1000 sjentsch sjentsch</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true"></a><span class="kw">unlink</span>(<span class="st">&quot;Trial.omv&quot;</span>);</span></code></pre></div>
+<p>Although jamovi reads R-data files (.RData, .rda, .rds) <a href="https://sjentsch.github.io/jmvReadWrite/reference/write_omv.html"><code>write_omv</code></a> permits to store <code>jamovi</code>-specific attributes (such as variable labels) in addition. Please note that if you are reading from an <code>.omv</code>-file in order to write back to an <code>.omv</code>-file (perhaps after some modifications), it is recommended to leave the <code>sveAtt</code>-attribute set to <code>TRUE</code> (which is the default).</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true"></a><span class="co"># reading and writing a file with the &quot;sveAtt&quot;-parameter permits you to keep</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true"></a><span class="co"># essential meta-data to ensure that the written file looks and works like the</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true"></a><span class="co"># original file (plus you modifications)</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true"></a>fleOMV =<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;ToothGrowth.omv&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;jmvReadWrite&quot;</span>);</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true"></a>data =<span class="st"> </span><span class="kw">read_omv</span>(fleOMV, <span class="dt">sveAtt =</span> <span class="ot">TRUE</span>);</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true"></a><span class="co"># shows the names of the attributes for the whole data set (e.g., number of</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true"></a><span class="co"># rows and columns) and the names of the attributes of the first column</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true"></a><span class="kw">names</span>(<span class="kw">attributes</span>(data));</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true"></a><span class="co">#&gt; [1] &quot;names&quot;       &quot;row.names&quot;   &quot;class&quot;       &quot;fltLst&quot;      &quot;removedRows&quot;</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true"></a><span class="co">#&gt; [6] &quot;addedRows&quot;   &quot;transforms&quot;</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true"></a><span class="kw">names</span>(<span class="kw">attributes</span>(data[[<span class="dv">1</span>]]));</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true"></a><span class="co">#&gt;  [1] &quot;missingValues&quot;  &quot;name&quot;           &quot;id&quot;             &quot;columnType&quot;    </span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true"></a><span class="co">#&gt;  [5] &quot;dataType&quot;       &quot;measureType&quot;    &quot;formula&quot;        &quot;formulaMessage&quot;</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true"></a><span class="co">#&gt;  [9] &quot;parentId&quot;       &quot;width&quot;          &quot;type&quot;           &quot;importName&quot;    </span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true"></a><span class="co">#&gt; [13] &quot;description&quot;    &quot;transform&quot;      &quot;edits&quot;          &quot;filterNo&quot;      </span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true"></a><span class="co">#&gt; [17] &quot;active&quot;</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true"></a><span class="co">#</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true"></a><span class="co"># perhaps do some modifications to the file here and write it back afterwards</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true"></a><span class="kw">write_omv</span>(data, <span class="st">&#39;Trial.omv&#39;</span>);</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true"></a><span class="kw">unlink</span>(<span class="st">&quot;Trial.omv&quot;</span>);</span></code></pre></div>
+<p>If <code>Trial.omv</code> in the example above would have been kept, it should look like the original file (plus your possible modifications). If you, e.g., added a new column, you could adjust some attributes (e.g., to enforce a specific <code>columnType</code> or <code>measurementType</code>): just look at how attributes are stored for other columns. <br /><br /></p>
+<p><strong>Helper functions</strong></p>
+<p>Since version 0.3.0, <code>jmvReadWrite</code> contains a number of helper functions that support you with commonly required data management tasks:</p>
+<ul>
+<li><p><a href="https://sjentsch.github.io/jmvReadWrite/reference/convert_to_omv.html"><code>convert_to_omv</code></a>: Converts data sets from other file formats into jamovi-format (this function may be helpful if you have to convert a larger amount of files).</p></li>
+<li><p><a href="https://sjentsch.github.io/jmvReadWrite/reference/long2wide_omv.html"><code>long2wide_omv</code></a>: Convert a data set from long to wide format (time points for repeated measurements are arranged as rows in the original and converted into columns).</p></li>
+<li><p><a href="https://sjentsch.github.io/jmvReadWrite/reference/wide2long_omv.html"><code>wide2long_omv</code></a>: Convert a data set from wide to long format (time points for repeated measurements are arranged as columns in the original and converted into rows).</p></li>
+<li><p><a href="https://sjentsch.github.io/jmvReadWrite/reference/merge_cols_omv.html"><code>merge_cols_omv</code></a>: Add cases from several data sets (i.e., the cases / rows in the second, etc. data set are added as rows to the first data set).</p></li>
+<li><p><a href="https://sjentsch.github.io/jmvReadWrite/reference/merge_rows_omv.html"><code>merge_rows_omv</code></a>: Add variables from several data sets (i.e., the variables / columns in the second, etc. input data set are added as columns to the first data set).</p></li>
+<li><p><a href="https://sjentsch.github.io/jmvReadWrite/reference/sort_omv.html"><code>sort_omv</code></a>: Sort a data set according to one or more variable(s).</p></li>
+</ul>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

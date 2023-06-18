@@ -10,5 +10,5 @@ Description: Reshape datasets from long to wide or from
 License: GPL
 Encoding: UTF-8
 LazyData: true
-Imports: jmvcore (>= 0.8.5), R6
-Built: R 4.1.3; ; 2023-06-17 23:22:44 UTC; unix
+Imports: jmvcore (>= 0.8.5), R6, jmvReadWrite
+Built: R 4.1.3; ; 2023-06-18 00:15:08 UTC; unix
