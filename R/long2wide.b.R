@@ -15,6 +15,7 @@ long2wideClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       .nn=NULL,
       .nv=NULL,
       .nc=NULL,
+      .labs=NULL,
       .notrun=FALSE,
       .init= function() {
 
@@ -167,22 +168,34 @@ long2wideClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         data<-self$data
         private$.on<-dim(data)[1]
         private$.ov<-dim(data)[2]
-        
-        deps<-self$options$rowstocols
 
-        index<-self$options$index
-        nl<-lapply(index, function(x) levels(factor(data[[x]])))
-        
+        ## gather variables names
         id<-self$options$id
-        private$.time<-time
+        deps<-self$options$rowstocols
+        indexes<-self$options$index
         
-        wnames<-combine(nl,prefix = deps)
+        ## be sure the index variables are factors
+        for (ind in indexes) 
+                     if (!is.factor(data[[ind]]))
+                         data[[ind]]<-factor(data[[ind]])
+        ## prepare the new variables names
+        nl<-lapply(indexes, function(x) levels(data[[x]]))
+        wnames<-lapply(deps, function(x) combine(nl,prefix = x))
+        wnames<-unlist(wnames)
+        
         private$.nc<-length(wnames)
+        
+        ## prepare the labs
+        labs<-lapply(seq_along(indexes), function(x) paste(indexes[[x]],levels(data[[indexes[[x]]]]),sep="="))
+        labs<-paste0(levels(interaction(labs, sep = " ")))
+        labs<-paste(wnames,labs,sep=": ")
+        names(labs)<-wnames
+        private$.labs<-labs
+        
         # do some checking on the data
-        nlevs<-length(wnames)
+        nlevs<-length(wnames)/length(deps)
         checklevs<-tapply(data[[deps[[1]]]],data[[id]],length)
         modeval<-getmode(checklevs)
-        mark(modeval,nlevs,as.numeric(modeval) %% as.numeric(nlevs) )
         if (modeval>nlevs)
             self$results$help$setContent("<h2>Warning</h2>
                                          <div>
@@ -199,16 +212,35 @@ long2wideClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
           
         }
         
-        data$int.index.<-apply(data[,index],1,paste0,collapse="_")
+        test=any(table(data[,indexes])==0)
+        if (test) {
+          self$results$help$setContent("<h2>Warning</h2>
+                                         <div>
+                                         Indexing variables levels are nested. Results may be unexpected.
+                                         Pleae check the new data carefully.
+                                         </div>")
+          
+        }
         
-
+        
+        ## make a internal index variable
+        if (length(indexes)>1)
+             data$int.index.<-apply(data[,indexes],1,paste0,collapse="_")
+        else
+             data$int.index.<-data[,indexes]
+        
+mark(head(data$int.index.))
+        ## reshape
         private$.rdata<-reshape(data,
                                 varying = wnames, 
                                 v.names=deps,
                                 direction="wide", 
                                 timevar = "int.index.",
-                                drop=index)
+                                drop=indexes)
+        ## set the new variables labels
+        attr(private$.rdata,"variable.labels")<-labs
         
+        ## gather some info
         private$.on<-dim(self$data)[1]
         private$.ov<-dim(self$data)[2]
         private$.nn<-dim(private$.rdata)[1]
@@ -216,6 +248,11 @@ long2wideClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         
       },
       .features=function() {
+        lapply(private$.labs, function(x) {
+          s<-strsplit(x,":",fixed = T)[[1]]
+          list(var=s[[1]],lab=s[[2]])
+        })
+        
         
       }
       

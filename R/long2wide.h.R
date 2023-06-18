@@ -113,7 +113,7 @@ long2wideResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Table$new(
                 options=options,
                 name="save",
-                title="The new data file has been saved as",
+                title="The new data file info",
                 columns=list(
                     list(
                         `name`="text", 
@@ -140,16 +140,16 @@ long2wideResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Table$new(
                 options=options,
                 name="features",
-                title="Repeated measures levels",
+                title="New created variables",
                 columns=list(
                     list(
-                        `name`="Var1", 
-                        `title`="rmlevels", 
+                        `name`="var", 
+                        `title`="New Variables", 
                         `type`="text"),
                     list(
-                        `name`="Freq", 
-                        `title`="Freq", 
-                        `type`="number"))))
+                        `name`="lab", 
+                        `title`="Original Levels", 
+                        `type`="text"))))
             self$add(jmvcore::Preformatted$new(
                 options=options,
                 name="showdata",

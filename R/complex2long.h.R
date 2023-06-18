@@ -132,7 +132,7 @@ complex2longResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
             self$add(jmvcore::Table$new(
                 options=options,
                 name="save",
-                title="The new data file has been saved as",
+                title="The new data file info",
                 columns=list(
                     list(
                         `name`="text", 
@@ -161,10 +161,6 @@ complex2longResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
                 name="features",
                 title="Repeated measures levels",
                 columns=list(
-                    list(
-                        `name`="Var1", 
-                        `title`="rmlevels", 
-                        `type`="text"),
                     list(
                         `name`="Freq", 
                         `title`="Freq", 

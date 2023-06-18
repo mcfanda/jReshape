@@ -4,15 +4,16 @@ const events = {
       ui.create.setValue(false);
     },
     button_creating: function(ui) {
-     ui.create.setValue(false);
      let $contents=ui.button.$el;
   		$contents.append(`
 		    <div id="createbutton" style="padding: 10px">
- 	     <input type="submit" value="Create" style="color: green; font-size: 1.2em; font-weight: bold" >
+ 	     <input id="inputbutton" type="submit" value="Create" style="color: green; font-size: 1.2em; font-weight: bold" >
         </div>`);
      $contents.on("click", () =>  {
           ui.create.setValue(true);
      });
+     ui.create.setValue(false);
+
     }
 
 };

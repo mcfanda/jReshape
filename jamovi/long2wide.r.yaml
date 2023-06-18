@@ -10,7 +10,7 @@ items:
       type: Html
 
     - name: save
-      title: The new data file has been saved as
+      title: The new data file info
       type: Table
       columns:
                     - name: text
@@ -33,15 +33,15 @@ items:
                       type: text
                       
     - name: features
-      title:  Repeated measures levels
+      title:  New created variables
       type: Table
       columns:
-                    - name: Var1
-                      title: "rmlevels"
+                    - name: var
+                      title: "New Variables"
                       type: text
-                    - name: Freq
-                      title: "Freq"
-                      type: number
+                    - name: lab
+                      title: "Original Levels"
+                      type: text
 
 
     - name:  showdata
