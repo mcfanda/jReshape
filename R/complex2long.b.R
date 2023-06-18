@@ -162,7 +162,7 @@ complex2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         afilename<-path.expand(afilename)
 
         if (dir.exists(apath)) 
-            write.csv(private$.rdata,file = afilename,row.names = FALSE,sep = ";")
+            jmvReadWrite::write_omv(private$.rdata,afilename)
         else 
             stop("Folder",apath,"does not exist")
 
