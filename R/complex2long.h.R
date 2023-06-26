@@ -116,8 +116,7 @@ complex2longResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
         save = function() private$.items[["save"]],
         info = function() private$.items[["info"]],
         features = function() private$.items[["features"]],
-        showdata = function() private$.items[["showdata"]],
-        showdatanote = function() private$.items[["showdatanote"]]),
+        showdata = function() private$.items[["showdata"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -165,14 +164,15 @@ complex2longResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
                         `name`="Freq", 
                         `title`="Freq", 
                         `type`="number"))))
-            self$add(jmvcore::Preformatted$new(
+            self$add(jmvcore::Table$new(
                 options=options,
                 name="showdata",
-                title="Data Preview"))
-            self$add(jmvcore::Preformatted$new(
-                options=options,
-                name="showdatanote",
-                title=""))}))
+                title="Data Preview",
+                columns=list(
+                    list(
+                        `name`="row", 
+                        `title`="Rows", 
+                        `type`="integer"))))}))
 
 complex2longBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "complex2longBase",
@@ -213,8 +213,7 @@ complex2longBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$save} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$info} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$features} \tab \tab \tab \tab \tab a table \cr
-#'   \code{results$showdata} \tab \tab \tab \tab \tab a preformatted \cr
-#'   \code{results$showdatanote} \tab \tab \tab \tab \tab a preformatted \cr
+#'   \code{results$showdata} \tab \tab \tab \tab \tab a table \cr
 #' }
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:

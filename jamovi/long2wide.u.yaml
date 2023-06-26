@@ -23,7 +23,7 @@ children:
             name: index
             isTarget: true
       - type: TargetLayoutBox
-        label: Indexing Variables
+        label: ID Variable
         children:
           - type: VariablesListBox
             name: id

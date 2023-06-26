@@ -1,6 +1,4 @@
 
-# This file is a generated template, your changes will not be overwritten
-
 simple2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
     "simple2longClass",
     inherit = simple2longBase,
@@ -16,14 +14,8 @@ simple2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       .nv=NULL,
       .init= function() {
         
-        if (!is.something(self$options$colstorows)) {
-          self$results$help$setContent(HELP_simple2long)
-          return()
-        } else
-          self$results$help$setContent("  ")
+      
         
-
-
         jinfo("MODULE: init phase started")
         # set up the coefficients SmartTable
         atable<-SmartTable$new(self$results$info)
@@ -32,39 +24,39 @@ simple2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         private$.tables[["save"]]<-atable
         atable<-SmartTable$new(self$results$features)
         private$.tables[["features"]]<-atable
-        
+        atable<-SmartTable$new(self$results$showdata)
+        atable$expandOnRun<-TRUE
+        atable$expandFrom<-2
+        private$.tables[["showdata"]]<-atable
         
         lapply(private$.tables,function(x) x$initTable())          
         
         
       },
+      
       .run = function() {
-    
+
         jinfo("MODULE: run phase started")
 
-        if (!is.something(self$options$colstorows))
+        if (!is.something(self$options$colstorows)) {
+          self$results$help$setContent(HELP_simple2long)
           return()
+        } else {
+          self$results$help$setContent("  ")
+        }
         
+
         private$.reshape()
         private$.tables[["info"]]$runSource<-private$.infotable
         private$.tables[["save"]]$runSource<-savedata(self,private$.rdata)
         private$.tables[["features"]]$runSource<-private$.features
-
+        private$.tables[["showdata"]]$runSource<-private$.showdata
+        
         lapply(private$.tables,function(x) x$runTable())          
         
-        showdata<-private$.rdata
-        nr<-nrow(showdata)
-        nrs<-min(30,nr)
-        nc<-ncol(showdata)
-        ncs<-min(10,nc)
-        showdata<-showdata[1:nrs,1:ncs]
-        self$results$showdata$setContent(showdata)
-        msg<-""
-        if (nr>30) msg<-paste("There are",nr-30,"more rows in the dataset not shown here\n")
-        if (nc>10) msg<-paste(msg,"There are",nc-10,"more colums in the dataset not shown here\n")
-        self$results$showdatanote$setContent(msg)
         
         },
+
       .infotable=function() {
         atab<-list()
         ladd(atab)<-list(text="Original N",var=private$.on)
@@ -107,7 +99,9 @@ simple2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         tab<-as.data.frame(atab)
         attr(tab,"titles")<-c(Var1=private$.time)
         tab
+      },
+      .showdata=function() {
+        showdata(private$.rdata)
       }
-      
       )
 )
