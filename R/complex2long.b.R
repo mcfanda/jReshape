@@ -123,12 +123,15 @@ complex2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         private$.ov<-dim(self$data)[2]
         
         dep<-unlist(lapply(self$options$colstorows,function(x) x$label))
-        colstorows<-unlist(lapply(self$options$colstorows,function(x) x$vars))
+        colstorows<-lapply(self$options$colstorows,function(x) x$vars)
+        if (length(colstorows)==1) colstorows<-unlist(colstorows)
+        
         indexes<-private$.indexes
 
         id<-"id"
         private$.rdata<-reshape(self$data,varying = colstorows, v.names=dep,direction="long", timevar = "int.index.")
         private$.rdata<-private$.rdata[order(private$.rdata[[id]]),]
+       
         if (length(indexes)>1) {
           grid<-expand.grid(lapply(indexes,function(x) 1:as.numeric(x$levels)))
           if (length(grep("int.index.",private$.indexes_name,fixed=T))>0) stop("'int.index.' is a reserved word, please choose another name for your index variables")
@@ -138,7 +141,7 @@ complex2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
           private$.rdata[["int.index."]]<-NULL
         } else   names(private$.rdata)[1]<-private$.indexes_name
 
-        
+        private$.rdata[[id]]<-factor(private$.rdata[[id]])
         private$.nn<-dim(private$.rdata)[1]
         private$.nv<-dim(private$.rdata)[2]
         private$.ndep<-length(dep)

@@ -4,7 +4,6 @@ savedata<-function(obj,data) {
     atab<-list(list(text="Action:",info="Press 'Create' when ready to save the dataset"))
     return(atab)
   }
-  
   where<-Sys.info()["sysname"]
   afilename<-obj$options$filename
   
@@ -77,7 +76,8 @@ showdata<-function(data) {
   ncs<-min(10,nc)
   if (nr>30) warning("There are ",nr-30," more rows in the dataset not shown here\n")
   if (nc>10) warning("There are ",nc-10," more colums in the dataset not shown here\n")
-  data[nrs,]<-rep("...",nc)
-  data[1:nrs,1:ncs]
+  data<-data[1:nrs,1:ncs]
+  try_hard(data[nrs,]<-rep("...",nc))
+  data
   
 }

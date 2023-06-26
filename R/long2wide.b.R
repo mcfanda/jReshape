@@ -114,12 +114,12 @@ long2wideClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         private$.nc<-length(wnames)
         
         ## prepare the labs
+
         labs<-lapply(seq_along(indexes), function(x) paste(indexes[[x]],levels(data[[indexes[[x]]]]),sep="="))
         labs<-paste0(levels(interaction(labs, sep = " ")))
         labs<-paste(wnames,labs,sep=": ")
         names(labs)<-wnames
         private$.labs<-labs
-        mark(labs)
         # do some checking on the data
         nlevs<-length(wnames)/length(deps)
         checklevs<-tapply(data[[deps[[1]]]],data[[id]],length)
@@ -170,10 +170,13 @@ long2wideClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                                 direction="wide", 
                                 timevar = "int.index.",
                                 drop=indexes)
+        
         private$.rdata<-private$.rdata[order(private$.rdata$id.),]
         private$.rdata$id.<-NULL
         rownames(private$.rdata)<-NULL
-        ## set the new variables labels
+        
+        private$.rdata<-private$.rdata[rowSums(is.na(private$.rdata))<(ncol(private$.rdata)),]
+        ## set the new variables labels,
         attr(private$.rdata,"variable.labels")<-labs
        
         ## gather some info
@@ -184,10 +187,11 @@ long2wideClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         
       },
       .features=function() {
-        lapply(private$.labs, function(x) {
+        tab<-lapply(private$.labs, function(x) {
           s<-strsplit(x,":",fixed = T)[[1]]
           list(var=s[[1]],lab=s[[2]])
         })
+        
       },
       .showdata=function() {
         showdata(private$.rdata)
