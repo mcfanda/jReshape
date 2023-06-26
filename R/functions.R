@@ -1,5 +1,5 @@
-combine <- function(..., prefix = "", sep = ".") {
-  paste0(paste0(prefix,"."), levels(interaction(..., sep = sep)))
+combine <- function(..., prefix = "", sep = ".",sep0=".") {
+  paste0(paste0(prefix,sep0), levels(interaction(..., sep = sep)))
 }
 
 file_ext<-function (x) 

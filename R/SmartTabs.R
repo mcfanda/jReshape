@@ -321,8 +321,39 @@ SmartTable <- R6::R6Class("SmartTable",
                                 return(rtable) 
                               }
                               if (inherits(fun,"function") ) {
-                                private$.debug_msg("function is ",class(fun))
-                                return(fun())
+                                output<-try_hard(fun())
+                                rtable<-output$obj
+                                error<-output$error
+                                warning<-output$warning
+                                
+                                if (!isFALSE(error)) {
+                                  private$.debug_msg("ERROR",fun,error)
+                                  if (exists("fromb64")) error<-fromb64(error)
+                                  self$table$setError(error)
+                                  private$.error<-TRUE
+                                  return()
+                                }
+                                if (!isFALSE(warning)) {
+                                  dispatch<-Dispatch$new(self)
+                                  warning<-lapply(warning, function(x) {
+                                    if (exists("fromb64")) 
+                                      x<-fromb64(x)
+                                    dispatch$translate(x)
+                                  })
+                                  
+                                  warning<-warning[sapply(warning,function(x) is.something(x))]
+                                  
+                                  if (inherits(self$table,"Table")) 
+                                    for (w in warning)
+                                      self$table$setNote(jmvcore::toB64(w),w,init=FALSE)
+                                  
+                                  if (inherits(self$table,"Array"))
+                                    for (obj in self$table$items)
+                                      for (w in warning)
+                                        obj$setNote(jmvcore::toB64(w),w,init=FALSE)
+                                  
+                                }
+                                return(rtable) 
                               }
                               ## if here, fun is a table (data.frame or list)
                               private$.debug_msg("function is ",class(fun))

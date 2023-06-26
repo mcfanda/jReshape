@@ -43,14 +43,13 @@ items:
                       title: "Original Levels"
                       type: text
 
-
     - name:  showdata
       title: Data Preview
-      type:  Preformatted
-      
-    - name:  showdatanote
-      title: ""
-      type:  Preformatted
+      type:  Table
+      columns:
+                    - name: row
+                      title: "Rows"
+                      type: integer
 
 
 ...

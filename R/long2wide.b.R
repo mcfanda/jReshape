@@ -19,7 +19,6 @@ long2wideClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       .notrun=FALSE,
       .init= function() {
 
-        self$results$help$setContent("  ")
         
         test<-(!is.something(self$options$rowstocols))
         if (test) {
@@ -53,6 +52,10 @@ long2wideClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         private$.tables[["save"]]<-atable
         atable<-SmartTable$new(self$results$features)
         private$.tables[["features"]]<-atable
+        atable<-SmartTable$new(self$results$showdata)
+        atable$expandOnRun<-TRUE
+        atable$expandFrom<-2
+        private$.tables[["showdata"]]<-atable
         
         
         lapply(private$.tables,function(x) x$initTable())          
@@ -66,24 +69,14 @@ long2wideClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         if (private$.notrun)
           return()
         
+        self$results$help$setContent("  ")
         private$.reshape()
         private$.tables[["info"]]$runSource<-private$.infotable
         private$.tables[["save"]]$runSource<-savedata(self,private$.rdata)
         private$.tables[["features"]]$runSource<-private$.features
-
-        lapply(private$.tables,function(x) x$runTable())          
+        private$.tables[["showdata"]]$runSource<-private$.showdata
         
-        showdata<-private$.rdata
-        nr<-nrow(showdata)
-        nrs<-min(30,nr)
-        nc<-ncol(showdata)
-        ncs<-min(10,nc)
-        showdata<-showdata[1:nrs,1:ncs]
-        self$results$showdata$setContent(showdata)
-        msg<-""
-        if (nr>30) msg<-paste("There are",nr-30,"more rows in the dataset not shown here\n")
-        if (nc>10) msg<-paste(msg,"There are",nc-10,"more colums in the dataset not shown here\n")
-        self$results$showdatanote$setContent(msg)
+        lapply(private$.tables,function(x) x$runTable())          
         
         },
       .infotable=function() {
@@ -105,6 +98,7 @@ long2wideClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
         ## gather variables names
         id<-self$options$id
+        data$id.<-as.numeric(data[[id]])
         deps<-self$options$rowstocols
         indexes<-self$options$index
         
@@ -125,7 +119,7 @@ long2wideClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         labs<-paste(wnames,labs,sep=": ")
         names(labs)<-wnames
         private$.labs<-labs
-        
+        mark(labs)
         # do some checking on the data
         nlevs<-length(wnames)/length(deps)
         checklevs<-tapply(data[[deps[[1]]]],data[[id]],length)
@@ -163,17 +157,25 @@ long2wideClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         else
              data$int.index.<-data[,indexes]
         
-mark(head(data$int.index.))
+        ## here we handle possible missing values
+        levs<-combine(nl,sep = "_",sep0 = "")
+        alllevels<-as.data.frame(do.call("rbind",lapply(unique(data$id.), function(x) cbind(id.=x,int.index.=levs))))
+        alllevels$id.<-as.numeric(alllevels$id.)
+
+        data<-merge(data,alllevels,by=c("id.","int.index."),all.y = T)
         ## reshape
+
         private$.rdata<-reshape(data,
-                                varying = wnames, 
                                 v.names=deps,
                                 direction="wide", 
                                 timevar = "int.index.",
                                 drop=indexes)
+        private$.rdata<-private$.rdata[order(private$.rdata$id.),]
+        private$.rdata$id.<-NULL
+        rownames(private$.rdata)<-NULL
         ## set the new variables labels
         attr(private$.rdata,"variable.labels")<-labs
-        
+       
         ## gather some info
         private$.on<-dim(self$data)[1]
         private$.ov<-dim(self$data)[2]
@@ -186,9 +188,11 @@ mark(head(data$int.index.))
           s<-strsplit(x,":",fixed = T)[[1]]
           list(var=s[[1]],lab=s[[2]])
         })
-        
-        
+      },
+      .showdata=function() {
+        showdata(private$.rdata)
       }
+      
       
       )
 )

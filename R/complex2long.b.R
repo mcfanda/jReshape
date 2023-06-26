@@ -1,5 +1,4 @@
 
-# This file is a generated template, your changes will not be overwritten
 
 complex2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
     "complex2longClass",
@@ -19,8 +18,7 @@ complex2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       .notrun=FALSE,
       .init= function() {
 
-        self$results$help$setContent("  ")
-        
+    
         test<-any(unlist(lapply(self$options$colstorows, function(x) !is.something(x$vars))))
         if (test) {
           help<-"<h1>Help</h1><div>Please fill in the columns variables that will go in the long format target variables</div>"
@@ -81,6 +79,10 @@ complex2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         atable<-SmartTable$new(self$results$features)
         atable$expandOnRun<-TRUE
         private$.tables[["features"]]<-atable
+        atable<-SmartTable$new(self$results$showdata)
+        atable$expandOnRun<-TRUE
+        atable$expandFrom<-2
+        private$.tables[["showdata"]]<-atable
         
         
         lapply(private$.tables,function(x) x$initTable())          
@@ -92,26 +94,15 @@ complex2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         jinfo("MODULE: run phase started")
 
         if (private$.notrun)    return()
+        self$results$help$setContent("  ")
         
         private$.reshape()
         private$.tables[["info"]]$runSource<-private$.infotable
         private$.tables[["save"]]$runSource<-savedata(self,private$.rdata)
         private$.tables[["features"]]$runSource<-private$.features
-
+        private$.tables[["showdata"]]$runSource<-private$.showdata
         lapply(private$.tables,function(x) x$runTable())          
-        
-        showdata<-private$.rdata
-        nr<-nrow(showdata)
-        nrs<-min(30,nr)
-        nc<-ncol(showdata)
-        ncs<-min(10,nc)
-        showdata<-showdata[1:nrs,1:ncs]
-        self$results$showdata$setContent(showdata)
-        msg<-""
-        if (nr>30) msg<-paste("There are",nr-30,"more rows in the dataset not shown here\n")
-        if (nc>10) msg<-paste(msg,"There are",nc-10,"more colums in the dataset not shown here\n")
-        self$results$showdatanote$setContent(msg)
-        
+
         },
       .infotable=function() {
         atab<-list()
@@ -159,7 +150,11 @@ complex2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         names(tab)[1:length(private$.indexes)]<-private$.indexes_name
         names(tab)[ncol(tab)]<-"Freq"
         tab
+      },
+      .showdata=function() {
+        showdata(private$.rdata)
       }
+      
       
       )
 )
