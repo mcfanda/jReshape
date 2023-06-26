@@ -67,14 +67,15 @@ savedata<-function(obj,data) {
   
 }
 
-showdata<-function(data) {
+showdata<-function(obj,data) {
   
+  nl<-50
   data$row<-1:dim(data)[1]
   nr<-nrow(data)
-  nrs<-min(30,nr)
+  nrs<-min(nl,nr)
   nc<-ncol(data)
   ncs<-min(10,nc)
-  if (nr>30) warning("There are ",nr-30," more rows in the dataset not shown here\n")
+  if (nr>nl) warning("There are ",nr-nl," more rows in the dataset not shown here\n")
   if (nc>10) warning("There are ",nc-10," more colums in the dataset not shown here\n")
   data<-data[1:nrs,1:ncs]
   try_hard(data[nrs,]<-rep("...",nc))

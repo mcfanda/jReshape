@@ -194,7 +194,7 @@ long2wideClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         
       },
       .showdata=function() {
-        showdata(private$.rdata)
+        showdata(self,private$.rdata)
       }
       
       

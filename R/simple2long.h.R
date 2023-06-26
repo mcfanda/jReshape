@@ -106,7 +106,7 @@ simple2longResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             super$initialize(
                 options=options,
                 name="",
-                title="jReshape: Wide to Long format")
+                title="Wide to Long format")
             self$add(jmvcore::Html$new(
                 options=options,
                 name="help",

@@ -101,7 +101,7 @@ simple2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         tab
       },
       .showdata=function() {
-        showdata(private$.rdata)
+        showdata(self,private$.rdata)
       }
       )
 )
