@@ -10,7 +10,6 @@ long2wideOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             covs = NULL,
             index = NULL,
             id = NULL,
-            filename = "widedata.omv",
             open = TRUE,
             button = NULL,
             create = FALSE,
@@ -34,10 +33,6 @@ long2wideOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..id <- jmvcore::OptionVariable$new(
                 "id",
                 id)
-            private$..filename <- jmvcore::OptionString$new(
-                "filename",
-                filename,
-                default="widedata.omv")
             private$..open <- jmvcore::OptionBool$new(
                 "open",
                 open,
@@ -61,7 +56,6 @@ long2wideOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..covs)
             self$.addOption(private$..index)
             self$.addOption(private$..id)
-            self$.addOption(private$..filename)
             self$.addOption(private$..open)
             self$.addOption(private$..button)
             self$.addOption(private$..create)
@@ -72,7 +66,6 @@ long2wideOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         covs = function() private$..covs$value,
         index = function() private$..index$value,
         id = function() private$..id$value,
-        filename = function() private$..filename$value,
         open = function() private$..open$value,
         button = function() private$..button$value,
         create = function() private$..create$value,
@@ -82,7 +75,6 @@ long2wideOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..covs = NA,
         ..index = NA,
         ..id = NA,
-        ..filename = NA,
         ..open = NA,
         ..button = NA,
         ..create = NA,
@@ -188,7 +180,6 @@ long2wideBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param covs .
 #' @param index .
 #' @param id .
-#' @param filename .
 #' @param open .
 #' @param button .
 #' @param create .
@@ -215,7 +206,6 @@ long2wide <- function(
     covs,
     index,
     id,
-    filename = "widedata.omv",
     open = TRUE,
     button,
     create = FALSE,
@@ -242,7 +232,6 @@ long2wide <- function(
         covs = covs,
         index = index,
         id = id,
-        filename = filename,
         open = open,
         button = button,
         create = create,

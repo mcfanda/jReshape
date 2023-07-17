@@ -54,7 +54,6 @@ simple2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         
         lapply(private$.tables,function(x) x$runTable())          
         
-        
         },
 
       .infotable=function() {

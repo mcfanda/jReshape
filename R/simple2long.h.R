@@ -10,7 +10,6 @@ simple2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             covs = NULL,
             rmlevels = "index",
             dep = "y",
-            filename = "longdata.omv",
             open = TRUE,
             button = NULL,
             create = FALSE,
@@ -36,10 +35,6 @@ simple2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 "dep",
                 dep,
                 default="y")
-            private$..filename <- jmvcore::OptionString$new(
-                "filename",
-                filename,
-                default="longdata.omv")
             private$..open <- jmvcore::OptionBool$new(
                 "open",
                 open,
@@ -63,7 +58,6 @@ simple2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             self$.addOption(private$..covs)
             self$.addOption(private$..rmlevels)
             self$.addOption(private$..dep)
-            self$.addOption(private$..filename)
             self$.addOption(private$..open)
             self$.addOption(private$..button)
             self$.addOption(private$..create)
@@ -74,7 +68,6 @@ simple2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
         covs = function() private$..covs$value,
         rmlevels = function() private$..rmlevels$value,
         dep = function() private$..dep$value,
-        filename = function() private$..filename$value,
         open = function() private$..open$value,
         button = function() private$..button$value,
         create = function() private$..create$value,
@@ -84,7 +77,6 @@ simple2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
         ..covs = NA,
         ..rmlevels = NA,
         ..dep = NA,
-        ..filename = NA,
         ..open = NA,
         ..button = NA,
         ..create = NA,
@@ -190,7 +182,6 @@ simple2longBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param covs .
 #' @param rmlevels .
 #' @param dep .
-#' @param filename .
 #' @param open .
 #' @param button .
 #' @param create .
@@ -217,7 +208,6 @@ simple2long <- function(
     covs,
     rmlevels = "index",
     dep = "y",
-    filename = "longdata.omv",
     open = TRUE,
     button,
     create = FALSE,
@@ -240,7 +230,6 @@ simple2long <- function(
         covs = covs,
         rmlevels = rmlevels,
         dep = dep,
-        filename = filename,
         open = open,
         button = button,
         create = create,

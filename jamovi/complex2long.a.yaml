@@ -43,11 +43,6 @@ options:
               type: Integer
       
 
-    - name: filename
-      title: Filename (.csv)  
-      type: String
-      default: "longdata.csv"
-
     - name: open
       title: Open the dataset
       type: Bool

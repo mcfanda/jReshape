@@ -1,10 +1,10 @@
-title: 'Wide to Long format'
+title: Wide to Long format
 name: simple2long
 jus: '3.0'
 stage: 0
 compilerMode: tame
 events:
-    update: './main::update'
+  update: './main::update'
 children:
   - type: VariableSupplier
     persistentItems: false
@@ -37,10 +37,6 @@ children:
             name: dep
             format: string
             stretchFactor: 1
-          - type: TextBox
-            name: filename
-            format: string
-            stretchFactor: 1
   - type: LayoutBox
     margin: large
     children:
@@ -51,4 +47,3 @@ children:
         name: button
         events:
           creating: './main::button_creating'
-          

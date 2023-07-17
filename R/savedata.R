@@ -5,39 +5,11 @@ savedata<-function(obj,data) {
     return(atab)
   }
   where<-Sys.info()["sysname"]
-  afilename<-obj$options$filename
-  
-  if (!is.something(afilename))
-    stop("Please define a filename to store the new dataset")
-  if (trimws(afilename)=="")
-    stop("Please define a filename to store the new dataset")
-  
-  aname<-basename(afilename)
-  aname<-gsub(" ","_",aname,fixed = T)
-  apath<-dirname(afilename)
-  ext<- file_ext(aname)
-  if (ext!="omv")
-    aname<-paste0(aname,".omv")
-  
-  if (apath==".") {
-    switch (where,
-            Windows = {apath<-paste0("C:/Users/",Sys.getenv("USERNAME"),"/Documents")},
-            Linux = {apath<-tempdir()},
-            Darwin= {apath<-tempdir()}
-    )
-  }
-  afilename<-file.path(apath,aname)
-  afilename<-path.expand(afilename)
-  
-  if (dir.exists(apath)) 
-    jmvReadWrite::write_omv(data,afilename)
-  else 
-    stop("Folder",apath,"does not exist")
-  
-  atab<-list(list(text="Filename:",info=aname),
-             list(text="Folder:",info=apath),
-             list(text="Pathname:",info=afilename)
-  )
+
+  afilename<-tempfile(fileext = ".omv")
+  jmvReadWrite::write_omv(data,afilename)
+
+  atab<-list(list(text="Pathname:",info=afilename))
   
 
   if (obj$options$open) {

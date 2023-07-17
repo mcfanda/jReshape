@@ -29,10 +29,6 @@ options:
       type: String
       default: "y"
 
-    - name: filename
-      title: Filename (.csv)  
-      type: String
-      default: "longdata.omv"
 
     - name: open
       title: Open the dataset

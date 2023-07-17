@@ -26,11 +26,6 @@ options:
       title: ID Variable
       type: Variable
 
-    - name: filename
-      title: Filename (.omv)  
-      type: String
-      default: "widedata.omv"
-
     - name: open
       title: Open the dataset
       type: Bool

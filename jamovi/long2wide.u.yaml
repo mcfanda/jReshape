@@ -29,7 +29,6 @@ children:
             name: id
             maxItemCount: 1
             isTarget: true
-
       - type: TargetLayoutBox
         label: Non-varying variables
         children:
@@ -42,11 +41,7 @@ children:
       - type: Label
         label: Names
         margin: large
-        children:
-          - type: TextBox
-            name: filename
-            format: string
-            stretchFactor: 1
+        children: []
   - type: LayoutBox
     margin: large
     children:

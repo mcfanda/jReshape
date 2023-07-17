@@ -11,7 +11,6 @@ complex2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
             covs = NULL,
             index = list(
                 list(var="index1", levels=0)),
-            filename = "longdata.csv",
             open = TRUE,
             button = NULL,
             create = FALSE,
@@ -56,10 +55,6 @@ complex2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
                         jmvcore::OptionInteger$new(
                             "levels",
                             NULL))))
-            private$..filename <- jmvcore::OptionString$new(
-                "filename",
-                filename,
-                default="longdata.csv")
             private$..open <- jmvcore::OptionBool$new(
                 "open",
                 open,
@@ -82,7 +77,6 @@ complex2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
             self$.addOption(private$..colstorows)
             self$.addOption(private$..covs)
             self$.addOption(private$..index)
-            self$.addOption(private$..filename)
             self$.addOption(private$..open)
             self$.addOption(private$..button)
             self$.addOption(private$..create)
@@ -92,7 +86,6 @@ complex2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
         colstorows = function() private$..colstorows$value,
         covs = function() private$..covs$value,
         index = function() private$..index$value,
-        filename = function() private$..filename$value,
         open = function() private$..open$value,
         button = function() private$..button$value,
         create = function() private$..create$value,
@@ -101,7 +94,6 @@ complex2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Clas
         ..colstorows = NA,
         ..covs = NA,
         ..index = NA,
-        ..filename = NA,
         ..open = NA,
         ..button = NA,
         ..create = NA,
@@ -202,7 +194,6 @@ complex2longBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param colstorows .
 #' @param covs .
 #' @param index .
-#' @param filename .
 #' @param open .
 #' @param button .
 #' @param create .
@@ -230,7 +221,6 @@ complex2long <- function(
     covs,
     index = list(
                 list(var="index1", levels=0)),
-    filename = "longdata.csv",
     open = TRUE,
     button,
     create = FALSE,
@@ -250,7 +240,6 @@ complex2long <- function(
         colstorows = colstorows,
         covs = covs,
         index = index,
-        filename = filename,
         open = open,
         button = button,
         create = create,
