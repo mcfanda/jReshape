@@ -9,11 +9,6 @@ children:
   - type: VariableSupplier
     persistentItems: true
     stretchFactor: 1
-    suggested:
-      - continuous
-      - ordinal
-    permitted:
-      - numeric
     children:
       - type: TargetLayoutBox
         label: New long variable (Columns to rows)

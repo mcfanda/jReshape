@@ -6,7 +6,6 @@ simple2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
     inherit = jmvcore::Options,
     public = list(
         initialize = function(
-            mode = "mode1",
             colstorows = NULL,
             covs = NULL,
             rmlevels = "index",
@@ -22,13 +21,6 @@ simple2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 requiresData=TRUE,
                 ...)
 
-            private$..mode <- jmvcore::OptionList$new(
-                "mode",
-                mode,
-                options=list(
-                    "mode1",
-                    "mode2"),
-                default="mode1")
             private$..colstorows <- jmvcore::OptionVariables$new(
                 "colstorows",
                 colstorows)
@@ -62,7 +54,6 @@ simple2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 default=FALSE,
                 hidden=TRUE)
 
-            self$.addOption(private$..mode)
             self$.addOption(private$..colstorows)
             self$.addOption(private$..covs)
             self$.addOption(private$..rmlevels)
@@ -73,7 +64,6 @@ simple2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             self$.addOption(private$..toggle)
         }),
     active = list(
-        mode = function() private$..mode$value,
         colstorows = function() private$..colstorows$value,
         covs = function() private$..covs$value,
         rmlevels = function() private$..rmlevels$value,
@@ -83,7 +73,6 @@ simple2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
         create = function() private$..create$value,
         toggle = function() private$..toggle$value),
     private = list(
-        ..mode = NA,
         ..colstorows = NA,
         ..covs = NA,
         ..rmlevels = NA,
@@ -175,7 +164,6 @@ simple2longBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'
 #' 
 #' @param data .
-#' @param mode .
 #' @param colstorows .
 #' @param covs .
 #' @param rmlevels .
@@ -201,7 +189,6 @@ simple2longBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @export
 simple2long <- function(
     data,
-    mode = "mode1",
     colstorows,
     covs,
     rmlevels = "index",
@@ -224,7 +211,6 @@ simple2long <- function(
 
 
     options <- simple2longOptions$new(
-        mode = mode,
         colstorows = colstorows,
         covs = covs,
         rmlevels = rmlevels,
