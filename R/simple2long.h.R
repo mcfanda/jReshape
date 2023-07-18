@@ -6,6 +6,7 @@ simple2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
     inherit = jmvcore::Options,
     public = list(
         initialize = function(
+            mode = "mode1",
             colstorows = NULL,
             covs = NULL,
             rmlevels = "index",
@@ -21,6 +22,13 @@ simple2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 requiresData=TRUE,
                 ...)
 
+            private$..mode <- jmvcore::OptionList$new(
+                "mode",
+                mode,
+                options=list(
+                    "mode1",
+                    "mode2"),
+                default="mode1")
             private$..colstorows <- jmvcore::OptionVariables$new(
                 "colstorows",
                 colstorows)
@@ -54,6 +62,7 @@ simple2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 default=FALSE,
                 hidden=TRUE)
 
+            self$.addOption(private$..mode)
             self$.addOption(private$..colstorows)
             self$.addOption(private$..covs)
             self$.addOption(private$..rmlevels)
@@ -64,6 +73,7 @@ simple2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             self$.addOption(private$..toggle)
         }),
     active = list(
+        mode = function() private$..mode$value,
         colstorows = function() private$..colstorows$value,
         covs = function() private$..covs$value,
         rmlevels = function() private$..rmlevels$value,
@@ -73,6 +83,7 @@ simple2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
         create = function() private$..create$value,
         toggle = function() private$..toggle$value),
     private = list(
+        ..mode = NA,
         ..colstorows = NA,
         ..covs = NA,
         ..rmlevels = NA,
@@ -88,7 +99,6 @@ simple2longResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
     inherit = jmvcore::Group,
     active = list(
         help = function() private$.items[["help"]],
-        save = function() private$.items[["save"]],
         info = function() private$.items[["info"]],
         features = function() private$.items[["features"]],
         showdata = function() private$.items[["showdata"]]),
@@ -103,19 +113,6 @@ simple2longResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 options=options,
                 name="help",
                 title="Getting started"))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="save",
-                title="The new data file has been saved as",
-                columns=list(
-                    list(
-                        `name`="text", 
-                        `title`="", 
-                        `type`="text"),
-                    list(
-                        `name`="info", 
-                        `title`="", 
-                        `type`="text"))))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="info",
@@ -178,6 +175,7 @@ simple2longBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'
 #' 
 #' @param data .
+#' @param mode .
 #' @param colstorows .
 #' @param covs .
 #' @param rmlevels .
@@ -189,7 +187,6 @@ simple2longBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$help} \tab \tab \tab \tab \tab a html \cr
-#'   \code{results$save} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$info} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$features} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$showdata} \tab \tab \tab \tab \tab a table \cr
@@ -197,13 +194,14 @@ simple2longBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
 #'
-#' \code{results$save$asDF}
+#' \code{results$info$asDF}
 #'
-#' \code{as.data.frame(results$save)}
+#' \code{as.data.frame(results$info)}
 #'
 #' @export
 simple2long <- function(
     data,
+    mode = "mode1",
     colstorows,
     covs,
     rmlevels = "index",
@@ -226,6 +224,7 @@ simple2long <- function(
 
 
     options <- simple2longOptions$new(
+        mode = mode,
         colstorows = colstorows,
         covs = covs,
         rmlevels = rmlevels,

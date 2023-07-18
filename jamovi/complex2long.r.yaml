@@ -9,16 +9,6 @@ items:
       title: Getting started
       type: Html
 
-    - name: save
-      title: The new data file info
-      type: Table
-      columns:
-                    - name: text
-                      title: ""
-                      type: text
-                    - name: info
-                      title: ""
-                      type: text
 
     - name: info
       title:  Info Table

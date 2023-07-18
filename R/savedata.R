@@ -4,16 +4,16 @@ savedata<-function(obj,data) {
     atab<-list(list(text="Action:",info="Press 'Create' when ready to save the dataset"))
     return(atab)
   }
-  where<-Sys.info()["sysname"]
 
   afilename<-tempfile(fileext = ".omv")
   jmvReadWrite::write_omv(data,afilename)
 
   atab<-list(list(text="Pathname:",info=afilename))
   
-
+  where<-Sys.info()["sysname"]
+  mark("we are in",where)
   if (obj$options$open) {
-    
+    mark("open file",afilename)
     switch (where,
             Windows = {
               dirs<-dir("C://Program Files")

@@ -47,3 +47,8 @@ children:
         name: button
         events:
           creating: './main::button_creating'
+  - type: LayoutBox
+    margin: large
+    children:
+      - type: ComboBox
+        name: mode

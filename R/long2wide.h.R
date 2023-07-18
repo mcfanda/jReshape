@@ -86,7 +86,6 @@ long2wideResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     inherit = jmvcore::Group,
     active = list(
         help = function() private$.items[["help"]],
-        save = function() private$.items[["save"]],
         info = function() private$.items[["info"]],
         features = function() private$.items[["features"]],
         showdata = function() private$.items[["showdata"]]),
@@ -101,19 +100,6 @@ long2wideResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="help",
                 title="Getting started"))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="save",
-                title="The new data file info",
-                columns=list(
-                    list(
-                        `name`="text", 
-                        `title`="", 
-                        `type`="text"),
-                    list(
-                        `name`="info", 
-                        `title`="", 
-                        `type`="text"))))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="info",
@@ -187,7 +173,6 @@ long2wideBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$help} \tab \tab \tab \tab \tab a html \cr
-#'   \code{results$save} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$info} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$features} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$showdata} \tab \tab \tab \tab \tab a table \cr
@@ -195,9 +180,9 @@ long2wideBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
 #'
-#' \code{results$save$asDF}
+#' \code{results$info$asDF}
 #'
-#' \code{as.data.frame(results$save)}
+#' \code{as.data.frame(results$info)}
 #'
 #' @export
 long2wide <- function(

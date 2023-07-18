@@ -74,8 +74,6 @@ complex2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         # set up the coefficients SmartTable
         atable<-SmartTable$new(self$results$info)
         private$.tables[["info"]]<-atable
-        atable<-SmartTable$new(self$results$save)
-        private$.tables[["save"]]<-atable
         atable<-SmartTable$new(self$results$features)
         atable$expandOnRun<-TRUE
         private$.tables[["features"]]<-atable
@@ -98,7 +96,6 @@ complex2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         
         private$.reshape()
         private$.tables[["info"]]$runSource<-private$.infotable
-        private$.tables[["save"]]$runSource<-savedata(self,private$.rdata)
         private$.tables[["features"]]$runSource<-private$.features
         private$.tables[["showdata"]]$runSource<-private$.showdata
         lapply(private$.tables,function(x) x$runTable())          
