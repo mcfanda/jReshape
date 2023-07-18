@@ -9,8 +9,17 @@ options:
     - name: data
       type: Data
 
+    - name: mode
+      title: Analysis Mode
+      type: List
+      options:
+            - name: mode1
+              title: Mode 1
+            - name: mode2
+              title: Mode 2
+      default: mode1
 
-    - name: colstorows
+    - name: sim_colstorows
       title: Columns to rows
       type: Variables
 
@@ -45,5 +54,34 @@ options:
       type: Bool
       default: false
       hidden: true     
+
+
+    - name: comp_colstorows
+      type: Array
+      default:
+        - label: long_y
+          vars: []
+      template:
+          type: Group
+          elements:
+            - name: label
+              type: String
+            - name: vars
+              type: Variables
+
+    - name: index
+      title: Index variables
+      type: Array
+      default:
+        - var: index1
+          levels: 0
+      template:
+          type: Group
+          elements:
+            - name: var
+              type: String
+            - name: levels
+              type: Integer
+
 
 ...

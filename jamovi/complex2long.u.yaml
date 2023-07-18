@@ -4,103 +4,103 @@ jus: '3.0'
 stage: 0
 compilerMode: tame
 events:
-  update: './main::update'
+          update: './main::update'
 children:
-  - type: VariableSupplier
-    persistentItems: true
-    stretchFactor: 1
-    suggested:
-      - continuous
-      - ordinal
-    permitted:
-      - numeric
-    children:
-      - type: TargetLayoutBox
-        label: New long variable (Columns to rows)
-        children:
-          - type: ListBox
-            name: colstorows
-            height: large
-            addButton: Add new long variable
-            events:
-              listItemAdded: './complex2long::onChange_items_changed'
-              listItemRemoved: './complex2long::onChange_items_changed'
-            templateName: linreg-block-template
-            template:
-              type: LayoutBox
-              margin: normal
-              children:
-                - type: TextBox
-                  valueKey:
-                    - label
-                  borderless: true
-                  name: blockName
-                  stretchFactor: 1
-                  margin: normal
-                - type: VariablesListBox
-                  name: blocklist
-                  valueFilter: unique
-                  valueKey:
-                    - vars
-                  isTarget: true
-                  height: auto
-                  ghostText: drag columns to rows variables here
-      - type: TargetLayoutBox
-        label: Non-varying variables
-        children:
-          - type: VariablesListBox
-            name: covs
-            isTarget: true
-  - type: LayoutBox
-    margin: large
-    children:
-      - type: Label
-        label: New file data
-        margin: large
-        children: []
-  - type: LayoutBox
-    margin: large
-    children:
-      - type: CheckBox
-        name: open
-      - type: CustomControl
-        stretchFactor: 3
-        name: button
-        events:
-          creating: './main::button_creating'
-  - type: CollapseBox
-    label: Index Variables
-    collapsed: true
-    stretchFactor: 1
-    children:
-      - type: Label
-        label: Clustering Variables
-        margin: large
-        style: list
-        stretchFactor: 1
-        children:
+          - type: VariableSupplier
+            persistentItems: true
+            stretchFactor: 1
+            suggested:
+              - continuous
+              - ordinal
+            permitted:
+              - numeric
+            children:
+              - type: TargetLayoutBox
+                label: New long variable (Columns to rows)
+                children:
+                  - type: ListBox
+                    name: colstorows
+                    height: large
+                    addButton: Add new long variable
+                    events:
+                      listItemAdded: './complex2long::onChange_items_changed'
+                      listItemRemoved: './complex2long::onChange_items_changed'
+                    templateName: linreg-block-template
+                    template:
+                      type: LayoutBox
+                      margin: normal
+                      children:
+                        - type: TextBox
+                          valueKey:
+                            - label
+                          borderless: true
+                          name: blockName
+                          stretchFactor: 1
+                          margin: normal
+                        - type: VariablesListBox
+                          name: blocklist
+                          valueFilter: unique
+                          valueKey:
+                            - vars
+                          isTarget: true
+                          height: auto
+                          ghostText: drag columns to rows variables here
+              - type: TargetLayoutBox
+                label: Non-varying variables
+                children:
+                  - type: VariablesListBox
+                    name: covs
+                    isTarget: true
           - type: LayoutBox
-            style: inline
+            margin: large
+            children:
+              - type: Label
+                label: New file data
+                margin: large
+                children: []
+          - type: LayoutBox
+            margin: large
+            children:
+              - type: CheckBox
+                name: open
+              - type: CustomControl
+                stretchFactor: 3
+                name: button
+                events:
+                  creating: './main::button_creating'
+          - type: CollapseBox
+            label: Index Variables
+            collapsed: true
             stretchFactor: 1
             children:
-              - type: ListBox
-                name: index
-                fullRowSelect: true
-                addButton: Add a index variable
-                height: large
-                events:
-                  listItemAdded: './complex2long::onChange_index_added'
-                  listItemRemoved: './complex2long::onChange_index_removed'
-                showColumnHeaders: true
+              - type: Label
+                label: Clustering Variables
+                margin: large
+                style: list
                 stretchFactor: 1
-                columns:
-                  - name: var
-                    label: Name
-                    template:
-                      type: TextBox
-                      stretchFactor: 1
-                  - name: levels
-                    label: N levels
-                    template:
-                      type: TextBox
-                      stretchFactor: 0.5
+                children:
+                  - type: LayoutBox
+                    style: inline
+                    stretchFactor: 1
+                    children:
+                      - type: ListBox
+                        name: index
+                        fullRowSelect: true
+                        addButton: Add a index variable
+                        height: large
+                        events:
+                          listItemAdded: './complex2long::onChange_index_added'
+                          listItemRemoved: './complex2long::onChange_index_removed'
+                        showColumnHeaders: true
+                        stretchFactor: 1
+                        columns:
+                          - name: var
+                            label: Name
+                            template:
+                              type: TextBox
+                              stretchFactor: 1
+                          - name: levels
+                            label: N levels
+                            template:
+                              type: TextBox
+                              stretchFactor: 0.5
