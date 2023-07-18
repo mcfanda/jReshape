@@ -6,67 +6,49 @@ compilerMode: tame
 events:
   update: './main::update'
 children:
-
-- type: ModeSelector
-  name: mode
-  children:
-   - type: Content
-     name: mode1
-     children: 
-             - type: VariableSupplier
-               persistentItems: false
-               stretchFactor: 1
-               children:
-                     - type: TargetLayoutBox
-                       label: Columns to row
-                       children:
-                              - type: VariablesListBox
-                                name: sim_colstorows
-                                isTarget: true
-                     - type: TargetLayoutBox
-                       label: Non-varying variables
-                       children:
-                             - type: VariablesListBox
-                               name: covs
-                               isTarget: true
-                             - type: LayoutBox
-                               margin: large
-                               children:
-                                       - type: Label
-                                         label: Names of new variables
-                                         margin: large
-                                         children:
-                                                - type: TextBox
-                                                  name: rmlevels
-                                                  format: string
-                                                  stretchFactor: 1
-                                                - type: TextBox
-                                                  name: dep
-                                                  format: string
-                                                  stretchFactor: 1
-                                                - type: LayoutBox
-                                                  margin: large
-                                                  children:
-                                                        - type: CheckBox
-                                                          name: open
-                                                        - type: CustomControl
-                                                          stretchFactor: 3
-                                                          name: button
-                                                          events:
-                                                                creating: './main::button_creating'
-
-     
-   - type: Content
-     name: mode2
-     children:  
+  - type: ModeSelector
+    name: mode
+    children:
+      - type: Content
+        name: mode1
+        children:
+          - type: VariableSupplier
+            persistentItems: false
+            stretchFactor: 1
+            children:
+              - type: TargetLayoutBox
+                label: Columns to row
+                children:
+                  - type: VariablesListBox
+                    name: sim_colstorows
+                    isTarget: true
+              - type: TargetLayoutBox
+                label: Non-varying variables
+                children:
+                  - type: VariablesListBox
+                    name: sim_covs
+                    isTarget: true
+          - type: LayoutBox
+            margin: large
+            children:
+              - type: Label
+                label: Names of new variables
+                margin: large
+                children:
+                  - type: TextBox
+                    name: sim_index
+                    format: string
+                    stretchFactor: 1
+                  - type: TextBox
+                    name: sim_dep
+                    format: string
+                    stretchFactor: 1
+      - type: Content
+        name: mode2
+        children:
           - type: VariableSupplier
             persistentItems: true
             stretchFactor: 1
-            suggested:
-              - continuous
-              - ordinal
-            permitted:
-              - numeric
             children:
               - type: TargetLayoutBox
                 label: New long variable (Columns to rows)
@@ -98,29 +80,6 @@ children:
                           isTarget: true
                           height: auto
                           ghostText: drag columns to rows variables here
-              - type: TargetLayoutBox
-                label: Non-varying variables
-                children:
-                  - type: VariablesListBox
-                    name: covs
-                    isTarget: true
-          - type: LayoutBox
-            margin: large
-            children:
-              - type: Label
-                label: New file data
-                margin: large
-                children: []
-          - type: LayoutBox
-            margin: large
-            children:
-              - type: CheckBox
-                name: open
-              - type: CustomControl
-                stretchFactor: 3
-                name: button
-                events:
-                  creating: './main::button_creating'
           - type: CollapseBox
             label: Index Variables
             collapsed: true
@@ -137,7 +96,7 @@ children:
                     stretchFactor: 1
                     children:
                       - type: ListBox
-                        name: index
+                        name: comp_index
                         fullRowSelect: true
                         addButton: Add a index variable
                         height: large
@@ -157,4 +116,13 @@ children:
                             template:
                               type: TextBox
                               stretchFactor: 0.5
-
+  - type: LayoutBox
+    margin: large
+    children:
+      - type: CheckBox
+        name: open
+      - type: CustomControl
+        stretchFactor: 3
+        name: button
+        events:
+          creating: './main::button_creating'

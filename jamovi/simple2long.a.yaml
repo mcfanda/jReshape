@@ -23,17 +23,17 @@ options:
       title: Columns to rows
       type: Variables
 
-    - name: covs
+    - name: sim_covs
       title: Non-varying variables
       type: Variables
 
 
-    - name: rmlevels
+    - name:  sim_index
       title: Repeated measures levels (time var)
       type: String
       default: "index"
       
-    - name: dep
+    - name: sim_dep
       title: Target variable  
       type: String
       default: "y"
@@ -69,7 +69,7 @@ options:
             - name: vars
               type: Variables
 
-    - name: index
+    - name: comp_index
       title: Index variables
       type: Array
       default:

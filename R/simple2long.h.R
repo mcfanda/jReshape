@@ -8,16 +8,16 @@ simple2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
         initialize = function(
             mode = "mode1",
             sim_colstorows = NULL,
-            covs = NULL,
-            rmlevels = "index",
-            dep = "y",
+            sim_covs = NULL,
+            sim_index = "index",
+            sim_dep = "y",
             open = TRUE,
             button = NULL,
             create = FALSE,
             toggle = FALSE,
             comp_colstorows = list(
                 list(label="long_y", vars=list())),
-            index = list(
+            comp_index = list(
                 list(var="index1", levels=0)), ...) {
 
             super$initialize(
@@ -36,16 +36,16 @@ simple2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             private$..sim_colstorows <- jmvcore::OptionVariables$new(
                 "sim_colstorows",
                 sim_colstorows)
-            private$..covs <- jmvcore::OptionVariables$new(
-                "covs",
-                covs)
-            private$..rmlevels <- jmvcore::OptionString$new(
-                "rmlevels",
-                rmlevels,
+            private$..sim_covs <- jmvcore::OptionVariables$new(
+                "sim_covs",
+                sim_covs)
+            private$..sim_index <- jmvcore::OptionString$new(
+                "sim_index",
+                sim_index,
                 default="index")
-            private$..dep <- jmvcore::OptionString$new(
-                "dep",
-                dep,
+            private$..sim_dep <- jmvcore::OptionString$new(
+                "sim_dep",
+                sim_dep,
                 default="y")
             private$..open <- jmvcore::OptionBool$new(
                 "open",
@@ -80,13 +80,13 @@ simple2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                         jmvcore::OptionVariables$new(
                             "vars",
                             NULL))))
-            private$..index <- jmvcore::OptionArray$new(
-                "index",
-                index,
+            private$..comp_index <- jmvcore::OptionArray$new(
+                "comp_index",
+                comp_index,
                 default=list(
                     list(var="index1", levels=0)),
                 template=jmvcore::OptionGroup$new(
-                    "index",
+                    "comp_index",
                     NULL,
                     elements=list(
                         jmvcore::OptionString$new(
@@ -98,40 +98,40 @@ simple2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
 
             self$.addOption(private$..mode)
             self$.addOption(private$..sim_colstorows)
-            self$.addOption(private$..covs)
-            self$.addOption(private$..rmlevels)
-            self$.addOption(private$..dep)
+            self$.addOption(private$..sim_covs)
+            self$.addOption(private$..sim_index)
+            self$.addOption(private$..sim_dep)
             self$.addOption(private$..open)
             self$.addOption(private$..button)
             self$.addOption(private$..create)
             self$.addOption(private$..toggle)
             self$.addOption(private$..comp_colstorows)
-            self$.addOption(private$..index)
+            self$.addOption(private$..comp_index)
         }),
     active = list(
         mode = function() private$..mode$value,
         sim_colstorows = function() private$..sim_colstorows$value,
-        covs = function() private$..covs$value,
-        rmlevels = function() private$..rmlevels$value,
-        dep = function() private$..dep$value,
+        sim_covs = function() private$..sim_covs$value,
+        sim_index = function() private$..sim_index$value,
+        sim_dep = function() private$..sim_dep$value,
         open = function() private$..open$value,
         button = function() private$..button$value,
         create = function() private$..create$value,
         toggle = function() private$..toggle$value,
         comp_colstorows = function() private$..comp_colstorows$value,
-        index = function() private$..index$value),
+        comp_index = function() private$..comp_index$value),
     private = list(
         ..mode = NA,
         ..sim_colstorows = NA,
-        ..covs = NA,
-        ..rmlevels = NA,
-        ..dep = NA,
+        ..sim_covs = NA,
+        ..sim_index = NA,
+        ..sim_dep = NA,
         ..open = NA,
         ..button = NA,
         ..create = NA,
         ..toggle = NA,
         ..comp_colstorows = NA,
-        ..index = NA)
+        ..comp_index = NA)
 )
 
 simple2longResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -217,15 +217,15 @@ simple2longBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param data .
 #' @param mode .
 #' @param sim_colstorows .
-#' @param covs .
-#' @param rmlevels .
-#' @param dep .
+#' @param sim_covs .
+#' @param sim_index .
+#' @param sim_dep .
 #' @param open .
 #' @param button .
 #' @param create .
 #' @param toggle .
 #' @param comp_colstorows .
-#' @param index .
+#' @param comp_index .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$help} \tab \tab \tab \tab \tab a html \cr
@@ -245,42 +245,42 @@ simple2long <- function(
     data,
     mode = "mode1",
     sim_colstorows,
-    covs,
-    rmlevels = "index",
-    dep = "y",
+    sim_covs,
+    sim_index = "index",
+    sim_dep = "y",
     open = TRUE,
     button,
     create = FALSE,
     toggle = FALSE,
     comp_colstorows = list(
                 list(label="long_y", vars=list())),
-    index = list(
+    comp_index = list(
                 list(var="index1", levels=0))) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("simple2long requires jmvcore to be installed (restart may be required)")
 
     if ( ! missing(sim_colstorows)) sim_colstorows <- jmvcore::resolveQuo(jmvcore::enquo(sim_colstorows))
-    if ( ! missing(covs)) covs <- jmvcore::resolveQuo(jmvcore::enquo(covs))
+    if ( ! missing(sim_covs)) sim_covs <- jmvcore::resolveQuo(jmvcore::enquo(sim_covs))
     if (missing(data))
         data <- jmvcore::marshalData(
             parent.frame(),
             `if`( ! missing(sim_colstorows), sim_colstorows, NULL),
-            `if`( ! missing(covs), covs, NULL))
+            `if`( ! missing(sim_covs), sim_covs, NULL))
 
 
     options <- simple2longOptions$new(
         mode = mode,
         sim_colstorows = sim_colstorows,
-        covs = covs,
-        rmlevels = rmlevels,
-        dep = dep,
+        sim_covs = sim_covs,
+        sim_index = sim_index,
+        sim_dep = sim_dep,
         open = open,
         button = button,
         create = create,
         toggle = toggle,
         comp_colstorows = comp_colstorows,
-        index = index)
+        comp_index = comp_index)
 
     analysis <- simple2longClass$new(
         options = options,
