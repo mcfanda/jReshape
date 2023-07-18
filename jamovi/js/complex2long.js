@@ -14,7 +14,7 @@ const events = {
    onChange_index_added: function(ui) {
       
       var h = ui.comp_index.$el.height();
-      ui.index.$el.height(h+moveup)
+      ui.comp_index.$el.height(h+moveup)
       updateStructure(ui,this);
       
     },

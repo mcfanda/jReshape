@@ -17,7 +17,8 @@ wide2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             comp_colstorows = list(
                 list(label="long_y", vars=list())),
             comp_index = list(
-                list(var="index1", levels=0)), ...) {
+                list(var="index1", levels=0)),
+            comp_covs = NULL, ...) {
 
             super$initialize(
                 package="jReshape",
@@ -90,6 +91,9 @@ wide2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                         jmvcore::OptionInteger$new(
                             "levels",
                             NULL))))
+            private$..comp_covs <- jmvcore::OptionVariables$new(
+                "comp_covs",
+                comp_covs)
 
             self$.addOption(private$..mode)
             self$.addOption(private$..sim_colstorows)
@@ -101,6 +105,7 @@ wide2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..toggle)
             self$.addOption(private$..comp_colstorows)
             self$.addOption(private$..comp_index)
+            self$.addOption(private$..comp_covs)
         }),
     active = list(
         mode = function() private$..mode$value,
@@ -112,7 +117,8 @@ wide2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         create = function() private$..create$value,
         toggle = function() private$..toggle$value,
         comp_colstorows = function() private$..comp_colstorows$value,
-        comp_index = function() private$..comp_index$value),
+        comp_index = function() private$..comp_index$value,
+        comp_covs = function() private$..comp_covs$value),
     private = list(
         ..mode = NA,
         ..sim_colstorows = NA,
@@ -123,7 +129,8 @@ wide2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..create = NA,
         ..toggle = NA,
         ..comp_colstorows = NA,
-        ..comp_index = NA)
+        ..comp_index = NA,
+        ..comp_covs = NA)
 )
 
 wide2longResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -164,10 +171,6 @@ wide2longResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 name="features",
                 title="Repeated measures levels",
                 columns=list(
-                    list(
-                        `name`="Var1", 
-                        `title`="rmlevels", 
-                        `type`="text"),
                     list(
                         `name`="Freq", 
                         `title`="Freq", 
@@ -217,6 +220,7 @@ wide2longBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param toggle .
 #' @param comp_colstorows .
 #' @param comp_index .
+#' @param comp_covs .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$help} \tab \tab \tab \tab \tab a html \cr
@@ -245,18 +249,21 @@ wide2long <- function(
     comp_colstorows = list(
                 list(label="long_y", vars=list())),
     comp_index = list(
-                list(var="index1", levels=0))) {
+                list(var="index1", levels=0)),
+    comp_covs) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("wide2long requires jmvcore to be installed (restart may be required)")
 
     if ( ! missing(sim_colstorows)) sim_colstorows <- jmvcore::resolveQuo(jmvcore::enquo(sim_colstorows))
     if ( ! missing(sim_covs)) sim_covs <- jmvcore::resolveQuo(jmvcore::enquo(sim_covs))
+    if ( ! missing(comp_covs)) comp_covs <- jmvcore::resolveQuo(jmvcore::enquo(comp_covs))
     if (missing(data))
         data <- jmvcore::marshalData(
             parent.frame(),
             `if`( ! missing(sim_colstorows), sim_colstorows, NULL),
-            `if`( ! missing(sim_covs), sim_covs, NULL))
+            `if`( ! missing(sim_covs), sim_covs, NULL),
+            `if`( ! missing(comp_covs), comp_covs, NULL))
 
 
     options <- wide2longOptions$new(
@@ -269,7 +276,8 @@ wide2long <- function(
         create = create,
         toggle = toggle,
         comp_colstorows = comp_colstorows,
-        comp_index = comp_index)
+        comp_index = comp_index,
+        comp_covs = comp_covs)
 
     analysis <- wide2longClass$new(
         options = options,

@@ -32,7 +32,6 @@ children:
                    - type: TargetLayoutBox
                      label: Non-varying variables
                      stretchFactor: 1
-                     
                      children:
                        - type: VariablesListBox
                          name: sim_covs
@@ -88,6 +87,14 @@ children:
                                isTarget: true
                                height: auto
                                ghostText: drag columns to rows variables here
+                   - type: TargetLayoutBox
+                     label: Non-varying variables
+                     stretchFactor: 1
+                     children:
+                       - type: VariablesListBox
+                         name: comp_covs
+                         isTarget: true
+
                - type: CollapseBox
                  label: Index Variables
                  collapsed: true
@@ -120,6 +127,7 @@ children:
                                  label: N levels
                                  template:
                                    type: TextBox
+                                   format: number
                                  stretchFactor:  1.20
  - type: LayoutBox
    margin: large

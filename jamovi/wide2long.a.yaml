@@ -78,5 +78,8 @@ options:
             - name: levels
               type: Integer
 
+    - name: comp_covs
+      title: Non-varying variables
+      type: Variables
 
 ...

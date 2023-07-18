@@ -26,9 +26,6 @@ items:
       title:  Repeated measures levels
       type: Table
       columns:
-                    - name: Var1
-                      title: "rmlevels"
-                      type: text
                     - name: Freq
                       title: "Freq"
                       type: number
