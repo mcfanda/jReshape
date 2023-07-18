@@ -1,6 +1,6 @@
 ---
-name:  simple2long
-title: "Wide to Long format"
+name:  wide2long
+title: "Wide to Long"
 jrs:   '1.1'
 
 items:

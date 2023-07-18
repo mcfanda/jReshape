@@ -1,6 +1,6 @@
 ---
-name:  simple2long
-title: "Wide to Long format (simple)"
+name:  wide2long
+title: "Wide to Long"
 menuGroup: jReshape
 version: '1.0.0'
 jas: '1.2'
@@ -10,14 +10,14 @@ options:
       type: Data
 
     - name: mode
-      title: Analysis Mode
+      title: "Mode:"
       type: List
       options:
-            - name: mode1
-              title: Mode 1
-            - name: mode2
-              title: Mode 2
-      default: mode1
+            - name: simple
+              title: Simple
+            - name: complex
+              title: Complex
+      default: simple
 
     - name: sim_colstorows
       title: Columns to rows
@@ -38,11 +38,6 @@ options:
       type: String
       default: "y"
 
-
-    - name: open
-      title: Open the dataset
-      type: Bool
-      default: true
     - name: button
       type: String
       hidden: true      

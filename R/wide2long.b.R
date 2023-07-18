@@ -1,7 +1,7 @@
 
-simple2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
-    "simple2longClass",
-    inherit = simple2longBase,
+wide2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
+    "wide2longClass",
+    inherit = wide2longBase,
     private = list(
       # this is a list that contains all the SmartTables
       .tables=list(),
@@ -13,9 +13,7 @@ simple2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       .nn=NULL,
       .nv=NULL,
       .init= function() {
-        
-      
-        
+
         jinfo("MODULE: init phase started")
         # set up the coefficients SmartTable
         atable<-SmartTable$new(self$results$info)
