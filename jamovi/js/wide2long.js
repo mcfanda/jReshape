@@ -43,41 +43,7 @@ const events = {
     console.log(newvals)
 
 //     ui.colstorows.setValue(newvals);
-   },
-  
-   sim_colstorows_changed: function(ui) {
-     ui.create.setValue(false);
-   },
-   comp_colstorows_changed: function(ui) {
-     ui.create.setValue(false);
-   },
-   
-   sim_covs_changed: function(ui) {
-     ui.create.setValue(false);
-   },
-   comp_covs_changed: function(ui) {
-     ui.create.setValue(false);
-   },
-
-   sim_index_changed: function(ui) {
-     ui.create.setValue(false);
-   },
-   comp_index_changed: function(ui) {
-     ui.create.setValue(false);
-   },
-   
-   sim_dep_changed: function(ui) {
-     ui.create.setValue(false);
-   },
-   comp_dep_changed: function(ui) {
-     ui.create.setValue(false);
-   },
-   
-   mode_changed: function(ui) {
-     ui.create.setValue(false);
    }
-
-
 };
 
 module.exports = events;

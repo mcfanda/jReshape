@@ -14,7 +14,12 @@ const events = {
      });
      ui.create.setValue(false);
 
-    }
+     let $view=ui.view.$el;
+     
+     $view.mouseover(function () {
+      ui.create.setValue(false);
+     });
+    },
 
 };
 

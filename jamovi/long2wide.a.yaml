@@ -26,10 +26,6 @@ options:
       title: ID Variable
       type: Variable
 
-    - name: open
-      title: Open the dataset
-      type: Bool
-      default: true
     - name: button
       type: String
       hidden: true      

@@ -10,7 +10,6 @@ long2wideOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             covs = NULL,
             index = NULL,
             id = NULL,
-            open = TRUE,
             button = NULL,
             create = FALSE,
             toggle = FALSE, ...) {
@@ -33,10 +32,6 @@ long2wideOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..id <- jmvcore::OptionVariable$new(
                 "id",
                 id)
-            private$..open <- jmvcore::OptionBool$new(
-                "open",
-                open,
-                default=TRUE)
             private$..button <- jmvcore::OptionString$new(
                 "button",
                 button,
@@ -56,7 +51,6 @@ long2wideOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..covs)
             self$.addOption(private$..index)
             self$.addOption(private$..id)
-            self$.addOption(private$..open)
             self$.addOption(private$..button)
             self$.addOption(private$..create)
             self$.addOption(private$..toggle)
@@ -66,7 +60,6 @@ long2wideOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         covs = function() private$..covs$value,
         index = function() private$..index$value,
         id = function() private$..id$value,
-        open = function() private$..open$value,
         button = function() private$..button$value,
         create = function() private$..create$value,
         toggle = function() private$..toggle$value),
@@ -75,7 +68,6 @@ long2wideOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..covs = NA,
         ..index = NA,
         ..id = NA,
-        ..open = NA,
         ..button = NA,
         ..create = NA,
         ..toggle = NA)
@@ -166,7 +158,6 @@ long2wideBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param covs .
 #' @param index .
 #' @param id .
-#' @param open .
 #' @param button .
 #' @param create .
 #' @param toggle .
@@ -191,7 +182,6 @@ long2wide <- function(
     covs,
     index,
     id,
-    open = TRUE,
     button,
     create = FALSE,
     toggle = FALSE) {
@@ -217,7 +207,6 @@ long2wide <- function(
         covs = covs,
         index = index,
         id = id,
-        open = open,
         button = button,
         create = create,
         toggle = toggle)

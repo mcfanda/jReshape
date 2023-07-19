@@ -38,15 +38,6 @@ children:
   - type: LayoutBox
     margin: large
     children:
-      - type: Label
-        label: Names
-        margin: large
-        children: []
-  - type: LayoutBox
-    margin: large
-    children:
-      - type: CheckBox
-        name: open
       - type: CustomControl
         stretchFactor: 3
         name: button
