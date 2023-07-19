@@ -129,7 +129,7 @@ wide2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
     
     .reshape=function() {
       vars<-c(unlist(private$.colstorows),unlist(private$.covs))
-      data<-self$data[,vars]
+      data<-subset(self$data,select=vars)
   
       private$.on<-dim(self$data)[1]
       private$.ov<-dim(self$data)[2]
@@ -139,7 +139,6 @@ wide2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       if (length(colstorows)==1) colstorows<-unlist(colstorows)
 
       indexes<-private$.indexes
-
       id<-"id"
       private$.rdata<-reshape(data,varying = colstorows, v.names=dep,direction="long", timevar = "int.index.")
       private$.rdata<-private$.rdata[order(private$.rdata[[id]]),]

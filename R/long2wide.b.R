@@ -107,7 +107,6 @@ long2wideClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         nl<-lapply(indexes, function(x) levels(data[[x]]))
         wnames<-lapply(deps, function(x) combine(nl,prefix = x))
         wnames<-unlist(wnames)
-        
         private$.nc<-length(wnames)
         
         ## prepare the labs
@@ -173,6 +172,8 @@ long2wideClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         rownames(private$.rdata)<-NULL
         
         private$.rdata<-private$.rdata[rowSums(is.na(private$.rdata))<(ncol(private$.rdata)),]
+        .names<-unlist(c(self$options$id,self$options$covs,wnames))
+        private$.rdata<-private$.rdata[,.names]
         ## set the new variables labels,
         attr(private$.rdata,"variable.labels")<-labs
        
@@ -188,7 +189,7 @@ long2wideClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
           s<-strsplit(x,":",fixed = T)[[1]]
           list(var=s[[1]],lab=s[[2]])
         })
-        
+        tab
       },
       .showdata=function() {
         savedata(self,private$.rdata)

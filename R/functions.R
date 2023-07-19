@@ -1,4 +1,4 @@
-combine <- function(..., prefix = "", sep = ".",sep0=".") {
+combine <- function(..., prefix = "", sep = "_",sep0=".") {
   paste0(paste0(prefix,sep0), levels(interaction(..., sep = sep)))
 }
 
