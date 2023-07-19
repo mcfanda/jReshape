@@ -10,8 +10,6 @@ long2wideOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             covs = NULL,
             index = NULL,
             id = NULL,
-            filename = "widedata.omv",
-            open = TRUE,
             button = NULL,
             create = FALSE,
             toggle = FALSE, ...) {
@@ -34,14 +32,6 @@ long2wideOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..id <- jmvcore::OptionVariable$new(
                 "id",
                 id)
-            private$..filename <- jmvcore::OptionString$new(
-                "filename",
-                filename,
-                default="widedata.omv")
-            private$..open <- jmvcore::OptionBool$new(
-                "open",
-                open,
-                default=TRUE)
             private$..button <- jmvcore::OptionString$new(
                 "button",
                 button,
@@ -61,8 +51,6 @@ long2wideOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..covs)
             self$.addOption(private$..index)
             self$.addOption(private$..id)
-            self$.addOption(private$..filename)
-            self$.addOption(private$..open)
             self$.addOption(private$..button)
             self$.addOption(private$..create)
             self$.addOption(private$..toggle)
@@ -72,8 +60,6 @@ long2wideOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         covs = function() private$..covs$value,
         index = function() private$..index$value,
         id = function() private$..id$value,
-        filename = function() private$..filename$value,
-        open = function() private$..open$value,
         button = function() private$..button$value,
         create = function() private$..create$value,
         toggle = function() private$..toggle$value),
@@ -82,8 +68,6 @@ long2wideOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..covs = NA,
         ..index = NA,
         ..id = NA,
-        ..filename = NA,
-        ..open = NA,
         ..button = NA,
         ..create = NA,
         ..toggle = NA)
@@ -94,7 +78,6 @@ long2wideResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     inherit = jmvcore::Group,
     active = list(
         help = function() private$.items[["help"]],
-        save = function() private$.items[["save"]],
         info = function() private$.items[["info"]],
         features = function() private$.items[["features"]],
         showdata = function() private$.items[["showdata"]]),
@@ -109,19 +92,6 @@ long2wideResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="help",
                 title="Getting started"))
-            self$add(jmvcore::Table$new(
-                options=options,
-                name="save",
-                title="The new data file info",
-                columns=list(
-                    list(
-                        `name`="text", 
-                        `title`="", 
-                        `type`="text"),
-                    list(
-                        `name`="info", 
-                        `title`="", 
-                        `type`="text"))))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="info",
@@ -188,15 +158,12 @@ long2wideBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param covs .
 #' @param index .
 #' @param id .
-#' @param filename .
-#' @param open .
 #' @param button .
 #' @param create .
 #' @param toggle .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$help} \tab \tab \tab \tab \tab a html \cr
-#'   \code{results$save} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$info} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$features} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$showdata} \tab \tab \tab \tab \tab a table \cr
@@ -204,9 +171,9 @@ long2wideBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
 #'
-#' \code{results$save$asDF}
+#' \code{results$info$asDF}
 #'
-#' \code{as.data.frame(results$save)}
+#' \code{as.data.frame(results$info)}
 #'
 #' @export
 long2wide <- function(
@@ -215,8 +182,6 @@ long2wide <- function(
     covs,
     index,
     id,
-    filename = "widedata.omv",
-    open = TRUE,
     button,
     create = FALSE,
     toggle = FALSE) {
@@ -242,8 +207,6 @@ long2wide <- function(
         covs = covs,
         index = index,
         id = id,
-        filename = filename,
-        open = open,
         button = button,
         create = create,
         toggle = toggle)

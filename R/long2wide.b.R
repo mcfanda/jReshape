@@ -48,8 +48,6 @@ long2wideClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         # set up the coefficients SmartTable
         atable<-SmartTable$new(self$results$info)
         private$.tables[["info"]]<-atable
-        atable<-SmartTable$new(self$results$save)
-        private$.tables[["save"]]<-atable
         atable<-SmartTable$new(self$results$features)
         private$.tables[["features"]]<-atable
         atable<-SmartTable$new(self$results$showdata)
@@ -72,7 +70,6 @@ long2wideClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         self$results$help$setContent("  ")
         private$.reshape()
         private$.tables[["info"]]$runSource<-private$.infotable
-        private$.tables[["save"]]$runSource<-savedata(self,private$.rdata)
         private$.tables[["features"]]$runSource<-private$.features
         private$.tables[["showdata"]]$runSource<-private$.showdata
         
@@ -110,7 +107,6 @@ long2wideClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         nl<-lapply(indexes, function(x) levels(data[[x]]))
         wnames<-lapply(deps, function(x) combine(nl,prefix = x))
         wnames<-unlist(wnames)
-        
         private$.nc<-length(wnames)
         
         ## prepare the labs
@@ -176,6 +172,8 @@ long2wideClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         rownames(private$.rdata)<-NULL
         
         private$.rdata<-private$.rdata[rowSums(is.na(private$.rdata))<(ncol(private$.rdata)),]
+        .names<-unlist(c(self$options$id,self$options$covs,wnames))
+        private$.rdata<-private$.rdata[,.names]
         ## set the new variables labels,
         attr(private$.rdata,"variable.labels")<-labs
        
@@ -191,10 +189,11 @@ long2wideClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
           s<-strsplit(x,":",fixed = T)[[1]]
           list(var=s[[1]],lab=s[[2]])
         })
-        
+        tab
       },
       .showdata=function() {
-        showdata(private$.rdata)
+        savedata(self,private$.rdata)
+        showdata(self,private$.rdata)
       }
       
       

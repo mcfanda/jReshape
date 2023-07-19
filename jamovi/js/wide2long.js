@@ -13,29 +13,23 @@ const events = {
     
    onChange_index_added: function(ui) {
       
-      var h = ui.index.$el.height();
-      ui.index.$el.height(h+moveup)
+      var h = ui.comp_index.$el.height();
+      ui.comp_index.$el.height(h+moveup)
       updateStructure(ui,this);
       
     },
     onChange_index_removed: function(ui) {
       
-      var h = ui.index.$el.height();
+      var h = ui.comp_index.$el.height();
       if (h>bound)
           ui.index.$el.height(h-movedown)
       updateStructure(ui,this);
       
     },
 
-  
-   colstorows_changed: function(ui) {
-     ui.create.setValue(false);
-     console.log(ui.colstorows.value())
-   },
-   
    onChange_items_changed: function(ui) {
   
-     const newvals=ui.colstorows.value().map((e, i) => { 
+     const newvals=ui.comp_colstorows.value().map((e, i) => { 
        if (e===null) {
             return {label: "long_y"+(i+1), vars: []};
         }
@@ -49,26 +43,7 @@ const events = {
     console.log(newvals)
 
 //     ui.colstorows.setValue(newvals);
-   },
-   covs_changed: function(ui) {
-     ui.create.setValue(false);
-   },
-   index_changed: function(ui) {
-     ui.create.setValue(false);
-   },
-   
-   dep_changed: function(ui) {
-     ui.create.setValue(false);
-   },
-   
-   filename_changed: function(ui) {
-     ui.create.setValue(false);
-   },
-   
-   open_changed: function(ui) {
-     ui.create.setValue(false);
    }
-
 };
 
 module.exports = events;

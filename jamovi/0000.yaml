@@ -1,7 +1,7 @@
 ---
 title: Reshape datasets
 name: jReshape
-version: 0.0.5
+version: 0.1.0
 jms: '1.0'
 authors:
   - Marcello Gallucci
@@ -13,16 +13,11 @@ description: >-
   module offers a simple interface for  simple reshaping, and a more complex
   interface for  more elaborated forms of reshaping.
 analyses:
-  - title: Wide to Long format (simple)
-    name: simple2long
+  - title: Wide to Long
+    name: wide2long
     ns: jReshape
     menuGroup: jReshape
-    menuTitle: Wide to Long format (simple)
-  - title: Wide to Long format (complex)
-    name: complex2long
-    ns: jReshape
-    menuGroup: jReshape
-    menuTitle: Wide to Long format (complex)
+    menuTitle: Wide to Long
   - title: Long to wide
     name: long2wide
     ns: jReshape

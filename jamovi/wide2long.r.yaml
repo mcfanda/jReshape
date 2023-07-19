@@ -1,24 +1,17 @@
 ---
-name:  simple2long
-title: "Wide to Long format"
+name:  wide2long
+title: "Wide to Long"
 jrs:   '1.1'
 
 items:
 
+    - name: desc
+      title: Getting started
+      type: Html
     - name: help
       title: Getting started
       type: Html
 
-    - name: save
-      title: The new data file has been saved as
-      type: Table
-      columns:
-                    - name: text
-                      title: ""
-                      type: text
-                    - name: info
-                      title: ""
-                      type: text
 
     - name: info
       title:  Info Table
@@ -36,9 +29,6 @@ items:
       title:  Repeated measures levels
       type: Table
       columns:
-                    - name: Var1
-                      title: "rmlevels"
-                      type: text
                     - name: Freq
                       title: "Freq"
                       type: number

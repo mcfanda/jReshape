@@ -1,4 +1,7 @@
-HELP_simple2long<-"<div>
+HELP_simple2long<-list()
+HELP_complex2long<-list()
+
+ladd(HELP_simple2long)<-"<div>
               <h2>Getting started</h2>
                With this module, you can transform a dataset from the wide format to the long format. 
                To do this, select the variables (columns) from the original dataset that you want to convert
@@ -14,14 +17,31 @@ HELP_simple2long<-"<div>
                If there are variables whose values should be copied for each row of the same case
                (invariant covariates), you can add them in the <b>Non-varying Variables</b> field.
                <br><br>
-               Once you are ready, provide a file name and select <b>Create</b>.
-               This will produce a CSV file that will be saved in the specified location 
-               (or in the working folder if no path is indicated in the filename).
-               The CSV file can be directly opened in jamovi by the user.
-               <br><br>
-               If you select <b>Open the dataset</b>, jamovi will open it for you.
-
+               Once you are ready, provide a file name and select <b>Reshape</b>.
+               This will produce a new jamovi file.
               </div>"
+
+ladd(HELP_complex2long)<-"<div>
+              <h2>Getting started</h2>
+               With this module, you can transform a dataset from the wide format to the long format. 
+               To do this, select the variables (columns) from the original dataset that you want to convert
+               into different long format variables. For each long format variable that you want to create,
+               define its name and fill the field below it in the <b>New long variable</b> field. 
+               In the new dataset, a variable with the specified name 
+               will be created, containing one row for each column value for each case.
+               <br><br>
+               Additionally,  in the <b>Index Variables</b> tab you can specify the names of
+               the indexes variables, that keep track of the original levels (e.g., conditions or times). 
+               A variable ID will also be created, containing the case ID, which represents the original
+               row number in the wide format.
+               <br><br>
+               If there are variables whose values should be copied for each row of the same case
+               (invariant covariates), you can add them in the <b>Non-varying Variables</b> field.
+               <br><br>
+               Once you are ready, provide a file name and select <b>Reshape</b>.
+               This will produce a new jamovi file.
+              </div>"
+
 
 HELP_long2wide<-list()
 

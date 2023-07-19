@@ -1,0 +1,85 @@
+---
+name:  wide2long
+title: "Wide to Long"
+menuGroup: jReshape
+version: '1.0.0'
+jas: '1.2'
+completeWhenFilled: true
+options:
+    - name: data
+      type: Data
+
+    - name: mode
+      title: "Mode:"
+      type: List
+      options:
+            - name: simple
+              title: Simple
+            - name: complex
+              title: Complex
+      default: simple
+
+    - name: sim_colstorows
+      title: Columns to rows
+      type: Variables
+
+    - name: sim_covs
+      title: Non-varying variables
+      type: Variables
+
+
+    - name:  sim_index
+      title: Repeated measures levels (time var)
+      type: String
+      default: "index"
+      
+    - name: sim_dep
+      title: Target variable  
+      type: String
+      default: "y"
+
+    - name: button
+      type: String
+      hidden: true      
+    - name: create
+      type: Bool
+      default: false
+      hidden: true      
+    - name: toggle
+      type: Bool
+      default: false
+      hidden: true     
+
+
+    - name: comp_colstorows
+      type: Array
+      default:
+        - label: long_y
+          vars: []
+      template:
+          type: Group
+          elements:
+            - name: label
+              type: String
+            - name: vars
+              type: Variables
+
+    - name: comp_index
+      title: Index variables
+      type: Array
+      default:
+        - var: index1
+          levels: 0
+      template:
+          type: Group
+          elements:
+            - name: var
+              type: String
+            - name: levels
+              type: Integer
+
+    - name: comp_covs
+      title: Non-varying variables
+      type: Variables
+
+...
