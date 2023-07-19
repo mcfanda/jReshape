@@ -43,25 +43,30 @@ wide2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         private$.covs<-self$options$sim_covs
         
       }
+        if (self$options$mode=="simple")
+                   self$results$desc$setContent(HELP_simple2long[[1]])
+        if (self$options$mode=="complex")
+                   self$results$desc$setContent(HELP_complex2long[[1]])
+
 
       if (!is.something(private$.indexes_name)) private$.indexes_name<-"index"
       
       test<-any(unlist(lapply(private$.deps,function(x) !is.something(x))))
       if (test)  {
-        private$.message<-"<h1>Help</h1><div>Please give a name to the long format target variable</div>"
+        private$.message<-"<h2>Help</h2><div>Please give a name to the long format target variable</div>"
         private$.notrun=TRUE
         return()
       }  
       test<-any(unlist(lapply(private$.colstorows,function(x) !is.something(x))))
       if (test) {
-        private$.message<-"<h1>Help</h1><div>Please fill in the columns variables that will go in the long format target variables</div>"
+        private$.message<-"<h2>Help</h2><div>Please fill in the columns variables that will go in the long format target variables</div>"
         private$.notrun=TRUE
         return()
       }
       ns<-unlist(lapply(private$.colstorows, function(x) length(x)))
       if (length(private$.deps)>1)
         if (var(ns)!=0)  {
-          private$.message<-"<h1>Help</h1><div>Levels should be the same across target variables. 
+          private$.message<-"<h2>Help</h2><div>Levels should be the same across target variables. 
                               </div>"
           private$.notrun=TRUE
           return()
@@ -71,7 +76,7 @@ wide2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       ref<-ns[1]
       if (length(private$.indexes)>1) {
         if (tot!=ref) {
-          private$.message<-paste("<h1>Help</h1><div>The combination (product) of the index variables levels should be equal
+          private$.message<-paste("<h2>Help</h2><div>The combination (product) of the index variables levels should be equal
                             to the number of levels defined in the `Columns to rows` setup.
                               </div>")
           private$.notrun=TRUE
@@ -79,7 +84,7 @@ wide2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         }
       }
       if (length(private$.indexes)==1 &  tot!=ref & tot>0) {
-        private$.message<-paste("<h1>Help</h1><div>Index variable",private$.indexes[[1]]$var,"defined levels are ignored. The number of 
+        private$.message<-paste("<h2>Help</h2><div>Index variable",private$.indexes[[1]]$var,"defined levels are ignored. The number of 
                                Columns to rows variables is used instead.
                               </div>")
       }
