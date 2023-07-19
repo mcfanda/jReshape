@@ -27,11 +27,6 @@ const events = {
       
     },
 
-  
-   colstorows_changed: function(ui) {
-     ui.create.setValue(false);
-   },
-   
    onChange_items_changed: function(ui) {
   
      const newvals=ui.comp_colstorows.value().map((e, i) => { 
@@ -49,24 +44,39 @@ const events = {
 
 //     ui.colstorows.setValue(newvals);
    },
-   covs_changed: function(ui) {
+  
+   sim_colstorows_changed: function(ui) {
      ui.create.setValue(false);
    },
-   index_changed: function(ui) {
-     ui.create.setValue(false);
-   },
-   
-   dep_changed: function(ui) {
+   comp_colstorows_changed: function(ui) {
      ui.create.setValue(false);
    },
    
-   filename_changed: function(ui) {
+   sim_covs_changed: function(ui) {
+     ui.create.setValue(false);
+   },
+   comp_covs_changed: function(ui) {
+     ui.create.setValue(false);
+   },
+
+   sim_index_changed: function(ui) {
+     ui.create.setValue(false);
+   },
+   comp_index_changed: function(ui) {
      ui.create.setValue(false);
    },
    
-   open_changed: function(ui) {
+   sim_dep_changed: function(ui) {
+     ui.create.setValue(false);
+   },
+   comp_dep_changed: function(ui) {
+     ui.create.setValue(false);
+   },
+   
+   mode_changed: function(ui) {
      ui.create.setValue(false);
    }
+
 
 };
 

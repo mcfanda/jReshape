@@ -120,7 +120,7 @@ wide2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       ladd(atab)<-list(text="New N",var=private$.nn)
       ladd(atab)<-list(text="# of original variables",var=private$.ov)
       ladd(atab)<-list(text="# of new varariables",var=private$.nv)
-      ladd(atab)<-list(text="Cols to rows",var=length(private$.colstorows))
+      ladd(atab)<-list(text="Cols to rows",var=length(unlist(private$.colstorows)))
       ladd(atab)<-list(text="Target variables",var=private$.ndep)
       ladd(atab)<-list(text="Fixed variables",var=length(private$.covs))
       
@@ -128,19 +128,20 @@ wide2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
     },
     
     .reshape=function() {
-      
+      vars<-c(unlist(private$.colstorows),unlist(private$.covs))
+      data<-self$data[,vars]
+  
       private$.on<-dim(self$data)[1]
       private$.ov<-dim(self$data)[2]
       
       dep<-unlist(private$.deps)
       colstorows<-private$.colstorows
       if (length(colstorows)==1) colstorows<-unlist(colstorows)
-      mark(colstorows)
-      
+
       indexes<-private$.indexes
 
       id<-"id"
-      private$.rdata<-reshape(self$data,varying = colstorows, v.names=dep,direction="long", timevar = "int.index.")
+      private$.rdata<-reshape(data,varying = colstorows, v.names=dep,direction="long", timevar = "int.index.")
       private$.rdata<-private$.rdata[order(private$.rdata[[id]]),]
 
       if (length(indexes)>1) {
@@ -167,6 +168,7 @@ wide2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       tab
     },
     .showdata=function() {
+      savedata(self,private$.rdata)
       showdata(self,private$.rdata)
       
     }

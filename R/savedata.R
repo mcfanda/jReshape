@@ -11,10 +11,8 @@ savedata<-function(obj,data) {
   atab<-list(list(text="Pathname:",info=afilename))
   
   where<-Sys.info()["sysname"]
-  mark("we are in",where)
-  if (obj$options$open) {
-    mark("open file",afilename)
-    switch (where,
+
+  switch (where,
             Windows = {
               dirs<-dir("C://Program Files")
               w<-grep("jamovi",dirs,fixed=T)
@@ -33,7 +31,7 @@ savedata<-function(obj,data) {
               system2(cmd,args=arg,stderr = T,stdout = T)     
             }
     ) # end of switch
-  }
+  
   
   return(atab)
   

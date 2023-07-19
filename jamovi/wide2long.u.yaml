@@ -65,8 +65,8 @@ children:
                          height: large
                          addButton: Add new long variable
                          events:
-                           listItemAdded: './complex2long::onChange_items_changed'
-                           listItemRemoved: './complex2long::onChange_items_changed'
+                           listItemAdded: './wide2long::onChange_items_changed'
+                           listItemRemoved: './wide2long::onChange_items_changed'
                          templateName: linreg-block-template
                          template:
                            type: LayoutBox
@@ -113,8 +113,8 @@ children:
                              addButton: Add a index variable
                              height: large
                              events:
-                               listItemAdded: './complex2long::onChange_index_added'
-                               listItemRemoved: './complex2long::onChange_index_removed'
+                               listItemAdded: './wide2long::onChange_index_added'
+                               listItemRemoved: './wide2long::onChange_index_removed'
                              showColumnHeaders: true
                              columns:
                                - name: var
