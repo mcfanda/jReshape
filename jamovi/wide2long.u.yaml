@@ -40,7 +40,7 @@ children:
             margin: large
             children:
                    - type: Label
-                     label: Names of new variables
+                     label: New variables
                      margin: large
                      children:
                        - type: TextBox

@@ -10,13 +10,13 @@ options:
       type: Data
 
     - name: mode
-      title: "Mode:"
+      title: "Mode"
       type: List
       options:
             - name: simple
-              title: Simple
+              title: Basic
             - name: complex
-              title: Complex
+              title: Advanced
       default: simple
 
     - name: sim_colstorows
