@@ -18,7 +18,7 @@ ladd(HELP_simple2long)<-"<div>
                (invariant covariates), you can add them in the <b>Non-varying Variables</b> field.
                <br><br>
                Once you are ready, provide a file name and select <b>Reshape</b>.
-               This will produce a new jamovi file.
+               This opens a new jamovi file in a new window.
               </div>"
 
 ladd(HELP_complex2long)<-"<div>
@@ -39,7 +39,7 @@ ladd(HELP_complex2long)<-"<div>
                (invariant covariates), you can add them in the <b>Non-varying Variables</b> field.
                <br><br>
                Once you are ready, provide a file name and select <b>Reshape</b>.
-               This will produce a new jamovi file.
+               This opens a new jamovi file in a new window.
               </div>"
 
 
