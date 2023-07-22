@@ -89,7 +89,9 @@ long2wideClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       },
       .reshape=function() {
         
-        data<-self$data
+        vars<-c(self$options$id,self$options$rowstocols,self$options$index,self$options$covs)
+        data<-subset(self$data,select=vars)
+        
         private$.on<-dim(data)[1]
         private$.ov<-dim(data)[2]
 
@@ -160,11 +162,11 @@ long2wideClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
         data<-merge(data,alllevels,by=c("id.","int.index."),all.y = T)
         ## reshape
-
         private$.rdata<-reshape(data,
                                 v.names=deps,
                                 direction="wide", 
                                 timevar = "int.index.",
+                                idvar = "id.",
                                 drop=indexes)
         
         private$.rdata<-private$.rdata[order(private$.rdata$id.),]
@@ -176,7 +178,6 @@ long2wideClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         private$.rdata<-private$.rdata[,.names]
         ## set the new variables labels,
         attr(private$.rdata,"variable.labels")<-labs
-       
         ## gather some info
         private$.on<-dim(self$data)[1]
         private$.ov<-dim(self$data)[2]
