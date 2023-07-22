@@ -109,7 +109,12 @@ wide2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       jinfo("MODULE: run phase started")
 
       self$results$help$setContent(" ")      
-      if (is.something(private$.message)) self$results$help$setContent(private$.message)      
+      if (is.something(private$.message)) {
+        self$results$help$setContent(private$.message)      
+        self$results$help$setVisible(TRUE)
+      } else
+        self$results$help$setVisible(FALSE)
+      
       if (private$.notrun)    return()
 
       private$.reshape()
