@@ -1,8 +1,7 @@
 savedata<-function(obj,data) {
   
   if (!obj$options$create) {
-    atab<-list(list(text="Action:",info="Press 'Create' when ready to save the dataset"))
-    return(atab)
+    return()
   }
 
   afilename<-tempfile(fileext = ".omv")

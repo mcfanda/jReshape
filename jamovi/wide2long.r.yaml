@@ -11,12 +11,17 @@ items:
     - name: help
       title: Getting started
       type: Html
+      visible: false
 
 
     - name: info
       title:  Info Table
       type: Table
       clearWith:
+         - sim_colstorows
+         - comp_colstorows
+         - sim_index
+         - comp_index
       columns:
                     - name: text
                       title: "Info"
@@ -28,6 +33,11 @@ items:
     - name: features
       title:  Repeated measures levels
       type: Table
+      clearWith:
+         - sim_colstorows
+         - comp_colstorows
+         - sim_index
+         - comp_index
       columns:
                     - name: Freq
                       title: "Freq"
@@ -37,6 +47,9 @@ items:
     - name:  showdata
       title: Data Preview
       type:  Table
+      clearWith: 
+        - create
+        - button
       columns:
                     - name: row
                       title: "Rows"

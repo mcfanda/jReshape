@@ -4,19 +4,19 @@ title: "Wide to Long"
 menuGroup: jReshape
 version: '1.0.0'
 jas: '1.2'
-completeWhenFilled: true
+
 options:
     - name: data
       type: Data
 
     - name: mode
-      title: "Mode:"
+      title: "Mode"
       type: List
       options:
             - name: simple
-              title: Simple
+              title: Basic
             - name: complex
-              title: Complex
+              title: Advanced
       default: simple
 
     - name: sim_colstorows

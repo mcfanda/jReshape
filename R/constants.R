@@ -17,9 +17,9 @@ ladd(HELP_simple2long)<-"<div>
                If there are variables whose values should be copied for each row of the same case
                (invariant covariates), you can add them in the <b>Non-varying Variables</b> field.
                <br><br>
-               Once you are ready, provide a file name and select <b>Reshape</b>.
-               This opens a new jamovi file in a new window.
+               Once you are ready, click on the <b>Reshape</b> button to open a new file with the reshaped data.
               </div>"
+
 
 ladd(HELP_complex2long)<-"<div>
               <h2>Getting started</h2>
@@ -38,8 +38,7 @@ ladd(HELP_complex2long)<-"<div>
                If there are variables whose values should be copied for each row of the same case
                (invariant covariates), you can add them in the <b>Non-varying Variables</b> field.
                <br><br>
-               Once you are ready, provide a file name and select <b>Reshape</b>.
-               This opens a new jamovi file in a new window.
+               Once you are ready, click on the <b>Reshape</b> button to open a new file with the reshaped data.
               </div>"
 
 
@@ -67,4 +66,10 @@ ladd(HELP_long2wide)<-"
                <div>
                Please insert in the <b>ID</b> field the variable identifying the case ID. For each ID value, a row
                of data is created in the wide format file.
+              </div>"
+
+ladd(HELP_long2wide)<-"
+               <h2>Getting started</h2>
+               <div>
+               Click on the <b>Reshape</b> to create a new file with the reshaped variables.
               </div>"

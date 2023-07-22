@@ -23,7 +23,6 @@ wide2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
     .init= function() {
       
       jinfo("MODULE: init phase started")
-
       if (self$options$mode=="complex") {
         private$.deps<-lapply(self$options$comp_colstorows,function(x) x$label)
         private$.colstorows<-lapply(self$options$comp_colstorows,function(x) x$vars)
@@ -44,7 +43,7 @@ wide2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         
       }
         if (self$options$mode=="simple")
-                   self$results$desc$setContent(HELP_simple2long[[1]])
+                   self$results$help$setContent(HELP_simple2long[[1]])
         if (self$options$mode=="complex")
                    self$results$desc$setContent(HELP_complex2long[[1]])
 
@@ -53,21 +52,28 @@ wide2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       
       test<-any(unlist(lapply(private$.deps,function(x) !is.something(x))))
       if (test)  {
-        private$.message<-"<h2>Help</h2><div>Please give a name to the long format target variable</div>"
+        msg<-"<h2>Help</h2><div>Please give a name to the long format target variable</div>"
+        self$results$help$setVisible(TRUE)
+        self$results$help$setContent(msg)
         private$.notrun=TRUE
         return()
       }  
       test<-any(unlist(lapply(private$.colstorows,function(x) !is.something(x))))
       if (test) {
-        private$.message<-"<h2>Help</h2><div>Please fill in the columns variables that will go in the long format target variables</div>"
+        msg<-"<h2>Help</h2><div>Please fill in the columns variables that will go in the long format target variables</div>"
+        self$results$help$setVisible(TRUE)
+        self$results$help$setContent(msg)
         private$.notrun=TRUE
         return()
       }
       ns<-unlist(lapply(private$.colstorows, function(x) length(x)))
       if (length(private$.deps)>1)
         if (var(ns)!=0)  {
-          private$.message<-"<h2>Help</h2><div>Levels should be the same across target variables. 
+          msg<-"<h2>Help</h2><div>Levels should be the same across target variables. 
                               </div>"
+          self$results$help$setVisible(TRUE)
+          self$results$help$setContent(msg)
+          
           private$.notrun=TRUE
           return()
         }  
@@ -76,25 +82,36 @@ wide2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       ref<-ns[1]
       if (length(private$.indexes)>1) {
         if (tot!=ref) {
-          private$.message<-paste("<h2>Help</h2><div>The combination (product) of the index variables levels should be equal
+          msg<-paste("<h2>Help</h2><div>The combination (product) of the index variables levels should be equal
                             to the number of levels defined in the `Columns to rows` setup.
                               </div>")
+          self$results$help$setVisible(TRUE)
+          self$results$help$setContent(msg)
+          
           private$.notrun=TRUE
           return()
         }
       }
       if (length(private$.indexes)==1 &  tot!=ref & tot>0) {
-        private$.message<-paste("<h2>Help</h2><div>Index variable",private$.indexes[[1]]$var,"defined levels are ignored. The number of 
+        self$results$help$setVisible(TRUE)
+        msg<-paste("<h2>Help</h2><div>Index variable",private$.indexes[[1]]$var,"defined levels are ignored. The number of 
                                Columns to rows variables is used instead.
                               </div>")
+        self$results$help$setContent(msg)
       }
       
       jinfo("MODULE: init check phase ended")
       # set up the coefficients SmartTable
       atable<-SmartTable$new(self$results$info)
+      atable$initSource<-private$.infotable
       private$.tables[["info"]]<-atable
       atable<-SmartTable$new(self$results$features)
-      atable$expandOnRun<-TRUE
+      atable$expandOnInit<-TRUE
+      kcol<-length(private$.deps)+length(private$.indexes)+1
+      krow<-max(ns)
+      m<-as.data.frame(matrix(".",nrow = krow,ncol = kcol))
+      names(m)<-c(private$.indexes_name,private$.deps, "Freq")
+      atable$initSource<-m
       private$.tables[["features"]]<-atable
       atable<-SmartTable$new(self$results$showdata)
       atable$expandOnRun<-TRUE
@@ -108,8 +125,6 @@ wide2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       
       jinfo("MODULE: run phase started")
 
-      self$results$help$setContent(" ")      
-      if (is.something(private$.message)) self$results$help$setContent(private$.message)      
       if (private$.notrun)    return()
 
       private$.reshape()
@@ -118,6 +133,8 @@ wide2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       private$.tables[["showdata"]]$runSource<-private$.showdata
       lapply(private$.tables,function(x) x$runTable())          
       
+      if (self$options$create)
+            savedata(self,private$.rdata)
     },
     .infotable=function() {
       atab<-list()
@@ -172,9 +189,7 @@ wide2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       tab
     },
     .showdata=function() {
-      savedata(self,private$.rdata)
       showdata(self,private$.rdata)
-      
     }
     
     
