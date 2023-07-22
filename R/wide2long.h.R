@@ -156,12 +156,17 @@ wide2longResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="help",
-                title="Getting started"))
+                title="Getting started",
+                visible=FALSE))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="info",
                 title="Info Table",
-                clearWith=NULL,
+                clearWith=list(
+                    "sim_colstorows",
+                    "comp_colstorows",
+                    "sim_index",
+                    "comp_index"),
                 columns=list(
                     list(
                         `name`="text", 
@@ -175,6 +180,11 @@ wide2longResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="features",
                 title="Repeated measures levels",
+                clearWith=list(
+                    "sim_colstorows",
+                    "comp_colstorows",
+                    "sim_index",
+                    "comp_index"),
                 columns=list(
                     list(
                         `name`="Freq", 
@@ -184,6 +194,9 @@ wide2longResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="showdata",
                 title="Data Preview",
+                clearWith=list(
+                    "create",
+                    "button"),
                 columns=list(
                     list(
                         `name`="row", 
@@ -206,7 +219,7 @@ wide2longBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 analysisId = analysisId,
                 revision = revision,
                 pause = NULL,
-                completeWhenFilled = TRUE,
+                completeWhenFilled = FALSE,
                 requiresMissings = FALSE,
                 weightsSupport = 'auto')
         }))

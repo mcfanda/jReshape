@@ -19,6 +19,9 @@ long2wideClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       .notrun=FALSE,
       .init= function() {
 
+        jinfo("MODULE: init phase started")
+        
+        self$results$help$setContent("  ")
         
         test<-(!is.something(self$options$rowstocols))
         if (test) {
@@ -41,14 +44,16 @@ long2wideClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
           private$.notrun=TRUE
           return()
         }
+  
+
+        self$results$help$setContent(HELP_long2wide[[4]])
         
-
-
-        jinfo("MODULE: init phase started")
         # set up the coefficients SmartTable
         atable<-SmartTable$new(self$results$info)
+        atable$initSource<-private$.infotable
         private$.tables[["info"]]<-atable
         atable<-SmartTable$new(self$results$features)
+        atable$initSource<-private$.features
         private$.tables[["features"]]<-atable
         atable<-SmartTable$new(self$results$showdata)
         atable$expandOnRun<-TRUE
@@ -67,13 +72,15 @@ long2wideClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         if (private$.notrun)
           return()
         
-        self$results$help$setContent("  ")
         private$.reshape()
         private$.tables[["info"]]$runSource<-private$.infotable
         private$.tables[["features"]]$runSource<-private$.features
         private$.tables[["showdata"]]$runSource<-private$.showdata
         
         lapply(private$.tables,function(x) x$runTable())          
+        
+        if (self$options$create)
+          savedata(self,private$.rdata)
         
         },
       .infotable=function() {
@@ -193,7 +200,6 @@ long2wideClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         tab
       },
       .showdata=function() {
-        savedata(self,private$.rdata)
         showdata(self,private$.rdata)
       }
       
