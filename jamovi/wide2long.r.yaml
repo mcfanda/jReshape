@@ -5,8 +5,13 @@ jrs:   '1.1'
 
 items:
 
-    - name: help
+    - name: desc
       title: Getting started
+      type: Html
+      clearWith:
+        - mode
+        
+    - name: help
       type: Html
       visible: false
 

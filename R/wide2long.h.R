@@ -137,6 +137,7 @@ wide2longResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "wide2longResults",
     inherit = jmvcore::Group,
     active = list(
+        desc = function() private$.items[["desc"]],
         help = function() private$.items[["help"]],
         info = function() private$.items[["info"]],
         features = function() private$.items[["features"]],
@@ -150,8 +151,13 @@ wide2longResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 title="Wide to Long")
             self$add(jmvcore::Html$new(
                 options=options,
-                name="help",
+                name="desc",
                 title="Getting started",
+                clearWith=list(
+                    "mode")))
+            self$add(jmvcore::Html$new(
+                options=options,
+                name="help",
                 visible=FALSE))
             self$add(jmvcore::Table$new(
                 options=options,
@@ -242,6 +248,7 @@ wide2longBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param comp_covs .
 #' @return A results object containing:
 #' \tabular{llllll}{
+#'   \code{results$desc} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$help} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$info} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$features} \tab \tab \tab \tab \tab a table \cr

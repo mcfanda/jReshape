@@ -15,7 +15,7 @@ const events = {
      ui.create.setValue(false);
 
      let $view=ui.view.$el;
-     
+     console.log(ui.view),
      $view.mouseover(function () {
       ui.create.setValue(false);
      });
