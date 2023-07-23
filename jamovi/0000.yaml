@@ -5,6 +5,7 @@ version: 0.1.2
 jms: '1.0'
 authors:
   - Marcello Gallucci
+  - Jonathon Love
 maintainer: The package maintainer <yourself@somewhere.net>
 date: '2024-01-01'
 type: R
