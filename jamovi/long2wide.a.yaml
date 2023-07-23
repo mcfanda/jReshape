@@ -4,7 +4,7 @@ title: "Long to wide"
 menuGroup: jReshape
 version: '1.0.0'
 jas: '1.2'
-completeWhenFilled: true
+
 options:
     - name: data
       type: Data

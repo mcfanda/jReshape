@@ -96,7 +96,11 @@ long2wideResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="info",
                 title="Info Table",
-                clearWith=NULL,
+                clearWith=list(
+                    "rowstocols",
+                    "index",
+                    "id",
+                    "covs"),
                 columns=list(
                     list(
                         `name`="text", 
@@ -110,6 +114,11 @@ long2wideResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="features",
                 title="New created variables",
+                clearWith=list(
+                    "rowstocols",
+                    "index",
+                    "id",
+                    "covs"),
                 columns=list(
                     list(
                         `name`="var", 
@@ -123,6 +132,11 @@ long2wideResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 options=options,
                 name="showdata",
                 title="Data Preview",
+                clearWith=list(
+                    "rowstocols",
+                    "index",
+                    "id",
+                    "covs"),
                 columns=list(
                     list(
                         `name`="row", 
@@ -145,7 +159,7 @@ long2wideBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 analysisId = analysisId,
                 revision = revision,
                 pause = NULL,
-                completeWhenFilled = TRUE,
+                completeWhenFilled = FALSE,
                 requiresMissings = FALSE,
                 weightsSupport = 'auto')
         }))
