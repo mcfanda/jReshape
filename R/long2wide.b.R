@@ -15,6 +15,7 @@ long2wideClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       .nn=NULL,
       .nv=NULL,
       .nc=NULL,
+      .wnames=NULL,
       .labs=NULL,
       .notrun=FALSE,
       .init= function() {
@@ -47,24 +48,45 @@ long2wideClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
   
 
         self$results$help$setContent(HELP_long2wide[[4]])
+
+        # check some info from the data 
+        indexes<-self$options$index
         
+        nl<-lapply(indexes, function(x) levels(self$data[[x]]))
+        wnames<-lapply(self$options$rowstocols, function(x) combine(nl,prefix = x))
+        private$.wnames<-unlist(wnames)
+        labs<-lapply(indexes, function(x) paste(x,levels(self$data[[x]]),sep="="))
+        private$.labs<-paste0(levels(interaction(labs, sep = " ")))
+
         # set up the coefficients SmartTable
         atable<-SmartTable$new(self$results$info)
         atable$initSource<-private$.infotable
         private$.tables[["info"]]<-atable
+      
         atable<-SmartTable$new(self$results$features)
         atable$initSource<-private$.features
         private$.tables[["features"]]<-atable
+
         atable<-SmartTable$new(self$results$showdata)
-        atable$expandOnRun<-TRUE
+        atable$expandOnInit<-TRUE
         atable$expandFrom<-2
+        .names<-unlist(c(self$options$id,private$.wnames,self$options$covs))
+        tab<-as.data.frame(matrix(".",ncol = length(.names),nrow = 1))
+        names(tab)<-.names
+        atable$initSource<-tab
         private$.tables[["showdata"]]<-atable
-        
-        
         lapply(private$.tables,function(x) x$initTable())          
         
         
       },
+      .postInit = function() {
+        if ( ! is.null(self$results$showdata$state)) {
+          atable <- private$.tables[["showdata"]]
+          atable$initSource <- private$.showdata
+          atable$initTable()
+         }
+        },
+
       .run = function() {
     
         jinfo("MODULE: run phase started")
@@ -193,14 +215,17 @@ long2wideClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         
       },
       .features=function() {
-        tab<-lapply(private$.labs, function(x) {
-          s<-strsplit(x,":",fixed = T)[[1]]
-          list(var=s[[1]],lab=s[[2]])
-        })
+        tab<-as.data.frame(cbind(private$.wnames,private$.labs))
+        names(tab)<-c("var","lab")
         tab
       },
       .showdata=function() {
-        showdata(self,private$.rdata)
+        data <- self$results$showdata$state
+        if (is.null(data)) {
+          data <- showdata(self,private$.rdata)
+          self$results$showdata$setState(data)
+        }
+        data
       }
       
       

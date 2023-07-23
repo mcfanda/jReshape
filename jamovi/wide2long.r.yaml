@@ -5,9 +5,6 @@ jrs:   '1.1'
 
 items:
 
-    - name: desc
-      title: Getting started
-      type: Html
     - name: help
       title: Getting started
       type: Html
@@ -47,9 +44,15 @@ items:
     - name:  showdata
       title: Data Preview
       type:  Table
-      clearWith: 
-        - create
-        - button
+      clearWith:
+         - mode
+         - sim_colstorows
+         - sim_covs
+         - sim_index
+         - sim_dep
+         - comp_colstorows
+         - comp_index
+         - comp_covs
       columns:
                     - name: row
                       title: "Rows"

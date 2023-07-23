@@ -105,6 +105,7 @@ wide2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       atable<-SmartTable$new(self$results$info)
       atable$initSource<-private$.infotable
       private$.tables[["info"]]<-atable
+      
       atable<-SmartTable$new(self$results$features)
       atable$expandOnInit<-TRUE
       kcol<-length(private$.deps)+length(private$.indexes)+1
@@ -113,13 +114,27 @@ wide2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       names(m)<-c(private$.indexes_name,private$.deps, "Freq")
       atable$initSource<-m
       private$.tables[["features"]]<-atable
+
       atable<-SmartTable$new(self$results$showdata)
-      atable$expandOnRun<-TRUE
-      atable$expandFrom<-2
+      atable$expandOnInit<-TRUE
+      atable$expandFrom<-2 
+      .names<-unlist(c("id",private$.indexes_name,private$.deps,private$.covs))
+      tab<-as.data.frame(matrix(".",ncol = length(.names),nrow = 1))
+      names(tab)<-.names
+      atable$initSource<-tab
       private$.tables[["showdata"]]<-atable
+      
       lapply(private$.tables,function(x) x$initTable())          
       jinfo("MODULE: init ended")
-      
+
+    },
+    .postInit = function() {
+      if ( ! is.null(self$results$showdata$state)) {
+        atable <- private$.tables[["showdata"]]
+        atable$initSource <- private$.showdata
+        atable$initTable()
+      }
+
     },
     .run = function() {
       
@@ -131,8 +146,11 @@ wide2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       private$.tables[["info"]]$runSource<-private$.infotable
       private$.tables[["features"]]$runSource<-private$.features
       private$.tables[["showdata"]]$runSource<-private$.showdata
-      lapply(private$.tables,function(x) x$runTable())          
-      
+
+      self$results$showdata$deleteRows()
+
+      lapply(private$.tables,function(x) x$runTable())
+
       if (self$options$create)
             savedata(self,private$.rdata)
     },
@@ -189,7 +207,12 @@ wide2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       tab
     },
     .showdata=function() {
-      showdata(self,private$.rdata)
+      data <- self$results$showdata$state
+      if (is.null(data)) {
+        data <- showdata(self,private$.rdata)
+        self$results$showdata$setState(data)
+      }
+      data
     }
     
     
