@@ -23,6 +23,8 @@ wide2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
     .init= function() {
       
       jinfo("MODULE: init phase started")
+      self$results$desc$setContent(" ")
+      
       if (self$options$mode=="complex") {
         private$.deps<-lapply(self$options$comp_colstorows,function(x) x$label)
         private$.colstorows<-lapply(self$options$comp_colstorows,function(x) x$vars)
@@ -43,7 +45,7 @@ wide2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         
       }
         if (self$options$mode=="simple")
-                   self$results$help$setContent(HELP_simple2long[[1]])
+                   self$results$desc$setContent(HELP_simple2long[[1]])
         if (self$options$mode=="complex")
                    self$results$desc$setContent(HELP_complex2long[[1]])
 
