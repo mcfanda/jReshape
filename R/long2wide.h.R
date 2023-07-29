@@ -10,9 +10,7 @@ long2wideOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             covs = NULL,
             index = NULL,
             id = NULL,
-            button = NULL,
-            create = FALSE,
-            toggle = FALSE, ...) {
+            reshape = NULL, ...) {
 
             super$initialize(
                 package="jReshape",
@@ -32,45 +30,28 @@ long2wideOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..id <- jmvcore::OptionVariable$new(
                 "id",
                 id)
-            private$..button <- jmvcore::OptionString$new(
-                "button",
-                button,
-                hidden=TRUE)
-            private$..create <- jmvcore::OptionBool$new(
-                "create",
-                create,
-                default=FALSE,
-                hidden=TRUE)
-            private$..toggle <- jmvcore::OptionBool$new(
-                "toggle",
-                toggle,
-                default=FALSE,
-                hidden=TRUE)
+            private$..reshape <- jmvcore::OptionAction$new(
+                "reshape",
+                reshape)
 
             self$.addOption(private$..rowstocols)
             self$.addOption(private$..covs)
             self$.addOption(private$..index)
             self$.addOption(private$..id)
-            self$.addOption(private$..button)
-            self$.addOption(private$..create)
-            self$.addOption(private$..toggle)
+            self$.addOption(private$..reshape)
         }),
     active = list(
         rowstocols = function() private$..rowstocols$value,
         covs = function() private$..covs$value,
         index = function() private$..index$value,
         id = function() private$..id$value,
-        button = function() private$..button$value,
-        create = function() private$..create$value,
-        toggle = function() private$..toggle$value),
+        reshape = function() private$..reshape$value),
     private = list(
         ..rowstocols = NA,
         ..covs = NA,
         ..index = NA,
         ..id = NA,
-        ..button = NA,
-        ..create = NA,
-        ..toggle = NA)
+        ..reshape = NA)
 )
 
 long2wideResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -172,9 +153,7 @@ long2wideBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param covs .
 #' @param index .
 #' @param id .
-#' @param button .
-#' @param create .
-#' @param toggle .
+#' @param reshape .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$help} \tab \tab \tab \tab \tab a html \cr
@@ -196,9 +175,7 @@ long2wide <- function(
     covs,
     index,
     id,
-    button,
-    create = FALSE,
-    toggle = FALSE) {
+    reshape) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("long2wide requires jmvcore to be installed (restart may be required)")
@@ -221,9 +198,7 @@ long2wide <- function(
         covs = covs,
         index = index,
         id = id,
-        button = button,
-        create = create,
-        toggle = toggle)
+        reshape = reshape)
 
     analysis <- long2wideClass$new(
         options = options,

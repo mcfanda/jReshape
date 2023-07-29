@@ -1,6 +1,6 @@
 savedata<-function(obj,data) {
   
-  if (!obj$options$create) {
+  if (!obj$options$reshape) {
     return()
   }
 

@@ -3,137 +3,128 @@ name: wide2long
 jus: '3.0'
 stage: 0
 compilerMode: tame
-events:
-       update: './main::update'
 children:
- - type: ModeSelector
-   name: mode
-   children:
-     - type: Content
-       name: simple
-       children:
+  - type: ModeSelector
+    name: mode
+    children:
+      - type: Content
+        name: simple
+        children:
           - type: LayoutBox
             margin: large
             stretchFactor: 1
-
             children:
-               - type: VariableSupplier
-                 persistentItems: false
-                 stretchFactor: 1
-                 children:
-                   - type: TargetLayoutBox
-                     label: Columns to row
-                     children:
-                       - type: VariablesListBox
-                         name: sim_colstorows
-                         isTarget: true
-                         stretchFactor: 1
-                       
-                   - type: TargetLayoutBox
-                     label: Non-varying variables
-                     stretchFactor: 1
-                     children:
-                       - type: VariablesListBox
-                         name: sim_covs
-                         isTarget: true
+              - type: VariableSupplier
+                persistentItems: false
+                stretchFactor: 1
+                children:
+                  - type: TargetLayoutBox
+                    label: Columns to row
+                    children:
+                      - type: VariablesListBox
+                        name: sim_colstorows
+                        isTarget: true
+                        stretchFactor: 1
+                  - type: TargetLayoutBox
+                    label: Non-varying variables
+                    stretchFactor: 1
+                    children:
+                      - type: VariablesListBox
+                        name: sim_covs
+                        isTarget: true
           - type: LayoutBox
             margin: large
             children:
-                   - type: Label
-                     label: New variables
-                     margin: large
-                     children:
-                       - type: TextBox
-                         name: sim_index
-                         format: string
-                         stretchFactor: 1
-                       - type: TextBox
-                         name: sim_dep
-                         format: string
-                         stretchFactor: 1
-     - type: Content
-       name: complex
-       children:
-               - type: VariableSupplier
-                 persistentItems: true
-                 children:
-                   - type: TargetLayoutBox
-                     label: New long variable (Columns to rows)
-                     children:
-                       - type: ListBox
-                         name: comp_colstorows
-                         height: large
-                         addButton: Add new long variable
-                         events:
-                           listItemAdded: './wide2long::onChange_items_changed'
-                           listItemRemoved: './wide2long::onChange_items_changed'
-                         templateName: linreg-block-template
-                         template:
-                           type: LayoutBox
-                           margin: normal
-                           children:
-                             - type: TextBox
-                               valueKey:
-                                 - label
-                               borderless: true
-                               name: blockName
-                               stretchFactor: 1
-                               margin: normal
-                             - type: VariablesListBox
-                               name: blocklist
-                               valueFilter: unique
-                               valueKey:
-                                 - vars
-                               isTarget: true
-                               height: auto
-                               ghostText: drag columns to rows variables here
-                   - type: TargetLayoutBox
-                     label: Non-varying variables
-                     stretchFactor: 1
-                     children:
-                       - type: VariablesListBox
-                         name: comp_covs
-                         isTarget: true
-
-               - type: CollapseBox
-                 label: Index Variables
-                 collapsed: true
-                 children:
-                   - type: Label
-                     label: Clustering Variables
-                     margin: large
-                     style: list
-                     children:
-                       - type: LayoutBox
-                         style: inline
-                         children:
-                           - type: ListBox
-                             name: comp_index
-                             fullRowSelect: true
-                             addButton: Add a index variable
-                             height: large
-                             events:
-                               listItemAdded: './wide2long::onChange_index_added'
-                               listItemRemoved: './wide2long::onChange_index_removed'
-                             showColumnHeaders: true
-                             columns:
-                               - name: var
-                                 label: Name
-                                 template:
-                                   type: TextBox
-                                 stretchFactor:  1.80
-                                   
-                               - name: levels
-                                 label: N levels
-                                 template:
-                                   type: TextBox
-                                   format: number
-                                 stretchFactor:  1.20
- - type: LayoutBox
-   margin: large
-   children:
-           - type: CustomControl
-             stretchFactor: 2
-             name: button
-             events:
-               creating: './main::button_creating'
+              - type: Label
+                label: New variables
+                margin: large
+                children:
+                  - type: TextBox
+                    name: sim_index
+                    format: string
+                    stretchFactor: 1
+                  - type: TextBox
+                    name: sim_dep
+                    format: string
+                    stretchFactor: 1
+      - type: Content
+        name: complex
+        children:
+          - type: VariableSupplier
+            persistentItems: true
+            children:
+              - type: TargetLayoutBox
+                label: New long variable (Columns to rows)
+                children:
+                  - type: ListBox
+                    name: comp_colstorows
+                    height: large
+                    addButton: Add new long variable
+                    events:
+                      listItemAdded: './wide2long::onChange_items_changed'
+                      listItemRemoved: './wide2long::onChange_items_changed'
+                    templateName: linreg-block-template
+                    template:
+                      type: LayoutBox
+                      margin: normal
+                      children:
+                        - type: TextBox
+                          valueKey:
+                            - label
+                          borderless: true
+                          name: blockName
+                          stretchFactor: 1
+                          margin: normal
+                        - type: VariablesListBox
+                          name: blocklist
+                          valueFilter: unique
+                          valueKey:
+                            - vars
+                          isTarget: true
+                          height: auto
+                          ghostText: drag columns to rows variables here
+              - type: TargetLayoutBox
+                label: Non-varying variables
+                stretchFactor: 1
+                children:
+                  - type: VariablesListBox
+                    name: comp_covs
+                    isTarget: true
+          - type: CollapseBox
+            label: Index Variables
+            collapsed: true
+            children:
+              - type: Label
+                label: Clustering Variables
+                margin: large
+                style: list
+                children:
+                  - type: LayoutBox
+                    style: inline
+                    children:
+                      - type: ListBox
+                        name: comp_index
+                        fullRowSelect: true
+                        addButton: Add a index variable
+                        height: large
+                        events:
+                          listItemAdded: './wide2long::onChange_index_added'
+                          listItemRemoved: './wide2long::onChange_index_removed'
+                        showColumnHeaders: true
+                        columns:
+                          - name: var
+                            label: Name
+                            template:
+                              type: TextBox
+                            stretchFactor: 1.8
+                          - name: levels
+                            label: N levels
+                            template:
+                              type: TextBox
+                              format: number
+                            stretchFactor: 1.2
+  - type: LayoutBox
+    margin: large
+    children:
+      - type: ActionButton
+        name: reshape

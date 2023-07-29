@@ -7,7 +7,6 @@ long2wideClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
     private = list(
       # this is a list that contains all the SmartTables
       .tables=list(),
-      .runcreate=FALSE,
       .rdata=NULL,
       .time="time",
       .on=NULL,
@@ -101,7 +100,7 @@ long2wideClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         
         lapply(private$.tables,function(x) x$runTable())          
         
-        if (self$options$create)
+        if (self$options$reshape)
           savedata(self,private$.rdata)
         
         },

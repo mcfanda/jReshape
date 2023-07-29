@@ -26,16 +26,8 @@ options:
       title: ID Variable
       type: Variable
 
-    - name: button
-      type: String
-      hidden: true      
-    - name: create
-      type: Bool
-      default: false
-      hidden: true      
-    - name: toggle
-      type: Bool
-      default: false
-      hidden: true     
+    - name: reshape
+      title: Reshape
+      type: Action
 
 ...
