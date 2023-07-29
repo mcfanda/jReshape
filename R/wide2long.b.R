@@ -5,8 +5,8 @@ wide2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
   inherit = wide2longBase,
   private = list(
     # this is a list that contains all the SmartTables
+    .createfile=FALSE,
     .tables=list(),
-    .runcreate=FALSE,
     .rdata=NULL,
     .colstorows=NULL,
     .deps=NULL,
@@ -24,7 +24,7 @@ wide2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       
       jinfo("MODULE: init phase started")
       self$results$desc$setContent(" ")
-      
+      private$.createfile<-self$options$reshape
       if (self$options$mode=="complex") {
         private$.deps<-lapply(self$options$comp_colstorows,function(x) x$label)
         private$.colstorows<-lapply(self$options$comp_colstorows,function(x) x$vars)
@@ -141,7 +141,8 @@ wide2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
     .run = function() {
       
       jinfo("MODULE: run phase started")
-
+      mark(private$.createfile)
+      
       if (private$.notrun)    return()
 
       private$.reshape()
@@ -153,7 +154,7 @@ wide2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
       lapply(private$.tables,function(x) x$runTable())
 
-      if (self$options$create)
+      if (self$options$reshape)
             savedata(self,private$.rdata)
     },
     .infotable=function() {

@@ -11,14 +11,12 @@ wide2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             sim_covs = NULL,
             sim_index = "index",
             sim_dep = "y",
-            button = NULL,
-            create = FALSE,
-            toggle = FALSE,
             comp_colstorows = list(
                 list(label="long_y", vars=list())),
             comp_index = list(
                 list(var="index1", levels=0)),
-            comp_covs = NULL, ...) {
+            comp_covs = NULL,
+            reshape = NULL, ...) {
 
             super$initialize(
                 package="jReshape",
@@ -47,20 +45,6 @@ wide2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "sim_dep",
                 sim_dep,
                 default="y")
-            private$..button <- jmvcore::OptionString$new(
-                "button",
-                button,
-                hidden=TRUE)
-            private$..create <- jmvcore::OptionBool$new(
-                "create",
-                create,
-                default=FALSE,
-                hidden=TRUE)
-            private$..toggle <- jmvcore::OptionBool$new(
-                "toggle",
-                toggle,
-                default=FALSE,
-                hidden=TRUE)
             private$..comp_colstorows <- jmvcore::OptionArray$new(
                 "comp_colstorows",
                 comp_colstorows,
@@ -94,18 +78,19 @@ wide2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..comp_covs <- jmvcore::OptionVariables$new(
                 "comp_covs",
                 comp_covs)
+            private$..reshape <- jmvcore::OptionAction$new(
+                "reshape",
+                reshape)
 
             self$.addOption(private$..mode)
             self$.addOption(private$..sim_colstorows)
             self$.addOption(private$..sim_covs)
             self$.addOption(private$..sim_index)
             self$.addOption(private$..sim_dep)
-            self$.addOption(private$..button)
-            self$.addOption(private$..create)
-            self$.addOption(private$..toggle)
             self$.addOption(private$..comp_colstorows)
             self$.addOption(private$..comp_index)
             self$.addOption(private$..comp_covs)
+            self$.addOption(private$..reshape)
         }),
     active = list(
         mode = function() private$..mode$value,
@@ -113,24 +98,20 @@ wide2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         sim_covs = function() private$..sim_covs$value,
         sim_index = function() private$..sim_index$value,
         sim_dep = function() private$..sim_dep$value,
-        button = function() private$..button$value,
-        create = function() private$..create$value,
-        toggle = function() private$..toggle$value,
         comp_colstorows = function() private$..comp_colstorows$value,
         comp_index = function() private$..comp_index$value,
-        comp_covs = function() private$..comp_covs$value),
+        comp_covs = function() private$..comp_covs$value,
+        reshape = function() private$..reshape$value),
     private = list(
         ..mode = NA,
         ..sim_colstorows = NA,
         ..sim_covs = NA,
         ..sim_index = NA,
         ..sim_dep = NA,
-        ..button = NA,
-        ..create = NA,
-        ..toggle = NA,
         ..comp_colstorows = NA,
         ..comp_index = NA,
-        ..comp_covs = NA)
+        ..comp_covs = NA,
+        ..reshape = NA)
 )
 
 wide2longResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -240,12 +221,10 @@ wide2longBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param sim_covs .
 #' @param sim_index .
 #' @param sim_dep .
-#' @param button .
-#' @param create .
-#' @param toggle .
 #' @param comp_colstorows .
 #' @param comp_index .
 #' @param comp_covs .
+#' @param reshape .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$desc} \tab \tab \tab \tab \tab a html \cr
@@ -269,14 +248,12 @@ wide2long <- function(
     sim_covs,
     sim_index = "index",
     sim_dep = "y",
-    button,
-    create = FALSE,
-    toggle = FALSE,
     comp_colstorows = list(
                 list(label="long_y", vars=list())),
     comp_index = list(
                 list(var="index1", levels=0)),
-    comp_covs) {
+    comp_covs,
+    reshape) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("wide2long requires jmvcore to be installed (restart may be required)")
@@ -298,12 +275,10 @@ wide2long <- function(
         sim_covs = sim_covs,
         sim_index = sim_index,
         sim_dep = sim_dep,
-        button = button,
-        create = create,
-        toggle = toggle,
         comp_colstorows = comp_colstorows,
         comp_index = comp_index,
-        comp_covs = comp_covs)
+        comp_covs = comp_covs,
+        reshape = reshape)
 
     analysis <- wide2longClass$new(
         options = options,

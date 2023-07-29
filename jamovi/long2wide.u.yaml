@@ -3,8 +3,6 @@ title: Long to wide
 jus: '3.0'
 stage: 0
 compilerMode: tame
-events:
-  update: './main::update'
 children:
   - type: VariableSupplier
     persistentItems: false
@@ -38,8 +36,5 @@ children:
   - type: LayoutBox
     margin: large
     children:
-      - type: CustomControl
-        stretchFactor: 3
-        name: button
-        events:
-          creating: './main::button_creating'
+      - type: ActionButton
+        name: reshape
