@@ -5,8 +5,7 @@ version: 0.1.3
 jms: '1.0'
 authors:
   - Marcello Gallucci
-  - Jonathon Love
-maintainer: The package maintainer <yourself@somewhere.net>
+maintainer: mcfanda <mcfanda@gmail.com>
 date: '2024-01-01'
 type: R
 description: >-
