@@ -16,14 +16,14 @@ analyses:
   - title: Wide to Long
     name: wide2long
     ns: jReshape
-    menuGroup: jReshape
+    menuGroup: Data
     menuTitle: Wide to Long
   - title: Long to wide
     name: long2wide
     ns: jReshape
-    menuGroup: jReshape
+    menuGroup: Data
     menuTitle: Long to wide
 usesNative: true
-minApp: 2.3.12
+minApp: 2.4.2
 
 ...
