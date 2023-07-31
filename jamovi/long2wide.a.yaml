@@ -1,7 +1,7 @@
 ---
 name:  long2wide
 title: "Long to wide"
-menuGroup: jReshape
+menuGroup: Data
 version: '1.0.0'
 jas: '1.2'
 
