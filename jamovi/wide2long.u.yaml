@@ -6,6 +6,7 @@ compilerMode: tame
 children:
   - type: ModeSelector
     name: mode
+    stretchFactor: 1
     children:
       - type: Content
         name: simple
@@ -52,6 +53,7 @@ children:
         children:
           - type: VariableSupplier
             persistentItems: true
+            stretchFactor: 1
             children:
               - type: TargetLayoutBox
                 label: New long variable (Columns to rows)
@@ -98,31 +100,29 @@ children:
                 label: Clustering Variables
                 margin: large
                 style: list
+                stretchFactor: 1
                 children:
-                  - type: LayoutBox
-                    style: inline
-                    children:
-                      - type: ListBox
-                        name: comp_index
-                        fullRowSelect: true
-                        addButton: Add a index variable
-                        height: large
-                        events:
-                          listItemAdded: './wide2long::onChange_index_added'
-                          listItemRemoved: './wide2long::onChange_index_removed'
-                        showColumnHeaders: true
-                        columns:
-                          - name: var
-                            label: Name
-                            template:
-                              type: TextBox
-                            stretchFactor: 1.8
-                          - name: levels
-                            label: N levels
-                            template:
-                              type: TextBox
-                              format: number
-                            stretchFactor: 1.2
+                  - type: ListBox
+                    name: comp_index
+                    fullRowSelect: true
+                    addButton: Add a index variable
+                    height: large
+                    events:
+                      listItemAdded: './wide2long::onChange_index_added'
+                      listItemRemoved: './wide2long::onChange_index_removed'
+                    showColumnHeaders: true
+                    columns:
+                      - name: var
+                        label: Name
+                        template:
+                          type: TextBox
+                        stretchFactor: 1.8
+                      - name: levels
+                        label: N levels
+                        template:
+                          type: TextBox
+                          format: number
+                        stretchFactor: 1.2
   - type: LayoutBox
     margin: large
     children:
