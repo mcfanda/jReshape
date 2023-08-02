@@ -1,0 +1,29 @@
+---
+name:  merge
+title: "Merge"
+menuGroup: Data
+version: '1.0.0'
+jas: '1.2'
+
+options:
+    - name: data
+      type: Data
+
+    - name:  filename
+      title: Jamovi file to merge 
+      type: String
+
+    - name: covs
+      title: Included variables
+      type: Variables
+
+    - name: index
+      title: ID Variables (case identifiers)
+      type: Variables
+
+
+    - name: reshape
+      title: Reshape
+      type: Action
+
+...
