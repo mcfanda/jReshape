@@ -10,6 +10,8 @@ wide2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             sim_colstorows = NULL,
             sim_covs = NULL,
             sim_index = "index",
+            index_values = "name",
+            sim_index_prefix = "index_value",
             sim_dep = "y",
             comp_colstorows = list(
                 list(label="long_y", vars=list())),
@@ -41,6 +43,18 @@ wide2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "sim_index",
                 sim_index,
                 default="index")
+            private$..index_values <- jmvcore::OptionList$new(
+                "index_values",
+                index_values,
+                options=list(
+                    "name",
+                    "index",
+                    "prefix"),
+                default="name")
+            private$..sim_index_prefix <- jmvcore::OptionString$new(
+                "sim_index_prefix",
+                sim_index_prefix,
+                default="index_value")
             private$..sim_dep <- jmvcore::OptionString$new(
                 "sim_dep",
                 sim_dep,
@@ -86,6 +100,8 @@ wide2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..sim_colstorows)
             self$.addOption(private$..sim_covs)
             self$.addOption(private$..sim_index)
+            self$.addOption(private$..index_values)
+            self$.addOption(private$..sim_index_prefix)
             self$.addOption(private$..sim_dep)
             self$.addOption(private$..comp_colstorows)
             self$.addOption(private$..comp_index)
@@ -97,6 +113,8 @@ wide2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         sim_colstorows = function() private$..sim_colstorows$value,
         sim_covs = function() private$..sim_covs$value,
         sim_index = function() private$..sim_index$value,
+        index_values = function() private$..index_values$value,
+        sim_index_prefix = function() private$..sim_index_prefix$value,
         sim_dep = function() private$..sim_dep$value,
         comp_colstorows = function() private$..comp_colstorows$value,
         comp_index = function() private$..comp_index$value,
@@ -107,6 +125,8 @@ wide2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..sim_colstorows = NA,
         ..sim_covs = NA,
         ..sim_index = NA,
+        ..index_values = NA,
+        ..sim_index_prefix = NA,
         ..sim_dep = NA,
         ..comp_colstorows = NA,
         ..comp_index = NA,
@@ -182,6 +202,8 @@ wide2longResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "sim_covs",
                     "sim_index",
                     "sim_dep",
+                    "index_values",
+                    "sim_index_prefix",
                     "comp_colstorows",
                     "comp_index",
                     "comp_covs"),
@@ -220,6 +242,8 @@ wide2longBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param sim_colstorows .
 #' @param sim_covs .
 #' @param sim_index .
+#' @param index_values .
+#' @param sim_index_prefix .
 #' @param sim_dep .
 #' @param comp_colstorows .
 #' @param comp_index .
@@ -247,6 +271,8 @@ wide2long <- function(
     sim_colstorows,
     sim_covs,
     sim_index = "index",
+    index_values = "name",
+    sim_index_prefix = "index_value",
     sim_dep = "y",
     comp_colstorows = list(
                 list(label="long_y", vars=list())),
@@ -274,6 +300,8 @@ wide2long <- function(
         sim_colstorows = sim_colstorows,
         sim_covs = sim_covs,
         sim_index = sim_index,
+        index_values = index_values,
+        sim_index_prefix = sim_index_prefix,
         sim_dep = sim_dep,
         comp_colstorows = comp_colstorows,
         comp_index = comp_index,
