@@ -29,12 +29,29 @@ options:
 
 
     - name:  sim_index
-      title: Repeated measures levels (time var)
+      title: Name 
       type: String
       default: "index"
+
+    - name: index_values
+      title: Levels defined as
+      type: List
+      options:
+        - name: name
+          title: Columns name
+        - name: index
+          title: Columns index
+        - name:  prefix
+          title: Prefix + index
+      default: name
+
+    - name:  sim_index_prefix
+      title: Values prefix
+      type: String
+      default: "index_value"
       
     - name: sim_dep
-      title: Target variable  
+      title: Name  
       type: String
       default: "y"
 

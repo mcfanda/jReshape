@@ -55,6 +55,8 @@ items:
          - sim_covs
          - sim_index
          - sim_dep
+         - index_values
+         - sim_index_prefix
          - comp_colstorows
          - comp_index
          - comp_covs

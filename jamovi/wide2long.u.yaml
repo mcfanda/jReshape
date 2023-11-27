@@ -37,17 +37,43 @@ children:
             margin: large
             children:
               - type: Label
-                label: New variables
+                label: Target Variable
+                margin: large
+                children:
+                  - type: TextBox
+                    name: sim_dep
+                    format: string
+                    stretchFactor: 1
+              - type: Label
+                label: Index Variable (contains repeated levels values)
                 margin: large
                 children:
                   - type: TextBox
                     name: sim_index
                     format: string
                     stretchFactor: 1
-                  - type: TextBox
-                    name: sim_dep
-                    format: string
-                    stretchFactor: 1
+                  - type: Label
+                    label: Values
+                    margin: large
+                    children:
+                      - type: RadioButton
+                        name: index_values_name
+                        optionName: index_values
+                        optionPart: name
+                      - name: index_values_index
+                        type: RadioButton
+                        optionName: index_values
+                        optionPart: index
+                      - name: index_values_prefix
+                        type: RadioButton
+                        optionName: index_values
+                        optionPart: prefix
+                      - type: TextBox
+                        name: sim_index_prefix
+                        format: string
+                        stretchFactor: 1
+                        enable: (index_values_prefix)
+
       - type: Content
         name: complex
         children:
