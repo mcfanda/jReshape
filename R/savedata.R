@@ -1,6 +1,5 @@
 savedata<-function(obj,data) {
   
-
     jmvReadWrite:::jmvOpn(dtaFrm = data, dtaTtl =  "Untitled")
     
 

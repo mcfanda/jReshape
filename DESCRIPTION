@@ -11,3 +11,4 @@ License: GPL
 Encoding: UTF-8
 LazyData: true
 Imports: jmvcore (>= 0.8.5), R6, jmvReadWrite
+Remotes: sjentsch/jmvReadWrite,
