@@ -1,5 +1,5 @@
-j_DEBUG <- T
-j_INFO  <- T
+j_DEBUG <- F
+j_INFO  <- F
 t_INFO  <- F
 
 #### Helper functions used by Scaffold (not exported)
@@ -22,9 +22,12 @@ jinfo <- function(...) {
 
 
 
+
 mark <- function(...) {
   if (!j_DEBUG) 
     return()
+  if (.Platform$OS.type=="windows")
+    sink("jamovi_jscaff_.log",append = TRUE)
   
   if (missing(...))
     cat("Mark here\n")
@@ -38,6 +41,9 @@ mark <- function(...) {
     print(a)
   if (length(items)>1)  cat("_____end_______\n\n")
   
+  if (.Platform$OS.type=="windows")
+    sink()
+  
 }
 
 is.something <- function(x, ...) UseMethod(".is.something")
@@ -48,7 +54,7 @@ is.something <- function(x, ...) UseMethod(".is.something")
 
 .is.something.numeric <- function(obj) (length(obj) > 0)
 
-.is.something.character <- function(obj) (length(obj) > 0 & obj!="")
+.is.something.character <- function(obj) (length(obj) > 0)
 
 .is.something.logical <- function(obj) !is.na(obj)
 
