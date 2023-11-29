@@ -4,10 +4,9 @@ t_INFO  <- FALSE
 j_W0S   <- .Platform$OS.type=="windows"
 
 ## -- Note for Windows users
-## If your OS is Windows, remember to uncomment row 11, but feel free
+## If your OS is Windows, remember to uncomment row 10, but feel free
 ## to change the path and name of the log file as you like.
 ## --
-wosjscaf<-""
 #wosjscaf <- paste0(base::Sys.getenv("TEMP"),"\\wosjscaf.log")
 
 

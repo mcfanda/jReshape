@@ -1,9 +1,9 @@
 
 # This file is a generated template, your changes will not be overwritten
 
-mergeClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
-    "mergeClass",
-    inherit = mergeBase,
+long2wideClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
+    "long2wideClass",
+    inherit = long2wideBase,
     private = list(
       # this is a list that contains all the SmartTables
       .tables=list(),
@@ -19,63 +19,53 @@ mergeClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       .notrun=FALSE,
       .init= function() {
 
-        jinfo("MODULE MERGE: init phase started")
+        jinfo("MODULE: init phase started")
+        
         self$results$help$setContent("  ")
         
-        filename<-self$options$filename
-        
-        if (!file.exists(filename)) {
-          
-          self$results$help$setContent(paste("<div><b>Error</b></div>
-                                              <div>File",filename,"not found.</div>"))
-          return()
-          
-        }
-        fileext<-file_ext(filename)
-
-        if (length(fileext)==0) {
-          self$results$help$setContent(paste("<div><b>Error</b></div>
-                                              <div>Filename",filename," does not contain an filtype extension.</div>",
-                                             "<div>Allowed filetype are ", paste(filetypes,collapse=", "),"</div>"))
-          private$.notrun<-TRUE
-          return()
-        }
-        
-        
-        if (!(fileext %in% filetypes)) {
-          self$results$help$setContent(paste("<div><b>Error</b></div>
-                                              <div>Filename",filename," filtype not reconized.</div>",
-                                             "<div>Allowed filetype are ", paste(filetypes,collapse=", "),"</div>"))
-          private$.notrun<-TRUE
+        test<-(!is.something(self$options$rowstocols))
+        if (test) {
+          self$results$help$setContent(HELP_long2wide[[1]])
+          private$.notrun=TRUE
           return()
         }
         
         test<-(!is.something(self$options$index))
         if (test) {
+          HELP_long2wide
           self$results$help$setContent(HELP_long2wide[[2]])
           private$.notrun=TRUE
           return()
         }
+        test<-(!is.something(self$options$id))
+        if (test) {
+          HELP_long2wide
+          self$results$help$setContent(HELP_long2wide[[3]])
+          private$.notrun=TRUE
+          return()
+        }
+  
 
+        self$results$help$setContent(HELP_long2wide[[4]])
 
-
+        # check some info from the data 
+        indexes<-self$options$index
+        
+        nl<-lapply(indexes, function(x) levels(self$data[[x]]))
+        wnames<-lapply(self$options$rowstocols, function(x) combine(nl,prefix = x))
+        private$.wnames<-unlist(wnames)
+        labs<-lapply(indexes, function(x) paste(x,levels(self$data[[x]]),sep="="))
+        private$.labs<-paste0(levels(interaction(labs, sep = " ")))
 
         # set up the coefficients SmartTable
-#        atable<-SmartTable$new(self$results$info)
-#        atable$initSource<-private$.infotable
-#        private$.tables[["info"]]<-atable
+        atable<-SmartTable$new(self$results$info)
+        atable$initSource<-private$.infotable
+        private$.tables[["info"]]<-atable
       
-        atable<-SmartTable$new(self$results$exfileinfo)
-        atable$initSource<-private$.exfileinfo()
-        private$.tables[["exfileinfo"]]<-atable
+        atable<-SmartTable$new(self$results$features)
+        atable$initSource<-private$.features
+        private$.tables[["features"]]<-atable
 
-        atable<-SmartTable$new(self$results$fileinfo)
-        atable$initSource<-private$.fileinfo()
-        private$.tables[["fileinfo"]]<-atable
-        
-        lapply(private$.tables,function(x) x$initTable())          
-        
-        return()
         atable<-SmartTable$new(self$results$showdata)
         atable$expandOnInit<-TRUE
         atable$expandFrom<-2
@@ -84,27 +74,22 @@ mergeClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         names(tab)<-.names
         atable$initSource<-tab
         private$.tables[["showdata"]]<-atable
+        lapply(private$.tables,function(x) x$initTable())          
         
         
       },
       .postInit = function() {
         if ( ! is.null(self$results$showdata$state)) {
-          atable <- private$.tables[["fileinfo"]]
-          atable$initSource <- private$.fileinfo()
+          atable <- private$.tables[["showdata"]]
+          atable$initSource <- private$.showdata
           atable$initTable()
          }
         },
 
       .run = function() {
     
-        jinfo("MODULE MERGE: run phase started")
+        jinfo("MODULE: run phase started")
 
-        private$.tables[["fileinfo"]]$runSource<-private$.fileinfo
-        lapply(private$.tables,function(x) x$runTable())          
-        
-        
-        
-        return()
         if (private$.notrun)
           return()
         
@@ -240,42 +225,7 @@ mergeClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
           self$results$showdata$setState(data)
         }
         data
-      },
-       .exfileinfo=function() {
-        ext<-file_ext(self$options$filename)
-        data<-switch(ext,
-               csv=read.csv(self$options$filename),
-               omv=jmvReadWrite::read_omv(fleInp = self$options$filename)
-        )
-        ef_names<-names(data)
-        at<-lapply(names(data),function(x) {
-                atts<-attributes(data[,x])
-                c(name=atts[["name"]],class=atts[["class"]],dataType=atts[["dataType"]],measureType=atts[["measureType"]],description=atts[["description"]])
-                }
-                )
-        infodata<-as.data.frame(do.call(rbind,at))
-        for (name in names(infodata))
-          infodata[[name]]<-unlist(infodata[[name]])
-        infodata
-       },
-      .fileinfo=function() {
-        mark(str(self))
-        mark(private$.readDatasetHeader())
-          data<-self$data
-          atts<-lapply(names(data),function(x) {
-            atts<-attributes(data[[x]])
-            if (is.null(atts))
-              c(name=x,dataType="Continuous",measureType="Continuous",class="numeric")
-            else
-              c(name=x,dataType="Integer",measureType="Nominal",class="factor")
-            
-          })
-          infodata<-as.data.frame(do.call(rbind,atts))
-          infodata
-          
-          }
-
-
+      }
       
       
       )
