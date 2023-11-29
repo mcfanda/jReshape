@@ -29,15 +29,19 @@ Dispatch <- R6::R6Class(
                           
                           where<-unlist(lapply(TRANS_WARNS,function(x) length(grep(x$original,msg))>0))
                           where<-which(where)
-                          
                           if (is.something(where)) {
-                            if (length(where)>1) where<-where[[1]]
-                            if (is.something(TRANS_WARNS[[where]]$new))
-                              msg<-gsub(TRANS_WARNS[[where]]$original,TRANS_WARNS[[where]]$new,msg,fixed=T)
-                            else
-                              msg<-NULL
-                          }                  
-                          return(msg)                          
+                              
+                            if (length(where)>1) where<-where[1]
+                            if ("new" %in% names(TRANS_WARNS[[where]]))
+                               msg<-TRANS_WARNS[[where]]$new
+                            if ("sub" %in% names(TRANS_WARNS[[where]]))
+                               msg<-gsub(TRANS_WARNS[[where]]$original,TRANS_WARNS[[where]]$sub,msg,fixed=T)
+                            if ("append" %in% names(TRANS_WARNS[[where]]))
+                               msg<-paste(msg,TRANS_WARNS[[where]]$append)
+                            if ("prepend" %in% names(TRANS_WARNS[[where]]))
+                               msg<-paste(TRANS_WARNS[[where]]$prepend,msg)
+                          }
+                          return(msg)
                         }
                         
                         ),

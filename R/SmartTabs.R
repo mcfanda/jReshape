@@ -32,6 +32,7 @@ SmartTable <- R6::R6Class("SmartTable",
                             combineBelow=0,
                             ci_info=list(),
                             columnTitles=list(),
+                            mutenotes=FALSE,
                             initialize=function(table,estimator=NULL) {
 
                               if (exists("t_INFO")) private$.debug<-t_INFO
@@ -96,7 +97,6 @@ SmartTable <- R6::R6Class("SmartTable",
                               ### fill with initial values###
 
                               rtable<-private$.getData()
-                              
                               if (is.null(rtable))
                                   return()
 
@@ -160,8 +160,11 @@ SmartTable <- R6::R6Class("SmartTable",
 
                                   notes<-self$table$notes
                                   lapply(notes,function(x) {
-                                    if (isTRUE(x$init))
+                                    if (self$mutenotes)
                                        self$table$setNote(x$key,NULL)
+                                    else
+                                       if (isTRUE(x$init))
+                                          self$table$setNote(x$key,NULL)
                                   })
 
                             },
@@ -292,8 +295,10 @@ SmartTable <- R6::R6Class("SmartTable",
                                 warning<-output$warning
                                 
                                 if (!isFALSE(error)) {
+                                  dispatch<-Dispatch$new(self)
                                   private$.debug_msg("ERROR",fun,error)
                                   if (exists("fromb64")) error<-fromb64(error)
+                                  error<-dispatch$translate(error)
                                   self$table$setError(error)
                                   private$.error<-TRUE
                                    return()
@@ -319,17 +324,17 @@ SmartTable <- R6::R6Class("SmartTable",
 
                                 }
                                 return(rtable) 
+                                
                               }
                               if (inherits(fun,"function") ) {
                                 output<-try_hard(fun())
                                 rtable<-output$obj
                                 error<-output$error
                                 warning<-output$warning
-                                
                                 if (!isFALSE(error)) {
                                   private$.debug_msg("ERROR",fun,error)
                                   if (exists("fromb64")) error<-fromb64(error)
-                                  self$table$setError(error)
+                                      self$table$setError(error)
                                   private$.error<-TRUE
                                   return()
                                 }
@@ -337,29 +342,26 @@ SmartTable <- R6::R6Class("SmartTable",
                                   dispatch<-Dispatch$new(self)
                                   warning<-lapply(warning, function(x) {
                                     if (exists("fromb64")) 
-                                      x<-fromb64(x)
+                                       x<-fromb64(x)
                                     dispatch$translate(x)
                                   })
-                                  
                                   warning<-warning[sapply(warning,function(x) is.something(x))]
-                                  
                                   if (inherits(self$table,"Table")) 
-                                    for (w in warning)
-                                      self$table$setNote(jmvcore::toB64(w),w,init=FALSE)
-                                  
+                                        for (w in warning)
+                                             self$table$setNote(jmvcore::toB64(w),w,init=FALSE)
+
                                   if (inherits(self$table,"Array"))
-                                    for (obj in self$table$items)
-                                      for (w in warning)
-                                        obj$setNote(jmvcore::toB64(w),w,init=FALSE)
-                                  
+                                     for (obj in self$table$items)
+                                        for (w in warning)
+                                           obj$setNote(jmvcore::toB64(w),w,init=FALSE)
+
                                 }
                                 return(rtable) 
+                                
                               }
-                              ## if here, fun is a table (data.frame or list)
+                              # if we here, fun is a table
                               private$.debug_msg("function is ",class(fun))
-                              return(fun)
-
-                              
+                              return(fun) 
                               
                             },
                             .fill=function(jtable,rtable) {
@@ -372,6 +374,7 @@ SmartTable <- R6::R6Class("SmartTable",
                                 else
                                   jtable$setRow(rowNo=i,w)
                               }
+                              private$.setHideOn(rtable)
                               
                               rlist <-private$.listify(rtable)
                               for (i in seq_along(rlist)) {
@@ -384,14 +387,13 @@ SmartTable <- R6::R6Class("SmartTable",
                             .finalize=function() {
                               
                               private$.setColumnTitle()
-                              private$.setHideOn()
                               self$table$setVisible(TRUE)
 
                             },
-                            .setHideOn=function() {
+                            .setHideOn=function(rtable) {
                               
+                              rtable<-private$.framefy(rtable)
                               if (is.something(private$.hideOn)) {
-                                rtable<-self$table$asDF
                                 what<-names(rtable)
                                 for (col in names(private$.hideOn))
                                   if (col %in% what) {
@@ -575,18 +577,20 @@ SmartTable <- R6::R6Class("SmartTable",
                             },
                             
                             .framefy = function(alist) {
-                              
+
                               .attr<-private$.getAttributes(alist)
-                              
                               if (inherits(alist,"list"))
                                 alist<-do.call(rbind,alist)
                               
                               aframe<-as.data.frame(alist,stringsAsFactors = F,optional = T)
-                              for (n in names(aframe))
-                                aframe[[n]]<-unlist(aframe[[n]])
                               
+                              for (n in names(aframe)) {
+                                ## NULL is your enemy
+                                one<-aframe[[n]]
+                                one[sapply(one,is.null)]<-NA
+                                aframe[[n]]<-unlist(one)
+                              }
                               aframe<-private$.setAttributes(aframe,.attr)
-                              
                               aframe
                             },
                             
