@@ -73,3 +73,6 @@ ladd(HELP_long2wide)<-"
                <div>
                Click on the <b>Reshape</b> to create a new file with the reshaped variables.
               </div>"
+
+
+filetypes<-c("omv","sav","Rdata","csv")

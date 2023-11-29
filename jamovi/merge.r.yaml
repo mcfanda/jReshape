@@ -1,0 +1,94 @@
+---
+name:  merge
+title: "Merge"
+jrs:   '1.1'
+
+items:
+
+    - name: help
+      title: Getting started
+      type: Html
+
+
+    - name: info
+      title:  Info Table
+      type: Table
+      clearWith:
+          - rowstocols
+          - index
+          - id
+          - covs
+      columns:
+                    - name: text
+                      title: "Info"
+                      type: text
+                    - name: var
+                      title: "Value"
+                      type: text
+                      
+
+    - name: fileinfo
+      title:  Selected variables info
+      type: Table
+      clearWith:
+          - index
+          - covs
+          - nocovs
+          - filename
+      columns:
+                    - name: name
+                      title: "Variable"
+                      type: text
+                    - name: dataType
+                      title: "Data Type"
+                      type: text
+                    - name: measureType
+                      title: "Measure Type"
+                      type: text
+                    - name: class
+                      title: "Class"
+                      type: text
+                    - name: description
+                      title: "Description"
+                      type: text
+
+    - name: exfileinfo
+      title:  External file info
+      type: Table
+      clearWith:
+          - index
+          - covs
+          - nocovs
+          - filename
+      columns:
+                    - name: name
+                      title: "Variable"
+                      type: text
+                    - name: dataType
+                      title: "Data Type"
+                      type: text
+                    - name: measureType
+                      title: "Measure Type"
+                      type: text
+                    - name: class
+                      title: "Class"
+                      type: text
+                    - name: description
+                      title: "Description"
+                      type: text
+
+    - name:  showdata
+      title: Data Preview
+      type:  Table
+      clearWith:
+          - rowstocols
+          - index
+          - id
+          - covs
+      columns:
+                    - name: row
+                      title: "Rows"
+                      type: integer
+
+
+...

@@ -1,0 +1,33 @@
+name: merge
+title: Merge
+jus: '3.0'
+stage: 0
+compilerMode: tame
+children:
+  - type: LayoutBox
+    margin: large
+    stretchFactor: 1
+    children:
+      - type: TextBox
+        name: filename
+        format: string
+        stretchFactor: 1
+  - type: VariableSupplier
+    persistentItems: false
+    stretchFactor: 1
+    children:
+      - type: TargetLayoutBox
+        children:
+          - type: VariablesListBox
+            name: index
+            isTarget: true
+      - type: TargetLayoutBox
+        children:
+          - type: VariablesListBox
+            name: covs
+            isTarget: true
+  - type: LayoutBox
+    margin: large
+    children:
+      - type: ActionButton
+        name: reshape
