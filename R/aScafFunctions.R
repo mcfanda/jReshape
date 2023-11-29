@@ -1,43 +1,63 @@
-j_DEBUG <- T
-j_INFO  <- T
-t_INFO  <- F
+j_DEBUG <- FALSE
+j_INFO  <- FALSE
+t_INFO  <- FALSE
+j_W0S   <- .Platform$OS.type=="windows"
+
+## -- Note for Windows users
+## If your OS is Windows, remember to uncomment row 10, but feel free
+## to change the path and name of the log file as you like.
+## --
+#wosjscaf <- paste0(base::Sys.getenv("TEMP"),"\\wosjscaf.log")
+
 
 #### Helper functions used by Scaffold (not exported)
 
 tinfo <- function(...) {
-  if (t_INFO) {
-    cat(paste(list(...)))
-    cat("\n")
-  }
+    if (t_INFO) {
+        if (j_W0S && wosjscaf != "") base::sink(file=wosjscaf, append=TRUE)
+
+        cat(paste(list(...)))
+        cat("\n")
+
+        if (j_W0S && wosjscaf != "") base::sink()
+    }
 }
 
 
 jinfo <- function(...) {
-  if (j_INFO) {
-    cat("\n")
-    cat(paste(list(...)))
-    cat("\n")
-  }
+    if (j_INFO) {
+        if (j_W0S && wosjscaf != "") base::sink(file=wosjscaf, append=TRUE)
+
+        cat("\n")
+        cat(paste(list(...)))
+        cat("\n")
+
+        if (j_W0S && wosjscaf != "") base::sink()
+    }
 }
 
 
-
 mark <- function(...) {
-  if (!j_DEBUG) 
-    return()
-  
-  if (missing(...))
-    cat("Mark here\n")
-  items<-list(...)
-  
-  if (length(items)>1)  cat("______begin________\n\n")
-  for (a in items)
-    if (is.character(a))
-      cat(a,"\n")
-  else
-    print(a)
-  if (length(items)>1)  cat("_____end_______\n\n")
-  
+    if (!j_DEBUG)
+        return()
+
+    if (j_W0S && wosjscaf != "") base::sink(file=wosjscaf, append=TRUE)
+
+    if (missing(...)) cat("Mark here\n")
+
+    items<-list(...)
+
+    if (length(items)>1)  cat("______begin________\n\n")
+
+    for (a in items)
+        if (is.character(a))
+            cat(a,"\n")
+    else
+        print(a)
+
+    if (length(items)>1)  cat("_____end_______\n\n")
+
+    if (j_W0S && wosjscaf != "") base::sink()
 }
 
 is.something <- function(x, ...) UseMethod(".is.something")
@@ -48,7 +68,7 @@ is.something <- function(x, ...) UseMethod(".is.something")
 
 .is.something.numeric <- function(obj) (length(obj) > 0)
 
-.is.something.character <- function(obj) (length(obj) > 0 & obj!="")
+.is.something.character <- function(obj) (length(obj) > 0)
 
 .is.something.logical <- function(obj) !is.na(obj)
 
@@ -56,9 +76,9 @@ is.there<-function(pattern,string) length(grep(pattern,string,fixed=T))>0
 
 #### This function run an expression and returns any warnings or errors without stopping the execution.
 try_hard<-function(exp,max_warn=5) {
-  
+
   .results<-list(error=FALSE,warning=list(),message=FALSE,obj=FALSE)
-  
+
   .results$obj <- withCallingHandlers(
     tryCatch(exp, error=function(e) {
       mark("SOURCE:")
@@ -66,20 +86,20 @@ try_hard<-function(exp,max_warn=5) {
       .results$error<<-conditionMessage(e)
       NULL
     }), warning=function(w) {
-      
-      if (length(.results$warning)==max_warn) 
+
+      if (length(.results$warning)==max_warn)
         .results$warning[[length(.results$warning)+1]]<<-"Additional warnings are present."
-      
+
       if (length(.results$warning)<max_warn)
         .results$warning[[length(.results$warning)+1]]<<-conditionMessage(w)
-      
+
       invokeRestart("muffleWarning")
     }, message = function(m) {
       .results$message<<-conditionMessage(m)
       invokeRestart("muffleMessage")
     })
-  
-  
+
+
   if (!isFALSE(.results$error)) {
     mark("CALLER:")
     mark(rlang::enquo(exp))
@@ -88,8 +108,8 @@ try_hard<-function(exp,max_warn=5) {
   }
   if(length(.results$warning)==0) .results$warning<-FALSE
   if(length(.results$warning)==1) .results$warning<-.results$warning[[1]]
-  
-  
+
+
   return(.results)
 }
 
@@ -97,16 +117,16 @@ try_hard<-function(exp,max_warn=5) {
 sourcifyOption<- function(x,...) UseMethod(".sourcifyOption")
 
 .sourcifyOption.default=function(option,def=NULL) {
-  
+
   if (option$name == 'data')
     return('data = data')
-  
+
   if (startsWith(option$name, 'results/'))
     return('')
-  
+
   value <- option$value
   def <- option$default
-  
+
   if ( ! ((is.numeric(value) && isTRUE(all.equal(value, def))) || base::identical(value, def))) {
     valueAsSource <- option$valueAsSource
     if ( ! identical(valueAsSource, ''))
@@ -115,21 +135,21 @@ sourcifyOption<- function(x,...) UseMethod(".sourcifyOption")
   ''
 }
 .sourcifyOption.OptionVariables<-function(option,def=NULL) {
-  
+
   if (is.null(option$value))
      return('')
-  
+
   values<-sourcifyName(option$value)
-  
+
   if (length(values)==1)
      return(paste0(option$name,"=",values))
   else
     return(paste0(option$name,"=c(",paste0(values,collapse = ","),")"))
 }
-  
+
 .sourcifyOption.OptionTerms<-function(option,def=NULL)
      .sourcifyOption.default(option,def)
-  
+
 .sourcifyOption.OptionArray<-function(option,def=NULL) {
   alist<-option$value
   if (length(alist)==0)
@@ -144,7 +164,7 @@ sourcifyOption<- function(x,...) UseMethod(".sourcifyOption")
 
 
 .sourcifyOption.OptionList<-function(option,def=NULL) {
-  
+
   if (length(option$value)==0)
     return('')
   if (option$value==option$default)
@@ -154,7 +174,7 @@ sourcifyOption<- function(x,...) UseMethod(".sourcifyOption")
 
 
 sourcifyName<-function(name) {
-  
+
   what<-which(make.names(name)!=name)
   for (i in what)
     name[[i]]<-paste0('"',name[[i]],'"')
@@ -162,16 +182,16 @@ sourcifyName<-function(name) {
 }
 
 sourcifyVars<-function(value) {
-  
+
   paste0(sourcifyName(value),collapse = ",")
-  
+
 }
 
 listify <- function(adata) {
   res <- lapply(1:dim(adata)[1], function(a) as.list(adata[a, ]))
   names(res) <- rownames(adata)
   res
-}            
+}
 
 smartTableName<-function(root,alist,end=NULL) {
     paste(root,make.names(paste(alist,collapse = ".")),end,sep="_")
@@ -188,7 +208,7 @@ transnames<-function(original,ref) {
 is.listOfList<-function(obj) {
   if (length(obj)==0)
      return(FALSE)
-   
+
   if (inherits(obj,"list")) {
     child<-obj[[1]]
     return(inherits(obj,"list"))
@@ -207,17 +227,17 @@ ebind<-function(...) {
     atab
   })
   return(do.call(rbind,tabs))
-  
+
 }
 
 ebind_square<-function(...) {
   tabs<-list(...)
   .names<-unique(unlist(sapply(tabs,colnames)))
   .max<-max(unlist(sapply(tabs,dim)))
- 
+
   tabs<-lapply(tabs, function(atab) {
     atab<-as.data.frame(atab)
-    for (name in .names) 
+    for (name in .names)
       if (!utils::hasName(atab,name))
         atab[[name]]<-NA
     if (dim(atab)[1]<.max)
@@ -225,7 +245,7 @@ ebind_square<-function(...) {
     atab
   })
   return(do.call(rbind,tabs))
-  
+
 }
 
 `ladd<-`<-function(x,value) {
@@ -245,16 +265,16 @@ ebind_square<-function(...) {
 sourcifyOption<- function(x,...) UseMethod(".sourcifyOption")
 
 .sourcifyOption.default=function(option,def=NULL) {
-  
+
   if (option$name == 'data')
     return('data = data')
-  
+
   if (startsWith(option$name, 'results/'))
     return('')
-  
+
   value <- option$value
   def <- option$default
-  
+
   if ( ! ((is.numeric(value) && isTRUE(all.equal(value, def))) || base::identical(value, def))) {
     valueAsSource <- option$valueAsSource
     if ( ! identical(valueAsSource, ''))
@@ -263,12 +283,12 @@ sourcifyOption<- function(x,...) UseMethod(".sourcifyOption")
   ''
 }
 .sourcifyOption.OptionVariables<-function(option,def=NULL) {
-  
+
   if (is.null(option$value))
     return('')
-  
+
   values<-sourcifyName(option$value)
-  
+
   if (length(values)==1)
     return(paste0(option$name,"=",values))
   else
@@ -292,7 +312,7 @@ sourcifyOption<- function(x,...) UseMethod(".sourcifyOption")
 
 
 .sourcifyOption.OptionList<-function(option,def=NULL) {
-  
+
   if (length(option$value)==0)
     return('')
   if (option$value==option$default)
@@ -302,7 +322,7 @@ sourcifyOption<- function(x,...) UseMethod(".sourcifyOption")
 
 
 sourcifyName<-function(name) {
-  
+
   what<-which(make.names(name)!=name)
   for (i in what)
     name[[i]]<-paste0('"',name[[i]],'"')
