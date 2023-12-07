@@ -1,0 +1,10 @@
+exportPattern("^[[:alpha:]]+")
+
+export(wide2longClass)
+export(wide2longOptions)
+
+export(long2wideClass)
+export(long2wideOptions)
+
+export(mergeClass)
+export(mergeOptions)

@@ -1,0 +1,33 @@
+---
+name:  long2wide
+title: "Long to wide"
+menuGroup: Data
+version: '1.0.0'
+jas: '1.2'
+
+options:
+    - name: data
+      type: Data
+
+
+    - name: rowstocols
+      title: Rows to Columns
+      type: Variables
+
+    - name: covs
+      title: Non-varying variables
+      type: Variables
+
+    - name: index
+      title: Indexing Variables
+      type: Variables
+
+    - name: id
+      title: ID Variable
+      type: Variable
+
+    - name: reshape
+      title: Reshape
+      type: Action
+
+...

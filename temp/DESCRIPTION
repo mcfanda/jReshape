@@ -2,9 +2,7 @@ Package: jReshape
 Type: Package
 Title: Reshape datasets from long to wide and back
 Version: 0.2.1
-Author: 
-   - Marcello Gallucci
-   - Maurizio Agosti 
+Author: Marcello Gallucci 
 Maintainer:  <mcfanda@gmail.com>
 Description: Reshape datasets from long to wide or from 
              wide to long. It offers a simple interface for simple cases
