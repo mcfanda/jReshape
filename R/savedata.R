@@ -1,12 +1,17 @@
 savedata<-function(obj,data) {
-  
-    jmvReadWrite:::jmvOpn(dtaFrm = data, dtaTtl =  "Untitled")
-    
+
+  ## -- If jmvReadWrite is NOT imported by CRUN
+  jmvReadWrite:::jmvOpn(dtaFrm = data, dtaTtl =  "Untitled")
+
+  ## If jmvReadWrite is imported from CRUN uncomment the two lines
+  ## below and comment out the function call on the line above
+  #jmvOpn <- utils::getFromNamespace("jmvOpn", "jmvReadWrite")
+  #jmvOpn(dtaFrm = data, dtaTtl =  "Untitled")
 
 }
 
 showdata<-function(obj,data) {
-  
+
   nl<-50
   data$row<-1:dim(data)[1]
   nr<-nrow(data)
