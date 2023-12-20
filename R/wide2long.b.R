@@ -188,7 +188,7 @@ wide2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                      index= 1:length(colstorows),
                      prefix= paste0(self$options$sim_index_prefix,1:length(colstorows))
       ) 
-      mark(levels)
+
       private$.rdata<-reshape(data,varying = colstorows, v.names=dep,direction="long", timevar = "int.index.", time=levels)
       private$.rdata<-private$.rdata[order(private$.rdata[[id]]),]
 
