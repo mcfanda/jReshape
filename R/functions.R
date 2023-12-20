@@ -1,5 +1,5 @@
 combine <- function(..., prefix = "", sep = "_",sep0=".") {
-  paste0(paste0(prefix,sep0), levels(interaction(..., sep = sep)))
+  paste0(paste0(prefix,sep0), as.character(interaction(..., sep = sep,lex.order = FALSE)))
 }
 
 file_ext<-function (x) 

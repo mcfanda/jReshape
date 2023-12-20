@@ -55,7 +55,7 @@ long2wideClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         wnames<-lapply(self$options$rowstocols, function(x) combine(nl,prefix = x))
         private$.wnames<-unlist(wnames)
         labs<-lapply(indexes, function(x) paste(x,levels(self$data[[x]]),sep="="))
-        private$.labs<-paste0(levels(interaction(labs, sep = " ")))
+        private$.labs<-paste0(as.character(interaction(labs, sep = " ")))
 
         # set up the coefficients SmartTable
         atable<-SmartTable$new(self$results$info)
@@ -135,14 +135,17 @@ long2wideClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                          data[[ind]]<-factor(data[[ind]])
         ## prepare the new variables names
         nl<-lapply(indexes, function(x) levels(data[[x]]))
+        mark(nl)
         wnames<-lapply(deps, function(x) combine(nl,prefix = x))
+        mark(wnames)
         wnames<-unlist(wnames)
         private$.nc<-length(wnames)
         
         ## prepare the labs
 
         labs<-lapply(seq_along(indexes), function(x) paste(indexes[[x]],levels(data[[indexes[[x]]]]),sep="="))
-        labs<-paste0(levels(interaction(labs, sep = " ")))
+
+        labs<-paste0(as.character(interaction(labs, sep = " ")))
         labs<-paste(wnames,labs,sep=": ")
         names(labs)<-wnames
         private$.labs<-labs
@@ -196,12 +199,13 @@ long2wideClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                                 timevar = "int.index.",
                                 idvar = "id.",
                                 drop=indexes)
-        
         private$.rdata<-private$.rdata[order(private$.rdata$id.),]
         private$.rdata$id.<-NULL
         rownames(private$.rdata)<-NULL
         
         private$.rdata<-private$.rdata[rowSums(is.na(private$.rdata))<(ncol(private$.rdata)),]
+        mark(head(private$.rdata))
+        mark(wnames)
         .names<-unlist(c(self$options$id,self$options$covs,wnames))
         private$.rdata<-private$.rdata[,.names]
         ## set the new variables labels,
