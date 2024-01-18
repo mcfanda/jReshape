@@ -1,9 +1,21 @@
 savedata<-function(obj,data) {
   
+    for (x in names(data)) {
+      if (inherits(data[[x]],"numeric")) {
+       test<-all(data[[x]]==round(data[[x]]))
+       if (test) 
+         data[[x]]<-as.integer(data[[x]])
+      }
+    }
     jmvReadWrite:::jmvOpn(dtaFrm = data, dtaTtl =  "Untitled")
     
 
 }
+
+d<-data.frame(x=c(1,2,3))
+d$x2<-as.integer(d$x)
+str(d)
+
 
 showdata<-function(obj,data) {
   
