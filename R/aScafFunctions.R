@@ -1,64 +1,54 @@
-j_DEBUG <- T
-j_INFO  <- T
+j_DEBUG <- FALSE
+j_INFO  <- FALSE
 t_INFO  <- FALSE
 j_W0S   <- .Platform$OS.type=="windows"
 
-## -- Note for Windows users
-## If your OS is Windows, remember to uncomment row 11, but feel free
-## to change the path and name of the log file as you like.
-## --
-wosjscaf<-""
-#wosjscaf <- paste0(base::Sys.getenv("TEMP"),"\\wosjscaf.log")
+fleWOS<-""
+# NB for Windows users: Feel free to change the path and name of the log file as you like.
+if (j_W0S) fleWOS <- file.path(base::Sys.getenv("TEMP"), "jReshape.log")
 
-
-#### Helper functions used by Scaffold (not exported)
+#### Helper functions for debugging
 
 tinfo <- function(...) {
-    if (t_INFO) {
-        if (j_W0S && wosjscaf != "") base::sink(file=wosjscaf, append=TRUE)
-
-        cat(paste(list(...)))
-        cat("\n")
-
-        if (j_W0S && wosjscaf != "") base::sink()
-    }
+    if (!t_INFO) return(invisible(NULL))
+    
+    if (j_W0S && nzchar(fleWOS)) base::sink(file = fleWOS, append = TRUE)
+    
+    cat(paste(list(...)))
+    cat("\n")
+    
+    if (j_W0S && nzchar(fleWOS)) base::sink()
 }
-
 
 jinfo <- function(...) {
-    if (j_INFO) {
-        if (j_W0S && wosjscaf != "") base::sink(file=wosjscaf, append=TRUE)
-
-        cat("\n")
-        cat(paste(list(...)))
-        cat("\n")
-
-        if (j_W0S && wosjscaf != "") base::sink()
-    }
+    if (!j_INFO) return(invisible(NULL))
+    
+    if (j_W0S && nzchar(fleWOS)) base::sink(file = fleWOS, append = TRUE)
+    
+    cat("\n")
+    cat(paste(list(...)))
+    cat("\n")
+    
+    if (j_W0S && nzchar(fleWOS)) base::sink()
 }
 
-
 mark <- function(...) {
-    if (!j_DEBUG)
-        return()
-
-    if (j_W0S && wosjscaf != "") base::sink(file=wosjscaf, append=TRUE)
-
-    if (missing(...)) cat("Mark here\n")
-
-    items<-list(...)
-
-    if (length(items)>1)  cat("______begin________\n\n")
-
+    if (!j_DEBUG) return(invisible(NULL))
+    
+    if (j_W0S && nzchar(fleWOS)) base::sink(file = fleWOS, append = TRUE)
+    
+    if (missing(...)) {
+        cat("Mark here\n")
+        return(invisible(NULL))
+    }
+    
+    items <- list(...)
+    cat("______begin________\n\n")
     for (a in items)
-        if (is.character(a))
-            cat(a,"\n")
-    else
-        print(a)
-
-    if (length(items)>1)  cat("_____end_______\n\n")
-
-    if (j_W0S && wosjscaf != "") base::sink()
+        if (is.character(a)) cat(a, "\n") else print(a)
+    cat("_____end_______\n\n")
+    
+    if (j_W0S && nzchar(fleWOS)) base::sink()
 }
 
 is.something <- function(x, ...) UseMethod(".is.something")
