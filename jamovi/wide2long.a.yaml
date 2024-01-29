@@ -2,6 +2,7 @@
 name:  wide2long
 title: "Wide to Long"
 menuGroup: Data
+menuSubgroup: jReshape
 version: '1.0.0'
 jas: '1.2'
 
@@ -26,7 +27,6 @@ options:
     - name: sim_covs
       title: Non-varying variables
       type: Variables
-
 
     - name:  sim_index
       title: Name 
@@ -54,7 +54,6 @@ options:
       title: Name  
       type: String
       default: "y"
-
 
     - name: comp_colstorows
       type: Array
