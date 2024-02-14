@@ -24,6 +24,7 @@ items:
          - comp_colstorows
          - sim_index
          - comp_index
+         - comp_index_values
       columns:
                     - name: text
                       title: "Info"
@@ -40,6 +41,7 @@ items:
          - comp_colstorows
          - sim_index
          - comp_index
+         - comp_index_values
       columns:
                     - name: Freq
                       title: "Freq"
@@ -56,6 +58,7 @@ items:
          - sim_index
          - sim_dep
          - index_values
+         - comp_index_values
          - sim_index_prefix
          - comp_colstorows
          - comp_index

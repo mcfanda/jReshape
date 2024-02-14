@@ -123,7 +123,7 @@ children:
             collapsed: true
             children:
               - type: Label
-                label: Clustering Variables
+                label: Index Variable (contains repeated levels values)
                 margin: large
                 style: list
                 stretchFactor: 1
@@ -149,6 +149,20 @@ children:
                           type: TextBox
                           format: number
                         stretchFactor: 1.2
+                  - type: Label
+                    label: Values
+                    margin: large
+                    children:
+                      - name: comp_index_values_index
+                        type: RadioButton
+                        optionName: comp_index_values
+                        optionPart: index
+                      - type: RadioButton
+                        name: comp_index_values_name
+                        optionName: comp_index_values
+                        optionPart: name
+
+
   - type: LayoutBox
     margin: large
     children:
