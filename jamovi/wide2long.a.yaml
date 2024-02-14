@@ -55,6 +55,21 @@ options:
       type: String
       default: "y"
 
+
+
+    - name: comp_index_values
+      title: Levels defined as
+      type: List
+      options:
+        - name: name
+          title: Columns name
+        - name: index
+          title: Columns index
+      default: index
+
+
+
+
     - name: comp_colstorows
       type: Array
       default:

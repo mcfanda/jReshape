@@ -13,6 +13,7 @@ wide2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             index_values = "name",
             sim_index_prefix = "index_value",
             sim_dep = "y",
+            comp_index_values = "index",
             comp_colstorows = list(
                 list(label="long_y", vars=list())),
             comp_index = list(
@@ -59,6 +60,13 @@ wide2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 "sim_dep",
                 sim_dep,
                 default="y")
+            private$..comp_index_values <- jmvcore::OptionList$new(
+                "comp_index_values",
+                comp_index_values,
+                options=list(
+                    "name",
+                    "index"),
+                default="index")
             private$..comp_colstorows <- jmvcore::OptionArray$new(
                 "comp_colstorows",
                 comp_colstorows,
@@ -103,6 +111,7 @@ wide2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..index_values)
             self$.addOption(private$..sim_index_prefix)
             self$.addOption(private$..sim_dep)
+            self$.addOption(private$..comp_index_values)
             self$.addOption(private$..comp_colstorows)
             self$.addOption(private$..comp_index)
             self$.addOption(private$..comp_covs)
@@ -116,6 +125,7 @@ wide2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         index_values = function() private$..index_values$value,
         sim_index_prefix = function() private$..sim_index_prefix$value,
         sim_dep = function() private$..sim_dep$value,
+        comp_index_values = function() private$..comp_index_values$value,
         comp_colstorows = function() private$..comp_colstorows$value,
         comp_index = function() private$..comp_index$value,
         comp_covs = function() private$..comp_covs$value,
@@ -128,6 +138,7 @@ wide2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..index_values = NA,
         ..sim_index_prefix = NA,
         ..sim_dep = NA,
+        ..comp_index_values = NA,
         ..comp_colstorows = NA,
         ..comp_index = NA,
         ..comp_covs = NA,
@@ -168,7 +179,8 @@ wide2longResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "sim_colstorows",
                     "comp_colstorows",
                     "sim_index",
-                    "comp_index"),
+                    "comp_index",
+                    "comp_index_values"),
                 columns=list(
                     list(
                         `name`="text", 
@@ -186,7 +198,8 @@ wide2longResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "sim_colstorows",
                     "comp_colstorows",
                     "sim_index",
-                    "comp_index"),
+                    "comp_index",
+                    "comp_index_values"),
                 columns=list(
                     list(
                         `name`="Freq", 
@@ -203,6 +216,7 @@ wide2longResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                     "sim_index",
                     "sim_dep",
                     "index_values",
+                    "comp_index_values",
                     "sim_index_prefix",
                     "comp_colstorows",
                     "comp_index",
@@ -245,6 +259,7 @@ wide2longBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param index_values .
 #' @param sim_index_prefix .
 #' @param sim_dep .
+#' @param comp_index_values .
 #' @param comp_colstorows .
 #' @param comp_index .
 #' @param comp_covs .
@@ -274,6 +289,7 @@ wide2long <- function(
     index_values = "name",
     sim_index_prefix = "index_value",
     sim_dep = "y",
+    comp_index_values = "index",
     comp_colstorows = list(
                 list(label="long_y", vars=list())),
     comp_index = list(
@@ -303,6 +319,7 @@ wide2long <- function(
         index_values = index_values,
         sim_index_prefix = sim_index_prefix,
         sim_dep = sim_dep,
+        comp_index_values = comp_index_values,
         comp_colstorows = comp_colstorows,
         comp_index = comp_index,
         comp_covs = comp_covs,

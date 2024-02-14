@@ -141,8 +141,7 @@ wide2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
     .run = function() {
       
       jinfo("MODULE: run phase started")
-      mark(private$.createfile)
-      
+
       if (private$.notrun)    return()
 
       private$.reshape()
@@ -183,13 +182,27 @@ wide2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
       indexes<-private$.indexes
       id<-"id"
+      if (self$options$mode=="simple") {
       levels<-switch (self$options$index_values,
                      name = colstorows,
                      index= 1:length(colstorows),
                      prefix= paste0(self$options$sim_index_prefix,1:length(colstorows))
       ) 
+      } else {
+        if (length(indexes)>1 &&  self$options$comp_index_values=="name") {
+          msg<-"<h2>Warning</h2><div>Variables names cannot be used for multiple indexes</div>"
+          self$results$help$setVisible(TRUE)
+          self$results$help$setContent(msg)
+        }
 
-      private$.rdata<-reshape(data,varying = colstorows, v.names=dep,direction="long", timevar = "int.index.", time=levels)
+        levels<-switch (self$options$comp_index_values,
+                        name = apply(do.call(rbind,colstorows),2,function(x) paste0(x,collapse = "_")),
+                        index= 1:max(lengths(colstorows))
+        ) 
+        
+      }
+
+      private$.rdata<-reshape(data,varying = colstorows, v.names=dep,direction="long", timevar = "int.index.", times=levels)
       private$.rdata<-private$.rdata[order(private$.rdata[[id]]),]
 
       if (length(indexes)>1) {
