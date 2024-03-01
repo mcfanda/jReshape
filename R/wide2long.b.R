@@ -169,41 +169,47 @@ wide2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       return(atab)
     },
     
-    .reshape=function() {
-      vars<-c(unlist(private$.colstorows),unlist(private$.covs))
-      data<-subset(self$data,select=vars)
-  
-      private$.on<-dim(self$data)[1]
-      private$.ov<-dim(self$data)[2]
+    .reshape = function() {
       
-      dep<-unlist(private$.deps)
-      colstorows<-private$.colstorows
-      if (length(colstorows)==1) colstorows<-unlist(colstorows)
+      vars         <- c(unlist(private$.colstorows),unlist(private$.covs))
+      data         <- subset(self$data,select = vars)
+  
+      private$.on  <- dim(self$data)[1]
+      private$.ov  <- dim(self$data)[2]
+      dep          <- unlist(private$.deps)
+      colstorows   <- private$.colstorows
+      if (length(dep) == 1) 
+              colstorows <- unlist(colstorows)
+      indexes      <- private$.indexes
 
-      indexes<-private$.indexes
-      id<-"id"
-      if (self$options$mode=="simple") {
-      levels<-switch (self$options$index_values,
-                     name = colstorows,
-                     index= 1:length(colstorows),
-                     prefix= paste0(self$options$sim_index_prefix,1:length(colstorows))
+      id           <- "id"
+      ## here comes probably the worse piece of code I ever wrote. This must be re-done. 
+      ## I need it to work quickly, so that's the best I got
+      if (self$options$mode == "simple") {
+      levels <- switch(self$options$index_values,
+                     name   = colstorows,
+                     index  = 1:length(colstorows),
+                     prefix = paste0(self$options$sim_index_prefix,1:length(colstorows))
       ) 
       } else {
-        if (length(indexes)>1 &&  self$options$comp_index_values=="name") {
-          msg<-"<h2>Warning</h2><div>Variables names cannot be used for multiple indexes</div>"
+        if (length(indexes) > 1 &&  self$options$comp_index_values == "name") {
+          msg <- "<h2>Warning</h2><div>Variables names cannot be used for multiple indexes</div>"
           self$results$help$setVisible(TRUE)
           self$results$help$setContent(msg)
         }
+        .levels <- apply(do.call(rbind,colstorows),2,function(x) paste0(x,collapse = "_"))
 
-        levels<-switch (self$options$comp_index_values,
-                        name = apply(do.call(rbind,colstorows),2,function(x) paste0(x,collapse = "_")),
-                        index= 1:max(lengths(colstorows))
+        levels <- switch(self$options$comp_index_values,
+                        name  = .levels,
+                        index = 1:length(.levels)
+                        
         ) 
-        
       }
 
-      private$.rdata<-reshape(data,varying = colstorows, v.names=dep,direction="long", timevar = "int.index.", times=levels)
-      private$.rdata<-private$.rdata[order(private$.rdata[[id]]),]
+      mark(dep,colstorows,levels,class(colstorows))
+      
+      private$.rdata <- reshape(data,varying = colstorows, v.names=dep,direction = "long", timevar = "int.index.", times=levels)
+      private$.rdata <- private$.rdata[order(private$.rdata[[id]]),]
 
       if (length(indexes)>1) {
         grid<-expand.grid(lapply(indexes,function(x) 1:as.numeric(x$levels)))
