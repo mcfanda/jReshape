@@ -1,5 +1,5 @@
-j_DEBUG <- T
-j_INFO  <- T
+j_DEBUG <- F
+j_INFO  <- F
 t_INFO  <- FALSE
 j_W0S   <- .Platform$OS.type=="windows"
 
