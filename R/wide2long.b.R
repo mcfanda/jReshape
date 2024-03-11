@@ -26,6 +26,7 @@ wide2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       self$results$desc$setContent(" ")
       private$.createfile<-self$options$reshape
       if (self$options$mode=="complex") {
+        mark("complex mode")
         private$.deps<-lapply(self$options$comp_colstorows,function(x) x$label)
         private$.colstorows<-lapply(self$options$comp_colstorows,function(x) x$vars)
         indexes<-self$options$comp_index
@@ -52,8 +53,10 @@ wide2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
       if (!is.something(private$.indexes_name)) private$.indexes_name<-"index"
       
-      test<-any(unlist(lapply(private$.deps,function(x) !is.something(x))))
-      if (test)  {
+      test1<-any(unlist(lapply(private$.deps,function(x) !is.something(x))))
+      test2<-any(unlist(lapply(private$.deps,function(x) print(trimws(x)==""))))
+
+      if (test1 || test2)  {
         msg<-"<h2>Help</h2><div>Please give a name to the long format target variable</div>"
         self$results$help$setVisible(TRUE)
         self$results$help$setContent(msg)
@@ -197,6 +200,10 @@ wide2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
           self$results$help$setVisible(TRUE)
           self$results$help$setContent(msg)
         }
+        if (class(colstorows) == "character") {
+          colstorows<-list(colstorows)
+        }
+         
         .levels <- apply(do.call(rbind,colstorows),2,function(x) paste0(x,collapse = "_"))
 
         levels <- switch(self$options$comp_index_values,
@@ -206,8 +213,7 @@ wide2longClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         ) 
       }
 
-      mark(dep,colstorows,levels,class(colstorows))
-      
+
       private$.rdata <- reshape(data,varying = colstorows, v.names=dep,direction = "long", timevar = "int.index.", times=levels)
       private$.rdata <- private$.rdata[order(private$.rdata[[id]]),]
 
