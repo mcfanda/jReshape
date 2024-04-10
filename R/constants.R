@@ -44,7 +44,6 @@ ladd(HELP_complex2long)<-"<div>
 
 HELP_long2wide<-list()
 
-
 ladd(HELP_long2wide)<-"<h2>Getting started</h2>
                <div>
                With this module, you can transform a dataset from the long format to the wide format. 
@@ -76,3 +75,48 @@ ladd(HELP_long2wide)<-"
 
 
 filetypes<-c("omv","sav","Rdata","csv")
+
+
+##--------------------------##
+# --- jrmergecols v0.3.0 --- #
+
+HELP_mergecols<-list()
+
+ladd(HELP_mergecols)<-paste("<h2>Getting started</h2><div style=\"text-align:justify\">
+                            <p>Please assign one or more variables that appear in all data sets (e.g., a participant code)
+                            to <b>Variable(s) to Match the Data Sets by</b>.<br/>",
+                            "Afterwards, either write the name of (one or more) file(s) to be merged under
+                            <b>Data Set(s) to Add</b> (separate mulitiple file names with semicolons), or select input files with:",
+                            "<h2>&#x1F4C2 Select file(s)...</h2><hr>",
+                            "For a more comprehensive explanation regarding the types of merging operations, <b>Details</b>",
+                            "underneath the preview table.</p>")
+
+ladd(HELP_mergecols)<-paste("<h2>Getting started</h2><div style=\"text-align:justify\"><p>
+                            <h2>&#x1F4C2 Select file(s)...</h2><hr>",
+                            "For a more comprehensive explanation regarding the types of merging operations, <b>Details</b>",
+                            "underneath the preview table.</p>")
+
+ladd(HELP_mergecols)<-paste("<h2>&#x1F4C2 Reshape</h2> You can open the modified data set in a new jamovi window.",
+                            "<hr><svg width=\"130pt\" height=\"30pt\">
+                            <rect width=\"30\" height=\"30\" fill=\"#2E6CB9\">
+                            <animate attributeName=\"rx\" values=\"0;15;0\" dur=\"2s\" repeatCount=\"3\"/></rect>
+                            <circle cx=\"15\" cy=\"15\" r=\"12\" stroke=\"#2E6CB9\" stroke-width=\"1\" fill=\"Tomato\"/>
+                            <text x=\"35\" y=\"20\" font-size=\"130%\" fill=\"#2E6CB9\" style=\"text-anchor: start;\">
+                            File(s) Merged</text></svg><h3>{file}</h3><hr>")                           
+
+if (getRversion() >= "4.1.3") {
+    utils::globalVariables(c("maxRow", "maxCol", "useIdx", "mulTFle",
+                             "fmtVrI", "fmtAdC", "fmtAdR", "fmtFsC"))
+}
+
+# variable definitions
+maxRow <- 10
+maxCol <- 10
+useIdx <- FALSE
+mulTFle <- c("omv","csv","dta","jasp","Rdata","sav","sas7bdat")
+
+# message formatting for sprintf
+fmtVrI <- "<strong>Variables in the Output Data Set</strong> (%d variables in %d rows): %s"
+fmtAdC <- "There are %d more colums in the data set not shown here. A complete list of variables can be found in \"Variables in the Output Data Set\" above this table."
+fmtAdR <- "There are %d more rows in the data set not shown here."
+fmtFsC <- "The column%s %s %s shown first in this preview. In the created data set, the variable order is as shown in \"Variables in the Output Data Set\" above this table."

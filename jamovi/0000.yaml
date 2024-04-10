@@ -1,31 +1,37 @@
 ---
-title: Reshape datasets
+title: Reshape datasets from merge columns, long to wide and back
 name: jReshape
-version: 0.2.6
+version: 0.3.0
 jms: '1.0'
 authors:
   - Marcello Gallucci
   - Maurizio Agosti
-maintainer: mcfanda <mcfanda@gmail.com>
+maintainer: Marcello Gallucci <mcfanda@gmail.com>
 date: '2024-01-01'
 type: R
 description: >-
-  Reshape datasets from wide to long format or from long to  wide format. The
-  module offers a simple interface for  simple reshaping, and a more complex
-  interface for  more elaborated forms of reshaping.
+  Reshape datasets from long to wide or from wide to long and merge colunms. It
+  offers a simple interface for simple cases and a more elaborated interface for
+  more complex reshaping tasks.
 analyses:
   - title: Wide to Long
     name: wide2long
     ns: jReshape
     menuGroup: Data
-    menuTitle: Wide to Long
     menuSubgroup: jReshape
+    menuTitle: Wide to Long
   - title: Long to wide
     name: long2wide
     ns: jReshape
     menuGroup: Data
-    menuTitle: Long to wide
     menuSubgroup: jReshape
+    menuTitle: Long to wide
+  - title: Merge Columns
+    name: jrmergecols
+    ns: jReshape
+    menuGroup: Data
+    menuSubgroup: jReshape
+    menuTitle: Merge Columns
 usesNative: true
 minApp: 2.4.2
 

@@ -1,0 +1,50 @@
+---
+name: jrmergecols
+title: Merge Columns
+jrs:   '1.1'
+
+items:
+  - name:  help
+    type:  Html
+    clearWith: [ varBy, varAll, fleInp, typMrg, btnRes ]
+    
+  - name:  pvwDta
+    type:  Table
+    title: "Data Preview"
+    refs:  [ jmvReadWrite ]
+    clearWith: [ varBy, varAll, fleInp, typMrg ]
+    rows: 1
+    columns:
+      - name: fstCol
+        title: ""
+
+  - name:  addInf
+    type:  Html
+    clearWith: NULL
+    content: >
+      <h2>Details</h2>
+      <div style="text-align:justify">
+      <p>There are <b>four different types of merging</b> operations:<br/><br/>
+      1) <b>Keeps All Cases (Rows)</b><br/> 
+      keeps all cases (but if some input data sets did not contain that value
+      of the matching variable, there might be missing values for variable
+      from that data set).<br/>
+      2) <b>Keeps Only Cases Contained in All Merged Data Sets</b><br/>
+      Keeps only those cases where a particular value of the matching variable
+      was contained in all datasets.<br/>
+      3) <b>Keeps All Cases From the Currently Opened Data Set</b><br/>
+      Keeps all rows/cases from the active data set (whereas cases that are only
+      contained in the data sets defined under "Data Set(s) to Add" are dropped).<br/>
+      4) <b>Keeps All Cases From the Data Sets To Be Added</b><br/>
+      Keeps all cases from the data sets defined under "Data Set(s) to Add"
+      (whereas cases that are only contained in the active data set are
+      dropped).</p><hr>
+      <p>If there are variables with the same name in several of the input data
+      sets, it will checked whether they contain the same content.<br/>
+      If they are the same, only the first of these identical variables is kept
+      (and the others are removed).<br/>
+      If they are different, the name of the first of these variables is kept, 
+      and a suffix with their position (_2, _3, etc.) will be added to the name
+      of all other variables.</p></div>
+
+...

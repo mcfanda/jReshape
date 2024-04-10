@@ -1,0 +1,65 @@
+---
+name:  jrmergecols
+title: "Merge Columns"
+menuGroup: Data
+menuSubgroup: jReshape
+version: '1.0.0'
+jas: '1.2'
+
+completeWhenFilled: true
+
+options:
+  - name: data
+    type: Data
+    description:
+      R: the data as a data frame
+
+  - name: varBy
+    title: Variable(s) to Match the Data Sets By
+    type: Variables
+    permitted:
+    - numeric
+    - factor
+    - id
+    default:
+
+  - name: varAll
+    title: Further Variables in the Output
+    type: Variables
+    hidden: true
+    permitted:
+    - numeric
+    - factor
+    - id
+    default:
+
+  - name: fleInp
+    type: String
+    title: ""
+    default: ""
+
+  - name: fleChs
+    type: String
+    hidden: true
+    default: ""
+
+  - name: typMrg
+    title: "Keeps type of Merging Operation"
+    type: List
+    options:
+    - title: "outer &#x1F539 All Cases (Rows)"
+      name:  outer
+    - title: "inner &#x1F539 Only Cases Contained in All Merged Data Sets"
+      name:  inner
+    - title: "left  &#x1F539 All Cases From the Currently Opened Data Set"
+      name:  left
+    - title: "right &#x1F539 All Cases From the Data Sets To Be Added"
+      name:  right
+    default: outer
+
+  - name: btnRes
+    type: Action
+    title: Reshape
+    default: false
+
+...
