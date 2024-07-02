@@ -1,7 +1,7 @@
 Package: jReshape
 Type: Package
 Title: "Reshape datasets from merge columns, long to wide and back"
-Version: 0.3.0
+Version: 0.3.1
 Author: 
    - Marcello Gallucci
    - Maurizio Agosti 

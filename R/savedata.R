@@ -2,7 +2,8 @@ savedata<-function(obj,data) {
   
     for (x in names(data)) {
       if (inherits(data[[x]],"numeric")) {
-       test<-all(data[[x]]==round(data[[x]]))
+       vec<-na.omit(data[[x]])
+       test<-all(vec==round(vec))
        if (test) 
          data[[x]]<-as.integer(data[[x]])
       }
