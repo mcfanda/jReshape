@@ -1,0 +1,80 @@
+name: jrMergeCols
+title: Merge Columns
+jus: '3.0'
+stage: 0
+compilerMode: tame
+events:
+  loaded: './main::loaded'
+  update: './main::update'
+  remoteDataChanged: './main::dataChanged'
+children:
+  - type: VariableSupplier
+    permitted:
+      - numeric
+      - factor
+      - id
+    persistentItems: false
+    stretchFactor: 1
+    children:
+      - type: TargetLayoutBox
+        label: Matching Variables (ID variables)
+        children:
+          - type: VariablesListBox
+            name: varBy
+            isTarget: true
+  - type: LayoutBox
+    style: inline
+    stretchFactor: 1
+    margin: large
+    children:
+      - type: CustomControl
+        name: fleChs
+        horizontalAlignment: left
+      - type: TextBox
+        name: fleInp
+        format: string
+        stretchFactor: 2
+        horizontalAlignment: left
+        margin: large
+      - type: CustomControl
+        name: fleRes
+        stretchFactor: 1
+        horizontalAlignment: right
+  - type: LayoutBox
+    margin: large
+    style: inline
+    children:
+      - type: Label
+        label: Keep cases
+        children:
+          - type: RadioButton
+            name: type_outer
+            optionName: type
+            optionPart: outer
+          - type: RadioButton
+            name: type_inner
+            optionName: type
+            optionPart: inner
+          - type: RadioButton
+            name: type_left
+            optionName: type
+            optionPart: left  
+          - type: RadioButton
+            name: type_right
+            optionName: type
+            optionPart: right
+      - type: Label
+        label: Replicated variables from
+        children:
+          - type: RadioButton
+            name: common_both
+            optionName: common
+            optionPart: both
+          - type: RadioButton
+            name: common_left
+            optionName: common
+            optionPart: left
+          - type: RadioButton
+            name: common_right
+            optionName: common
+            optionPart: right

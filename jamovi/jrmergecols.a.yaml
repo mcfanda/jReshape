@@ -1,0 +1,80 @@
+---
+name:  jrmergecols
+title: "Merge Columns"
+menuGroup: Data
+menuSubgroup: jReshape
+version: '1.0.0'
+jas: '1.2'
+
+completeWhenFilled: true
+
+options:
+  - name: data
+    type: Data
+    description:
+      R: the data as a data frame
+
+  - name: varBy
+    title: Index Variables (match by)
+    type: Variables
+    permitted:
+      - numeric
+      - factor
+      - id
+
+  - name: varAll
+    title: All variables
+    type: Variables
+    hidden: true
+    permitted:
+      - numeric
+      - factor
+      - id
+
+  - name: fleInp
+    type: String
+    title: ""
+    default: ""
+
+  - name: fleChs
+    type: String
+    hidden: true
+    
+  - name: fleRes
+    type: String
+    hidden: true    
+
+  - name: type
+    title: Keep cases
+    type: List
+    options:
+      - title: '[outer] &#x1F539 In any datasets'
+        name: outer
+      - title: '[inner] &#x1F539 In all datasets'
+        name: inner
+      - title: '[left&nbsp;&nbsp;&nbsp;] &#x1F539 Only in active data'
+        name: left
+      - title: '[right] &#x1F539 Only in the external data'
+        name: right
+    default: outer
+
+  - name: common
+    title: Replicated variables from
+    type: List
+    options:
+      - title: '[both] &#x1F539 Both datasets'
+        name:  both
+      - title: '[left&nbsp;&nbsp;] &#x1F539 Open dataset'
+        name:  left
+      - title: '[right] &#x1F539 External dataset'
+        name:  right
+    default: both
+
+  - name: btnReshape
+    type: Action
+    title: Reshape
+    hidden: true    
+    default: false
+    
+
+...

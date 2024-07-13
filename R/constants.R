@@ -44,7 +44,6 @@ ladd(HELP_complex2long)<-"<div>
 
 HELP_long2wide<-list()
 
-
 ladd(HELP_long2wide)<-"<h2>Getting started</h2>
                <div>
                With this module, you can transform a dataset from the long format to the wide format. 

@@ -1,0 +1,65 @@
+---
+name: jrmergecols
+title: Merge Columns
+jrs:   '1.1'
+
+items:
+  - name: help
+    title: Getting started
+    type: Html
+    clearWith:
+      - fleInp
+      - varBy
+      - btnReshape
+
+  - name: desc
+    type: Html
+    visible: false
+
+  - name: info
+    title: Info Table
+    type: Table
+    clearWith:
+      - fleInp
+      - varBy
+      - common
+      - type
+    columns:
+      - name: text
+        title: "Info"
+        type: text
+      - name: var
+        title: "Value"
+        type: text
+        
+  - name: features
+    title:  Common Variables
+    type: Table
+    clearWith:
+      - fleInp
+      - varBy
+    columns:
+      - name: var
+        title: "Variable"
+        type: text
+      - name: lab1
+        title: "Type.x"
+        type: text
+      - name: lab2
+        title: "Type.y"
+        type: text
+
+  - name:  showdata
+    title: Data Preview
+    type:  Table
+    clearWith:
+      - fleInp
+      - varBy
+      - type
+      - common
+    columns:
+      - name: row
+        title: "Rows"
+        type: integer
+
+...
