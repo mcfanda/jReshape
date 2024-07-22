@@ -23,6 +23,8 @@ jrmergecolsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
             if (private$.chkVar()) {
                 # prepare output table
+               dd<-private$.crrArg()
+               mark(str(dd$dtaInp))
                 private$.mrgDta <- do.call(jmvReadWrite::merge_cols_omv, private$.crrArg())
 
                 seqRow <- seq(self$results$pvwDta$rowCount + 1, min(dim(private$.mrgDta)[1], maxRow))

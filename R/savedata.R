@@ -13,11 +13,6 @@ savedata<-function(obj,data) {
 
 }
 
-d<-data.frame(x=c(1,2,3))
-d$x2<-as.integer(d$x)
-str(d)
-
-
 showdata<-function(obj,data) {
   
   nl<-50
