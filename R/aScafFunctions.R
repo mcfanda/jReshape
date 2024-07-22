@@ -1,5 +1,5 @@
-j_DEBUG <- F
-j_INFO  <- F
+j_DEBUG <- FALSE
+j_INFO  <- FALSE
 t_INFO  <- FALSE
 j_W0S   <- .Platform$OS.type=="windows"
 
@@ -11,43 +11,43 @@ if (j_W0S) fleWOS <- file.path(base::Sys.getenv("TEMP"), "jReshape.log")
 
 tinfo <- function(...) {
     if (!t_INFO) return(invisible(NULL))
-    
+
     if (j_W0S && nzchar(fleWOS)) base::sink(file = fleWOS, append = TRUE)
-    
+
     cat(paste(list(...)))
     cat("\n")
-    
+
     if (j_W0S && nzchar(fleWOS)) base::sink()
 }
 
 jinfo <- function(...) {
     if (!j_INFO) return(invisible(NULL))
-    
+
     if (j_W0S && nzchar(fleWOS)) base::sink(file = fleWOS, append = TRUE)
-    
+
     cat("\n")
     cat(paste(list(...)))
     cat("\n")
-    
+
     if (j_W0S && nzchar(fleWOS)) base::sink()
 }
 
 mark <- function(...) {
     if (!j_DEBUG) return(invisible(NULL))
-    
+
     if (j_W0S && nzchar(fleWOS)) base::sink(file = fleWOS, append = TRUE)
-    
+
     if (missing(...)) {
         cat("Mark here\n")
         return(invisible(NULL))
     }
-    
+
     items <- list(...)
     cat("______begin________\n\n")
     for (a in items)
         if (is.character(a)) cat(a, "\n") else print(a)
     cat("_____end_______\n\n")
-    
+
     if (j_W0S && nzchar(fleWOS)) base::sink()
 }
 
