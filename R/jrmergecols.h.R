@@ -105,7 +105,6 @@ jrmergecolsResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
     inherit = jmvcore::Group,
     active = list(
         help = function() private$.items[["help"]],
-        desc = function() private$.items[["desc"]],
         info = function() private$.items[["info"]],
         features = function() private$.items[["features"]],
         showdata = function() private$.items[["showdata"]]),
@@ -124,10 +123,6 @@ jrmergecolsResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                     "fleInp",
                     "varBy",
                     "btnReshape")))
-            self$add(jmvcore::Html$new(
-                options=options,
-                name="desc",
-                visible=FALSE))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="info",
@@ -217,7 +212,6 @@ jrmergecolsBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$help} \tab \tab \tab \tab \tab a html \cr
-#'   \code{results$desc} \tab \tab \tab \tab \tab a html \cr
 #'   \code{results$info} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$features} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$showdata} \tab \tab \tab \tab \tab a table \cr

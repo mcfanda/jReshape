@@ -231,7 +231,7 @@ jrmergecolsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 '<h2>Getting started</h2><div style=\"text-align:justify\">',
                 '<h2>&#x1F4C2 Select file ...</h2><hr>',
                 '<ol><li>Please, assign one or more variables that appear in all data sets to Matching Variables <b>(ID variables)</b></li>',
-                '<li>You can merge columns from a file into the current dataset by using the <b>Select file ...</b> button or by typing the full path and name of the file.</li></ol><br/>',
+                '<li>You can merge columns from a file into the current dataset by using the <b>Select file ...</b> button (<b>Ctrl+F</b>) or by typing the full path and name of the file.</li></ol><br/>',
                 '<svg width=\"130pt\" height=\"30pt\">',
                 '<rect width=\"30\" height=\"30\" fill=\"#2E6CB9\">',
                 '<animate attributeName=\"rx\" values=\"0;15;0\" dur=\"2s\" repeatCount=\"3\"/></rect>',
@@ -256,7 +256,7 @@ jrmergecolsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             } else if(nchar(self$options$fleInp) > 0)
                 hlp <- paste0(hlp,
                              '<h2>&#x1F4C1 Reshape</h2>
-                              You can open the modified data set in a new jamovi window, using the <b>Reshape</b> button')
+                              Open the modified data set in a new jamovi window, using the <b>Reshape</b> button (<b>Ctrl+R</b>)')
 
             self$results$help$setContent(hlp)
         }

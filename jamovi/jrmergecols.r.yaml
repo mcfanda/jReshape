@@ -12,10 +12,6 @@ items:
       - varBy
       - btnReshape
 
-  - name: desc
-    type: Html
-    visible: false
-
   - name: info
     title: Info Table
     type: Table
