@@ -13,7 +13,8 @@ jrmergecolsOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             fleRes = NULL,
             type = "outer",
             common = "both",
-            btnReshape = FALSE, ...) {
+            btnReshape = FALSE,
+            jlog = FALSE, ...) {
 
             super$initialize(
                 package="jReshape",
@@ -70,6 +71,11 @@ jrmergecolsOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 btnReshape,
                 hidden=TRUE,
                 default=FALSE)
+            private$..jlog <- jmvcore::OptionBool$new(
+                "jlog",
+                jlog,
+                hidden=TRUE,
+                default=FALSE)
 
             self$.addOption(private$..varBy)
             self$.addOption(private$..varAll)
@@ -79,6 +85,7 @@ jrmergecolsOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             self$.addOption(private$..type)
             self$.addOption(private$..common)
             self$.addOption(private$..btnReshape)
+            self$.addOption(private$..jlog)
         }),
     active = list(
         varBy = function() private$..varBy$value,
@@ -88,7 +95,8 @@ jrmergecolsOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
         fleRes = function() private$..fleRes$value,
         type = function() private$..type$value,
         common = function() private$..common$value,
-        btnReshape = function() private$..btnReshape$value),
+        btnReshape = function() private$..btnReshape$value,
+        jlog = function() private$..jlog$value),
     private = list(
         ..varBy = NA,
         ..varAll = NA,
@@ -97,7 +105,8 @@ jrmergecolsOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
         ..fleRes = NA,
         ..type = NA,
         ..common = NA,
-        ..btnReshape = NA)
+        ..btnReshape = NA,
+        ..jlog = NA)
 )
 
 jrmergecolsResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -134,12 +143,12 @@ jrmergecolsResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                     "type"),
                 columns=list(
                     list(
-                        `name`="text", 
-                        `title`="Info", 
+                        `name`="text",
+                        `title`="Info",
                         `type`="text"),
                     list(
-                        `name`="var", 
-                        `title`="Value", 
+                        `name`="var",
+                        `title`="Value",
                         `type`="text"))))
             self$add(jmvcore::Table$new(
                 options=options,
@@ -150,16 +159,16 @@ jrmergecolsResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                     "varBy"),
                 columns=list(
                     list(
-                        `name`="var", 
-                        `title`="Variable", 
+                        `name`="var",
+                        `title`="Variable",
                         `type`="text"),
                     list(
-                        `name`="lab1", 
-                        `title`="Type.x", 
+                        `name`="lab1",
+                        `title`="Type.x",
                         `type`="text"),
                     list(
-                        `name`="lab2", 
-                        `title`="Type.y", 
+                        `name`="lab2",
+                        `title`="Type.y",
                         `type`="text"))))
             self$add(jmvcore::Table$new(
                 options=options,
@@ -172,8 +181,8 @@ jrmergecolsResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                     "common"),
                 columns=list(
                     list(
-                        `name`="row", 
-                        `title`="Rows", 
+                        `name`="row",
+                        `title`="Rows",
                         `type`="integer"))))}))
 
 jrmergecolsBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -199,7 +208,7 @@ jrmergecolsBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 
 #' Merge Columns
 #'
-#' 
+#'
 #' @param data the data as a data frame
 #' @param varBy .
 #' @param varAll .
@@ -209,6 +218,7 @@ jrmergecolsBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param type .
 #' @param common .
 #' @param btnReshape .
+#' @param jlog .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$help} \tab \tab \tab \tab \tab a html \cr
@@ -233,7 +243,8 @@ jrmergecols <- function(
     fleRes,
     type = "outer",
     common = "both",
-    btnReshape = FALSE) {
+    btnReshape = FALSE,
+    jlog = FALSE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("jrmergecols requires jmvcore to be installed (restart may be required)")
@@ -255,7 +266,8 @@ jrmergecols <- function(
         fleRes = fleRes,
         type = type,
         common = common,
-        btnReshape = btnReshape)
+        btnReshape = btnReshape,
+        jlog = jlog)
 
     analysis <- jrmergecolsClass$new(
         options = options,

@@ -11,6 +11,9 @@ jrmergecolsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         .notrun=FALSE,
 
         .init=function() {
+            # Update logging flags based on current options
+            set_logflags(self$options$jlog)
+
             jinfo("MODULE: init phase started")
 
             self$results$showdata$setTitle(
@@ -54,6 +57,8 @@ jrmergecolsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             private$.tables[["info"]] <- atable
 
             lapply(private$.tables, function(x) x$initTable())
+
+            jinfo("MODULE: init phase ended")
         },
 
         .postInit=function() {
@@ -66,6 +71,9 @@ jrmergecolsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         },
 
         .run=function() {
+            # Update logging flags during the run phase
+            set_logflags(self$options$jlog)
+
             jinfo("MODULE: run phase started")
 
             private$.helpmerge()
@@ -80,6 +88,8 @@ jrmergecolsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             lapply(private$.tables, function(x) x$runTable())
 
             private$.reshape()
+
+            jinfo("MODULE: run phase ended")
         },
 
         .reshape=function() {
@@ -91,6 +101,8 @@ jrmergecolsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 data <- private$.mergedata
                 jmvReadWrite:::jmvOpn(dtaFrm=data, dtaTtl= "Untitled")
             }
+
+            jinfo("MODULE: reshape phase ended")
         },
 
         .inspect=function() {
@@ -130,6 +142,7 @@ jrmergecolsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
                 tail(private$.mergedata)
             }
+            jinfo("MODULE: infotable phase ended")
 
             return(tab)
         },
@@ -183,6 +196,8 @@ jrmergecolsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             )
 
             private$.mergedata <- do.call(merge, opts)
+
+            jinfo("MODULE: merge phase ended")
         },
 
         .showdata=function() {
@@ -221,7 +236,7 @@ jrmergecolsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
                 self$results$showdata$setState(data)
             }
-
+            jinfo("MODULE: showdata phase ended")
             return(data)
         },
 
