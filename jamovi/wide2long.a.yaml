@@ -104,4 +104,10 @@ options:
     - name: reshape
       title: Reshape
       type: Action
+      
+    - name: jlog
+      title: ''
+      type: Bool
+      hidden: true
+      default: false
 ...

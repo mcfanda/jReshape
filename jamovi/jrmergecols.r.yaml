@@ -13,13 +13,9 @@ items:
       - btnReshape
 
   - name: info
-    title: Info Table
     type: Table
-    clearWith:
-      - fleInp
-      - varBy
-      - common
-      - type
+    title: Info Table
+    clearWith: [varBy, varAll, fleInp, type]
     columns:
       - name: text
         title: "Info"
@@ -27,35 +23,95 @@ items:
       - name: var
         title: "Value"
         type: text
-        
+
   - name: features
-    title:  Common Variables
     type: Table
-    clearWith:
-      - fleInp
-      - varBy
+    title:  Common Variables
+    clearWith: [fleInp, varBy]
     columns:
       - name: var
         title: "Variable"
         type: text
-      - name: lab1
+      - name: lab
         title: "Type.x"
         type: text
-      - name: lab2
-        title: "Type.y"
+      - name: lab1
+        title: "Type.y1"
         type: text
+      - name: lab2
+        title: "Type.y2"
+        type: text
+        visible: (nfiles >= 2)
+      - name: lab3
+        title: "Type.y3"
+        type: text
+        visible: (nfiles >= 3)
 
   - name:  showdata
-    title: Data Preview
     type:  Table
-    clearWith:
-      - fleInp
-      - varBy
-      - type
-      - common
+    title: Data Preview
+    clearWith: [varBy, varAll, fleInp, type]
     columns:
       - name: row
         title: "Rows"
         type: integer
+
+  - name: mergeReport
+    type: Html
+    title: ""
+    visible: false
+    clearWith: [varBy, varAll, fleInp, type]
+    content: ""
+
+  - name: modstyletabs
+    type: Html
+    visible: true
+    clearWith: [ ]
+    content: >
+      <style>
+      /* Hide the element with id "modstyletabs" if needed */
+      #modstyletabs { display: none; }
+
+      /* Style for the table */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      /* Style for the table caption (title) */
+      caption {
+        font-family: Arial, sans-serif;
+        font-size: 1rem;    /* Using rem (0.875rem is equivalent a 14px if the root font-size is 16px) */
+        font-weight: bold;  /* Makes the text bold */
+        color: #3e6da9;     /* Sets the text color to jamovi blue */
+        margin-bottom: 8px; /* Optional: adds some spacing below the caption */
+      }
+
+      /* Style for table headers and cells */
+      th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        font-family: Arial, sans-serif;
+        font-size: 0.75rem; /* For example, 0.75rem equals 12px if root font-size is 16px */
+      }
+
+      /* Style for column headers only */
+      th {
+        background-color: #3e6da9;    /* Jamovi blue for header background */
+        color: white;                 /* Text color for headers */
+        text-align: left;
+      }
+
+      /* Row styles */
+      tr:nth-child(even) {
+        background-color: #d6eaf8;
+      }
+      tr:nth-child(odd) {
+        background-color: #ffffff;
+      }
+      tr:hover {
+        background-color: #aed6f1;
+      }
+      </style>
 
 ...

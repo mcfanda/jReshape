@@ -12,8 +12,9 @@ jrmergecolsOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             fleChs = NULL,
             fleRes = NULL,
             type = "outer",
-            common = "both",
             btnReshape = FALSE,
+            showMergeReport = FALSE,
+            nfiles = 0,
             jlog = FALSE, ...) {
 
             super$initialize(
@@ -58,19 +59,20 @@ jrmergecolsOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                     "left",
                     "right"),
                 default="outer")
-            private$..common <- jmvcore::OptionList$new(
-                "common",
-                common,
-                options=list(
-                    "both",
-                    "left",
-                    "right"),
-                default="both")
             private$..btnReshape <- jmvcore::OptionAction$new(
                 "btnReshape",
                 btnReshape,
                 hidden=TRUE,
                 default=FALSE)
+            private$..showMergeReport <- jmvcore::OptionBool$new(
+                "showMergeReport",
+                showMergeReport,
+                default=FALSE)
+            private$..nfiles <- jmvcore::OptionInteger$new(
+                "nfiles",
+                nfiles,
+                hidden=TRUE,
+                default=0)
             private$..jlog <- jmvcore::OptionBool$new(
                 "jlog",
                 jlog,
@@ -83,8 +85,9 @@ jrmergecolsOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             self$.addOption(private$..fleChs)
             self$.addOption(private$..fleRes)
             self$.addOption(private$..type)
-            self$.addOption(private$..common)
             self$.addOption(private$..btnReshape)
+            self$.addOption(private$..showMergeReport)
+            self$.addOption(private$..nfiles)
             self$.addOption(private$..jlog)
         }),
     active = list(
@@ -94,8 +97,9 @@ jrmergecolsOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
         fleChs = function() private$..fleChs$value,
         fleRes = function() private$..fleRes$value,
         type = function() private$..type$value,
-        common = function() private$..common$value,
         btnReshape = function() private$..btnReshape$value,
+        showMergeReport = function() private$..showMergeReport$value,
+        nfiles = function() private$..nfiles$value,
         jlog = function() private$..jlog$value),
     private = list(
         ..varBy = NA,
@@ -104,8 +108,9 @@ jrmergecolsOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
         ..fleChs = NA,
         ..fleRes = NA,
         ..type = NA,
-        ..common = NA,
         ..btnReshape = NA,
+        ..showMergeReport = NA,
+        ..nfiles = NA,
         ..jlog = NA)
 )
 
@@ -116,7 +121,9 @@ jrmergecolsResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
         help = function() private$.items[["help"]],
         info = function() private$.items[["info"]],
         features = function() private$.items[["features"]],
-        showdata = function() private$.items[["showdata"]]),
+        showdata = function() private$.items[["showdata"]],
+        mergeReport = function() private$.items[["mergeReport"]],
+        modstyletabs = function() private$.items[["modstyletabs"]]),
     private = list(),
     public=list(
         initialize=function(options) {
@@ -137,18 +144,18 @@ jrmergecolsResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 name="info",
                 title="Info Table",
                 clearWith=list(
-                    "fleInp",
                     "varBy",
-                    "common",
+                    "varAll",
+                    "fleInp",
                     "type"),
                 columns=list(
                     list(
-                        `name`="text",
-                        `title`="Info",
+                        `name`="text", 
+                        `title`="Info", 
                         `type`="text"),
                     list(
-                        `name`="var",
-                        `title`="Value",
+                        `name`="var", 
+                        `title`="Value", 
                         `type`="text"))))
             self$add(jmvcore::Table$new(
                 options=options,
@@ -159,31 +166,58 @@ jrmergecolsResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                     "varBy"),
                 columns=list(
                     list(
-                        `name`="var",
-                        `title`="Variable",
+                        `name`="var", 
+                        `title`="Variable", 
                         `type`="text"),
                     list(
-                        `name`="lab1",
-                        `title`="Type.x",
+                        `name`="lab", 
+                        `title`="Type.x", 
                         `type`="text"),
                     list(
-                        `name`="lab2",
-                        `title`="Type.y",
-                        `type`="text"))))
+                        `name`="lab1", 
+                        `title`="Type.y1", 
+                        `type`="text"),
+                    list(
+                        `name`="lab2", 
+                        `title`="Type.y2", 
+                        `type`="text", 
+                        `visible`="(nfiles >= 2)"),
+                    list(
+                        `name`="lab3", 
+                        `title`="Type.y3", 
+                        `type`="text", 
+                        `visible`="(nfiles >= 3)"))))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="showdata",
                 title="Data Preview",
                 clearWith=list(
-                    "fleInp",
                     "varBy",
-                    "type",
-                    "common"),
+                    "varAll",
+                    "fleInp",
+                    "type"),
                 columns=list(
                     list(
-                        `name`="row",
-                        `title`="Rows",
-                        `type`="integer"))))}))
+                        `name`="row", 
+                        `title`="Rows", 
+                        `type`="integer"))))
+            self$add(jmvcore::Html$new(
+                options=options,
+                name="mergeReport",
+                title="",
+                visible=FALSE,
+                clearWith=list(
+                    "varBy",
+                    "varAll",
+                    "fleInp",
+                    "type"),
+                content=""))
+            self$add(jmvcore::Html$new(
+                options=options,
+                name="modstyletabs",
+                visible=TRUE,
+                clearWith=list(),
+                content="<style> /* Hide the element with id \"modstyletabs\" if needed */ #modstyletabs { display: none; }\n/* Style for the table */ table {\n  width: 100%;\n  border-collapse: collapse;\n}\n/* Style for the table caption (title) */ caption {\n  font-family: Arial, sans-serif;\n  font-size: 1rem;    /* Using rem (0.875rem is equivalent a 14px if the root font-size is 16px) */\n  font-weight: bold;  /* Makes the text bold */\n  color: #3e6da9;     /* Sets the text color to jamovi blue */\n  margin-bottom: 8px; /* Optional: adds some spacing below the caption */\n}\n/* Style for table headers and cells */ th, td {\n  border: 1px solid #ddd;\n  padding: 8px;\n  font-family: Arial, sans-serif;\n  font-size: 0.75rem; /* For example, 0.75rem equals 12px if root font-size is 16px */\n}\n/* Style for column headers only */ th {\n  background-color: #3e6da9;    /* Jamovi blue for header background */\n  color: white;                 /* Text color for headers */\n  text-align: left;\n}\n/* Row styles */ tr:nth-child(even) {\n  background-color: #d6eaf8;\n} tr:nth-child(odd) {\n  background-color: #ffffff;\n} tr:hover {\n  background-color: #aed6f1;\n} </style>\n"))}))
 
 jrmergecolsBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
     "jrmergecolsBase",
@@ -208,7 +242,7 @@ jrmergecolsBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 
 #' Merge Columns
 #'
-#'
+#' 
 #' @param data the data as a data frame
 #' @param varBy .
 #' @param varAll .
@@ -216,8 +250,10 @@ jrmergecolsBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param fleChs .
 #' @param fleRes .
 #' @param type .
-#' @param common .
 #' @param btnReshape .
+#' @param showMergeReport Enable this option to generate detailed information
+#'   in HTML format
+#' @param nfiles .
 #' @param jlog .
 #' @return A results object containing:
 #' \tabular{llllll}{
@@ -225,6 +261,8 @@ jrmergecolsBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #'   \code{results$info} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$features} \tab \tab \tab \tab \tab a table \cr
 #'   \code{results$showdata} \tab \tab \tab \tab \tab a table \cr
+#'   \code{results$mergeReport} \tab \tab \tab \tab \tab a html \cr
+#'   \code{results$modstyletabs} \tab \tab \tab \tab \tab a html \cr
 #' }
 #'
 #' Tables can be converted to data frames with \code{asDF} or \code{\link{as.data.frame}}. For example:
@@ -242,8 +280,9 @@ jrmergecols <- function(
     fleChs,
     fleRes,
     type = "outer",
-    common = "both",
     btnReshape = FALSE,
+    showMergeReport = FALSE,
+    nfiles = 0,
     jlog = FALSE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
@@ -265,8 +304,9 @@ jrmergecols <- function(
         fleChs = fleChs,
         fleRes = fleRes,
         type = type,
-        common = common,
         btnReshape = btnReshape,
+        showMergeReport = showMergeReport,
+        nfiles = nfiles,
         jlog = jlog)
 
     analysis <- jrmergecolsClass$new(

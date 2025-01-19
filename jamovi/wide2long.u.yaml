@@ -3,6 +3,8 @@ name: wide2long
 jus: '3.0'
 stage: 0
 compilerMode: tame
+events:
+  loaded: './jrMain::view_loaded'
 children:
   - type: ModeSelector
     name: mode

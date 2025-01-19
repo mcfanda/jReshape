@@ -4,9 +4,9 @@ jus: '3.0'
 stage: 0
 compilerMode: tame
 events:
-  loaded: './jrmergecols::loaded'
-  update: './jrmergecols::update'
-  remoteDataChanged: './jrmergecols::dataChanged'
+   loaded: './jrmergecols::view_loaded'
+   update: './jrmergecols::view_updated'
+   remoteDataChanged: './jrmergecols::dataChanged'
 children:
   - type: VariableSupplier
     permitted:
@@ -36,6 +36,8 @@ children:
         stretchFactor: 2
         horizontalAlignment: left
         margin: large
+        events:
+          change: './jrmergecols::onChange_fleInp'
       - type: CustomControl
         name: fleRes
         stretchFactor: 1
@@ -58,23 +60,14 @@ children:
           - type: RadioButton
             name: type_left
             optionName: type
-            optionPart: left  
+            optionPart: left
           - type: RadioButton
             name: type_right
             optionName: type
             optionPart: right
-      - type: Label
-        label: Replicated variables from
-        children:
-          - type: RadioButton
-            name: common_both
-            optionName: common
-            optionPart: both
-          - type: RadioButton
-            name: common_left
-            optionName: common
-            optionPart: left
-          - type: RadioButton
-            name: common_right
-            optionName: common
-            optionPart: right
+
+  - type: LayoutBox
+    margin: large
+    children:
+      - type: CheckBox
+        name: showMergeReport
