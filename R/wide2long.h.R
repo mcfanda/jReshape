@@ -19,7 +19,8 @@ wide2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             comp_index = list(
                 list(var="index1", levels=0)),
             comp_covs = NULL,
-            reshape = NULL, ...) {
+            reshape = NULL,
+            jlog = FALSE, ...) {
 
             super$initialize(
                 package="jReshape",
@@ -103,6 +104,11 @@ wide2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..reshape <- jmvcore::OptionAction$new(
                 "reshape",
                 reshape)
+            private$..jlog <- jmvcore::OptionBool$new(
+                "jlog",
+                jlog,
+                hidden=TRUE,
+                default=FALSE)
 
             self$.addOption(private$..mode)
             self$.addOption(private$..sim_colstorows)
@@ -116,6 +122,7 @@ wide2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$.addOption(private$..comp_index)
             self$.addOption(private$..comp_covs)
             self$.addOption(private$..reshape)
+            self$.addOption(private$..jlog)
         }),
     active = list(
         mode = function() private$..mode$value,
@@ -129,7 +136,8 @@ wide2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         comp_colstorows = function() private$..comp_colstorows$value,
         comp_index = function() private$..comp_index$value,
         comp_covs = function() private$..comp_covs$value,
-        reshape = function() private$..reshape$value),
+        reshape = function() private$..reshape$value,
+        jlog = function() private$..jlog$value),
     private = list(
         ..mode = NA,
         ..sim_colstorows = NA,
@@ -142,7 +150,8 @@ wide2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
         ..comp_colstorows = NA,
         ..comp_index = NA,
         ..comp_covs = NA,
-        ..reshape = NA)
+        ..reshape = NA,
+        ..jlog = NA)
 )
 
 wide2longResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -264,6 +273,7 @@ wide2longBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param comp_index .
 #' @param comp_covs .
 #' @param reshape .
+#' @param jlog .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$desc} \tab \tab \tab \tab \tab a html \cr
@@ -295,7 +305,8 @@ wide2long <- function(
     comp_index = list(
                 list(var="index1", levels=0)),
     comp_covs,
-    reshape) {
+    reshape,
+    jlog = FALSE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("wide2long requires jmvcore to be installed (restart may be required)")
@@ -323,7 +334,8 @@ wide2long <- function(
         comp_colstorows = comp_colstorows,
         comp_index = comp_index,
         comp_covs = comp_covs,
-        reshape = reshape)
+        reshape = reshape,
+        jlog = jlog)
 
     analysis <- wide2longClass$new(
         options = options,

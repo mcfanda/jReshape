@@ -10,7 +10,8 @@ long2wideOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             covs = NULL,
             index = NULL,
             id = NULL,
-            reshape = NULL, ...) {
+            reshape = NULL,
+            jlog = FALSE, ...) {
 
             super$initialize(
                 package="jReshape",
@@ -33,25 +34,33 @@ long2wideOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             private$..reshape <- jmvcore::OptionAction$new(
                 "reshape",
                 reshape)
+            private$..jlog <- jmvcore::OptionBool$new(
+                "jlog",
+                jlog,
+                hidden=TRUE,
+                default=FALSE)
 
             self$.addOption(private$..rowstocols)
             self$.addOption(private$..covs)
             self$.addOption(private$..index)
             self$.addOption(private$..id)
             self$.addOption(private$..reshape)
+            self$.addOption(private$..jlog)
         }),
     active = list(
         rowstocols = function() private$..rowstocols$value,
         covs = function() private$..covs$value,
         index = function() private$..index$value,
         id = function() private$..id$value,
-        reshape = function() private$..reshape$value),
+        reshape = function() private$..reshape$value,
+        jlog = function() private$..jlog$value),
     private = list(
         ..rowstocols = NA,
         ..covs = NA,
         ..index = NA,
         ..id = NA,
-        ..reshape = NA)
+        ..reshape = NA,
+        ..jlog = NA)
 )
 
 long2wideResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
@@ -154,6 +163,7 @@ long2wideBase <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
 #' @param index .
 #' @param id .
 #' @param reshape .
+#' @param jlog .
 #' @return A results object containing:
 #' \tabular{llllll}{
 #'   \code{results$help} \tab \tab \tab \tab \tab a html \cr
@@ -175,7 +185,8 @@ long2wide <- function(
     covs,
     index,
     id,
-    reshape) {
+    reshape,
+    jlog = FALSE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
         stop("long2wide requires jmvcore to be installed (restart may be required)")
@@ -198,7 +209,8 @@ long2wide <- function(
         covs = covs,
         index = index,
         id = id,
-        reshape = reshape)
+        reshape = reshape,
+        jlog = jlog)
 
     analysis <- long2wideClass$new(
         options = options,

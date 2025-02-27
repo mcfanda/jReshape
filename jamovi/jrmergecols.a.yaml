@@ -39,42 +39,47 @@ options:
   - name: fleChs
     type: String
     hidden: true
-    
+
   - name: fleRes
     type: String
-    hidden: true    
+    hidden: true
 
   - name: type
-    title: Keep cases
+    title: 'Keep cases in Merging Operation'
     type: List
     options:
-      - title: '[outer] &#x1F539 In any datasets'
+      - title: '[outer] &#x1F539 All Cases (Rows)'
         name: outer
-      - title: '[inner] &#x1F539 In all datasets'
+      - title: '[inner] &#x1F539 Only Cases Contained in All Merged Data Sets'
         name: inner
-      - title: '[left&nbsp;&nbsp;&nbsp;] &#x1F539 Only in active data'
+      - title: '[left&nbsp;&nbsp;&nbsp;] &#x1F539 All Cases From the Currently Opened Data Set'
         name: left
-      - title: '[right] &#x1F539 Only in the external data'
+      - title: '[right] &#x1F539 All Cases From the Data Sets To Be Added'
         name: right
     default: outer
-
-  - name: common
-    title: Replicated variables from
-    type: List
-    options:
-      - title: '[both] &#x1F539 Both datasets'
-        name:  both
-      - title: '[left&nbsp;&nbsp;] &#x1F539 Open dataset'
-        name:  left
-      - title: '[right] &#x1F539 External dataset'
-        name:  right
-    default: both
 
   - name: btnReshape
     type: Action
     title: Reshape
-    hidden: true    
+    hidden: true
     default: false
-    
 
+  - name: showMergeReport
+    title: "Merge Report <i>(Show detailed information)</i>"
+    type: Bool
+    default: false
+    description: |
+      Enable this option to generate detailed information in HTML format
+
+  - name: nfiles
+    title: Number of Files
+    type: Integer
+    hidden: true
+    default: 0
+
+  - name: jlog
+    title: ''
+    type: Bool
+    hidden: true
+    default: false
 ...
