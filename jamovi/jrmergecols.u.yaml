@@ -4,9 +4,9 @@ jus: '3.0'
 stage: 0
 compilerMode: tame
 events:
-   loaded: './jrmergecols::view_loaded'
-   update: './jrmergecols::view_updated'
-   remoteDataChanged: './jrmergecols::dataChanged'
+  loaded: ./jrmergecols::view_loaded
+  update: ./jrmergecols::view_updated
+  remoteDataChanged: ./jrmergecols::dataChanged
 children:
   - type: VariableSupplier
     permitted:
@@ -37,7 +37,7 @@ children:
         horizontalAlignment: left
         margin: large
         events:
-          change: './jrmergecols::onChange_fleInp'
+          change: ./jrmergecols::onChange_fleInp
       - type: CustomControl
         name: fleRes
         stretchFactor: 1
@@ -65,7 +65,11 @@ children:
             name: type_right
             optionName: type
             optionPart: right
-
+      - type: LayoutBox
+        margin: large
+        children:
+          - type: ActionButton
+            name: btnReshape
   - type: LayoutBox
     margin: large
     children:

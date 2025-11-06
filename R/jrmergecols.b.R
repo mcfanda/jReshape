@@ -210,14 +210,7 @@ jrmergecolsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
             # Open the dataset in a new Jamovi instance if requested
             if (self$options$btnReshape) {
-                tryCatch({
-                    jmvReadWrite:::jmvOpn(dtaFrm = private$.mergedata, dtaTtl = "Merged Dataset")
-                    jinfo("[.reshape] Merged dataset opened in a new Jamovi instance.")
-                }, error = function(e) {
-                    mzstop <- sprintf("Error opening dataset: %s", e$message)
-                    jinfo("[.reshape]", mzstop)
-                    stop(mzstop)
-                })
+                   savedata(self,private$.mergedata,title="Merged Dataset",option="btnReshape")  
             } else {
                 jinfo("[.reshape] Reshape not requested. Skipping.")
             }

@@ -61,11 +61,9 @@ options:
   - name: btnReshape
     type: Action
     title: Reshape
-    hidden: true
-    default: false
 
   - name: showMergeReport
-    title: "Merge Report <i>(Show detailed information)</i>"
+    title: "Merge Report (detailed information)"
     type: Bool
     default: false
     description: |
