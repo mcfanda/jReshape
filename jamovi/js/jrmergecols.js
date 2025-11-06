@@ -13,29 +13,38 @@ module.exports = {
         // 1. Enable the "LOGGING ACTIVE" indicator using the utility function
         enableLoggingIndicator({ ui });
 
+        // Hide the btnReshape Action button (no longer supports hidden: true in .a.yaml)
+        const btnReshapeEl = ui.btnReshape.$el[0];
+        if (btnReshapeEl) {
+            btnReshapeEl.style.display = 'none';
+        }
+
         // 2. Add shortcut for 'Select File(s)...' button
         KeyboardShortcuts.addShortcut(['ctrl', 'f'], () => {
             console.log('Shortcut pressed: CTRL+F');
 
             // Simulate a click on the "Select File(s)..." button
-            let fileButton = ui.fleChs.$el.find('#butsf-file');
-            if (fileButton.length > 0) {
+            const btnchs = ui.fleChs.$el[0];
+            const fileButton = btnchs.querySelector('#butsf-file');
+            if (fileButton) {
                 console.log('Invoking modeless file dialog.');
-                fileButton.trigger('click'); // Simulate the click
+                fileButton.click(); // Simulate the click
             } else {
                 console.warn('Select File button not found.');
             }
         });
 
         // 3. Add the 'Select File(s)...' button to the UI
-        let $btnchs = ui.fleChs.$el;
-        $btnchs.append(`
+        const btnchs = ui.fleChs.$el[0];
+        btnchs.insertAdjacentHTML('beforeend', `
             <label>
                 <input type="button" style="display: none;"/>
                 <span id="butsf-file" class="button-style" style="font-size: 1.3em;">Select <span>F</span>ile ...</span>
             </label>
         `);
-        $btnchs.find('#butsf-file').off('click').on('click', () => {
+        
+        const butsFile = btnchs.querySelector('#butsf-file');
+        butsFile.addEventListener('click', () => {
             console.log('Opening modeless file dialog.');
             DOMUtils.createCustomFileDialog(ui, (result) => {
                 // result contains: { filesArray, filePaths, fileCount }
@@ -63,30 +72,33 @@ module.exports = {
         });
 
         // 4. Add a tooltip for the 'Select File(s)...' button
-        TooltipManager.createTooltip($btnchs.find('#butsf-file')[0], 'Click or (Ctrl+F) to select a file to merge', 'right');
+        TooltipManager.createTooltip(butsFile, 'Click or (Ctrl+F) to select a file to merge', 'right');
 
         // 5. Add shortcut for 'Reshape' button
         KeyboardShortcuts.addShortcut(['ctrl', 'r'], () => {
-            let reshapeButton = ui.fleRes.$el.find('span#butsf-reshape');
-            if (reshapeButton.length) {
-                reshapeButton.trigger('click');
+            const btnres = ui.fleRes.$el[0];
+            const reshapeButton = btnres.querySelector('span#butsf-reshape');
+            if (reshapeButton) {
+                reshapeButton.click();
             }
         });
 
         // 6. Add the 'Reshape' button to the UI
-        let $btnres = ui.fleRes.$el;
-        $btnres.append(`
+        const btnres = ui.fleRes.$el[0];
+        btnres.insertAdjacentHTML('beforeend', `
             <label>
                 <input type="button" style="display: none;"/>
                 <span id="butsf-reshape" class="button-style" style="font-size: 1.3em;"><span>R</span>eshape</span>
             </label>
         `);
-        $btnres.find('#butsf-reshape').off('click').on('click', () => {
+        
+        const butsReshape = btnres.querySelector('#butsf-reshape');
+        butsReshape.addEventListener('click', () => {
             ui.btnReshape.setValue(true);
         });
 
         // 7. Add a tooltip for the 'Reshape' button
-        TooltipManager.createTooltip($btnres.find('#butsf-reshape')[0], 'Click or (Ctrl+R) for a new merged file', 'left');
+        TooltipManager.createTooltip(butsReshape, 'Click or (Ctrl+R) for a new merged file', 'left');
 
         // 8. Define a function to fetch the column names, excluding filter-related columns
         this.getColumnNames = async () => {
@@ -102,7 +114,7 @@ module.exports = {
 
         // 9. Populate the UI element with column names
         this.getColumnNames().then(columns => {
-        ui.varAll.setValue(columns);
+            ui.varAll.setValue(columns);
         });
     },
 
@@ -110,6 +122,12 @@ module.exports = {
      * Called to update the UI when data changes.
      */
     view_updated: function(ui, event) {
+        // Ensure btnReshape remains hidden
+        const btnReshapeEl = ui.btnReshape.$el[0];
+        if (btnReshapeEl) {
+            btnReshapeEl.style.display = 'none';
+        }
+
         this.getColumnNames().then((columns) => {
             if (!_.isEqual(ui.varAll.value(), columns)) {
                 ui.varAll.setValue(columns);

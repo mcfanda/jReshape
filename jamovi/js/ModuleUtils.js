@@ -286,40 +286,51 @@ const ToastManager = {
  */
 const enableLoggingIndicator = (options = {}) => {
     const {
-        parentElement = document.querySelector('.silky-options-header h1'),
+        parentElement,
         onEnable,
         onDisable,
         ui
     } = options;
 
-    if (!parentElement) {
-        console.error('Parent element not found for LOGGING ACTIVE indicator');
+    // Find parent element, with fallback
+    const target = parentElement || document.querySelector('.silky-options-header h1');
+    
+    if (!target) {
+        console.error('enableLoggingIndicator: Parent element not found. Cannot add LOGGING ACTIVE indicator.');
         return;
     }
 
-    // Default callbacks for jlog
-    const enableCallback = onEnable || (() => ui?.jlog?.setValue(true));
-    const disableCallback = onDisable || (() => ui?.jlog?.setValue(false));
+    // Default callbacks for jlog with proper checks
+    const enableCallback = onEnable || (() => {
+        if (ui?.jlog?.setValue) {
+            ui.jlog.setValue(true);
+        } else {
+            console.warn('enableLoggingIndicator: ui.jlog.setValue not available');
+        }
+    });
+    
+    const disableCallback = onDisable || (() => {
+        if (ui?.jlog?.setValue) {
+            ui.jlog.setValue(false);
+        } else {
+            console.warn('enableLoggingIndicator: ui.jlog.setValue not available');
+        }
+    });
 
     // 1. Create the logging container
     const loggingContainer = DOMUtils.createDivWithClass('logging-container');
-    DOMUtils.insertAfter(parentElement, loggingContainer);
+    DOMUtils.insertAfter(target, loggingContainer);
 
     // 2. Create the "LOGGING ACTIVE" label
     const loggingMessage = DOMUtils.createDivWithClass('logging-active hidden');
     loggingMessage.id = 'logging-message';
-    loggingMessage.innerHTML = `<span>LOGGING ACTIVE</span>`;
+    loggingMessage.innerHTML = '<span>LOGGING ACTIVE</span>';
     loggingContainer.appendChild(loggingMessage);
 
     // 3. Show/hide logic
     const toggleLoggingMessage = (isVisible) => {
-        if (isVisible) {
-            DOMUtils.addClass(loggingMessage, 'visible');
-            DOMUtils.removeClass(loggingMessage, 'hidden');
-        } else {
-            DOMUtils.addClass(loggingMessage, 'hidden');
-            DOMUtils.removeClass(loggingMessage, 'visible');
-        }
+        loggingMessage.classList.toggle('visible', isVisible);
+        loggingMessage.classList.toggle('hidden', !isVisible);
     };
 
     // 4. Add tooltip for the label
