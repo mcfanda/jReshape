@@ -19,7 +19,6 @@ wide2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             comp_index = list(
                 list(var="index1", levels=0)),
             comp_covs = NULL,
-            reshape = NULL,
             jlog = FALSE, ...) {
 
             super$initialize(
@@ -103,7 +102,7 @@ wide2longOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 comp_covs)
             private$..reshape <- jmvcore::OptionAction$new(
                 "reshape",
-                reshape)
+                FALSE)
             private$..jlog <- jmvcore::OptionBool$new(
                 "jlog",
                 jlog,
@@ -175,7 +174,8 @@ wide2longResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 name="desc",
                 title="Getting started",
                 clearWith=list(
-                    "mode")))
+                    "mode"),
+                refs="jReshape"))
             self$add(jmvcore::Html$new(
                 options=options,
                 name="help",
@@ -305,7 +305,6 @@ wide2long <- function(
     comp_index = list(
                 list(var="index1", levels=0)),
     comp_covs,
-    reshape,
     jlog = FALSE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
@@ -334,7 +333,6 @@ wide2long <- function(
         comp_colstorows = comp_colstorows,
         comp_index = comp_index,
         comp_covs = comp_covs,
-        reshape = reshape,
         jlog = jlog)
 
     analysis <- wide2longClass$new(

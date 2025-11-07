@@ -10,7 +10,6 @@ long2wideOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             covs = NULL,
             index = NULL,
             id = NULL,
-            reshape = NULL,
             jlog = FALSE, ...) {
 
             super$initialize(
@@ -33,7 +32,7 @@ long2wideOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
                 id)
             private$..reshape <- jmvcore::OptionAction$new(
                 "reshape",
-                reshape)
+                FALSE)
             private$..jlog <- jmvcore::OptionBool$new(
                 "jlog",
                 jlog,
@@ -81,7 +80,8 @@ long2wideResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class(
             self$add(jmvcore::Html$new(
                 options=options,
                 name="help",
-                title="Getting started"))
+                title="Getting started",
+                refs="jReshape"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="info",
@@ -185,7 +185,6 @@ long2wide <- function(
     covs,
     index,
     id,
-    reshape,
     jlog = FALSE) {
 
     if ( ! requireNamespace("jmvcore", quietly=TRUE))
@@ -209,7 +208,6 @@ long2wide <- function(
         covs = covs,
         index = index,
         id = id,
-        reshape = reshape,
         jlog = jlog)
 
     analysis <- long2wideClass$new(

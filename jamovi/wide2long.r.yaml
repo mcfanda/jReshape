@@ -10,7 +10,8 @@ items:
       type: Html
       clearWith:
         - mode
-        
+      refs: jReshape
+      
     - name: help
       type: Html
       visible: false

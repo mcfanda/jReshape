@@ -1,4 +1,4 @@
-savedata<-function(obj,data) {
+savedata<-function(obj,data,title="Untitled", option="reshape") {
 
     for (x in names(data)) {
       if (inherits(data[[x]],"numeric")) {
@@ -9,13 +9,28 @@ savedata<-function(obj,data) {
       }
     }
 
-    jmvReadWrite:::jmvOpn(dtaFrm = data, dtaTtl =  "Untitled")
+  option<-obj$options$option(option)
+  
+  if (is.null(option$perform)) {
+    ## old style
+    .saverfun <- function(data,title) {
+      jmvReadWrite:::jmvOpn(dtaFrm = data, dtaTtl = title)
+    }
+  } else {
+    # new style
+    .saverfun <- function(data,title) {
+      
+      option$perform(function(action) {
+        list(
+          data = data,
+          title = title)
+      })
+    }
+  } ### end
+  
+  .saverfun(data,title)
+  
 }
-
-d<-data.frame(x=c(1,2,3))
-d$x2<-as.integer(d$x)
-str(d)
-
 
 showdata<-function(obj,data) {
 

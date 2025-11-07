@@ -12,7 +12,6 @@ jrmergecolsOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
             fleChs = NULL,
             fleRes = NULL,
             type = "outer",
-            btnReshape = FALSE,
             showMergeReport = FALSE,
             nfiles = 0,
             jlog = FALSE, ...) {
@@ -61,9 +60,7 @@ jrmergecolsOptions <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 default="outer")
             private$..btnReshape <- jmvcore::OptionAction$new(
                 "btnReshape",
-                btnReshape,
-                hidden=TRUE,
-                default=FALSE)
+                FALSE)
             private$..showMergeReport <- jmvcore::OptionBool$new(
                 "showMergeReport",
                 showMergeReport,
@@ -138,7 +135,8 @@ jrmergecolsResults <- if (requireNamespace("jmvcore", quietly=TRUE)) R6::R6Class
                 clearWith=list(
                     "fleInp",
                     "varBy",
-                    "btnReshape")))
+                    "btnReshape"),
+                refs="jReshape"))
             self$add(jmvcore::Table$new(
                 options=options,
                 name="info",
@@ -280,7 +278,6 @@ jrmergecols <- function(
     fleChs,
     fleRes,
     type = "outer",
-    btnReshape = FALSE,
     showMergeReport = FALSE,
     nfiles = 0,
     jlog = FALSE) {
@@ -304,7 +301,6 @@ jrmergecols <- function(
         fleChs = fleChs,
         fleRes = fleRes,
         type = type,
-        btnReshape = btnReshape,
         showMergeReport = showMergeReport,
         nfiles = nfiles,
         jlog = jlog)

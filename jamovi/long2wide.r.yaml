@@ -8,7 +8,7 @@ items:
     - name: help
       title: Getting started
       type: Html
-
+      refs: jReshape
 
     - name: info
       title:  Info Table
