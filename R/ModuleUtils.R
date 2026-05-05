@@ -80,8 +80,16 @@ MzMergeUtils <- R6::R6Class(
             ordered_columns <- c(match_columns, other_columns)
             merged_data <- merged_data[, ordered_columns, drop = FALSE]
 
-            # Sostituisci i valori NA con stringhe vuote
-            merged_data[is.na(merged_data)] <- ""
+            # 2026-05-05 | Fix #1 (audit Jonathon Love)
+            # The global replacement merged_data[is.na(merged_data)] <- ""
+            # was silently coercing numeric/integer columns to character,
+            # corrupting data for downstream statistical use.
+            # The replacement is now applied only to columns that are
+            # already of character type.
+            for (col in names(merged_data)) {
+                if (is.character(merged_data[[col]]))
+                    merged_data[[col]][is.na(merged_data[[col]])] <- ""
+            }
 
             return(merged_data)
         }
@@ -136,11 +144,31 @@ MzMergeUtils <- R6::R6Class(
         },
 
         generateReport = function() {
+            # 2026-05-05 | Fix #6 (Jonathon Love audit)
+            # jmvcore doesn't export htmlEscape;
+            # Local helper that covers the five basic HTML special characters
+            htmlEscape <- function(x) {
+                x <- gsub("&",  "&amp;",  x, fixed = TRUE)
+                x <- gsub("<",  "&lt;",   x, fixed = TRUE)
+                x <- gsub(">",  "&gt;",   x, fixed = TRUE)
+                x <- gsub("\"", "&quot;", x, fixed = TRUE)
+                x <- gsub("'",  "&#39;",  x, fixed = TRUE)
+                x
+            }
+
             n_files <- length(strsplit(private$external_files, ";")[[1]])
             n_rows <- if (!is.null(private$merged_data)) nrow(private$merged_data) else 0
             n_cols <- if (!is.null(private$merged_data)) ncol(private$merged_data) else 0
-            col_names_main <- paste(names(private$dataset), collapse = ", ")
-
+            
+            # 2026-05-05 | Fix #6 (audit Jonathon Love)
+            # The column names of the main dataset were inserted into the HTML
+            # without escaping: a name containing characters like <, >, & would
+            # produce malformed markup.
+            col_names_main <- paste(
+                vapply(names(private$dataset), htmlEscape, character(1)),
+                collapse = ", "
+            )
+            
             file_details <- tryCatch({
                 files <- strsplit(private$external_files, ";")[[1]]
                 files <- trimws(files)
@@ -148,18 +176,27 @@ MzMergeUtils <- R6::R6Class(
                     file <- files[[i]]
                     cols <- names(jmvReadWrite:::read_all(fleInp = file))
                     duplicates <- intersect(cols, names(private$dataset))
-                    duplicates_formatted <- if (length(duplicates) > 0) {
+                    
+                    # 2026-05-05 | Fix #6 (audit Jonathon Love)
+                    # Column names and file path come from an external source
+                    # (.omv/.csv); apply htmlEscape before interpolation into
+                    # the report's HTML.
+                    cols_escaped       <- vapply(cols,       htmlEscape, character(1))
+                    duplicates_escaped <- vapply(duplicates, htmlEscape, character(1))
+                    file_escaped       <- htmlEscape(file)
+                    
+                    duplicates_formatted <- if (length(duplicates_escaped) > 0) {
                         paste(
                             "<p><strong>Duplicates:</strong> ",
-                            paste(duplicates, collapse = ", "),
+                            paste(duplicates_escaped, collapse = ", "),
                             "</p><p>In the final dataset, these variables are renamed with suffix '.y", i, "'</p>"
                         )
                     } else {
                         "<p><strong>Duplicates:</strong> None</p>"
                     }
                     paste0(
-                        "<p><strong>File:</strong> ", file, "</p>",
-                        "<p><strong>Columns:</strong> ", paste(cols, collapse = ", "), "</p>",
+                        "<p><strong>File:</strong> ", file_escaped, "</p>",
+                        "<p><strong>Columns:</strong> ", paste(cols_escaped, collapse = ", "), "</p>",
                         duplicates_formatted
                     )
                 })
@@ -167,8 +204,18 @@ MzMergeUtils <- R6::R6Class(
             }, error = function(e) {
                 "Error retrieving file details"
             })
-
-            commons <- if (!is.null(private$match_vars)) paste(private$match_vars, collapse = ", ") else "None"
+            
+            # 2026-05-05 | Fix #6 (audit Jonathon Love)
+            # Match_vars is user input;
+            # escape applied before insertion into the HTML report.
+            commons <- if (!is.null(private$match_vars)) {
+                paste(
+                    vapply(private$match_vars, htmlEscape, character(1)),
+                    collapse = ", "
+                )
+            } else {
+                "None"
+            }
 
             report <- paste0(
                 "<div class=\"report-container\">",
