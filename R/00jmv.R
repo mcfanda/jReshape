@@ -6,7 +6,7 @@
         `type`="software", 
         `author`="Gallucci, M. & Agosti, M.", 
         `year`=2025, 
-        `title`="jReshape: Datasets transformations (Version 0.3.7)", 
+        `title`="jReshape: Datasets transformations (Version 0.3.8)", 
         `publisher`="[jamovi module]. Retrieved from https://github.com/mcfanda/jReshape/", 
         `url`="https://github.com/mcfanda/jReshape", 
         `versioning`="jReshape: Datasets transformations"))

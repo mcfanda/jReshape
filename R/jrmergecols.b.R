@@ -147,20 +147,24 @@ jrmergecolsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                 stop(mzstop)
             }
 
-            if (is.null(private$.merge_util)) {
-                private$.merge_util <- tryCatch({
-                    MzMergeUtils$new(
-                        dataset = self$data,
-                        external_files = paste(files, collapse = ";"),
-                        match_vars = self$options$varBy,
-                        join_type = self$options$type
-                    )
-                }, error = function(e) {
-                    mzstop <- sprintf("Error initializing MzMergeUtils: %s", e$message)
-                    jinfo("[.run]", mzstop)
-                    stop(mzstop)
-                })
-            }
+            # 2026-05-05 Fix #7 (audit Jonathon Love)
+            # the previous instance is always invalidated:
+            # fleInp, varBy or type can be changed between one .run() and another
+            # and the stale cache would return data from the previous merge.
+            private$.merge_util <- NULL
+            
+            private$.merge_util <- tryCatch({
+                MzMergeUtils$new(
+                    dataset        = self$data,
+                    external_files = paste(files, collapse = ";"),
+                    match_vars     = self$options$varBy,
+                    join_type      = self$options$type
+                )
+            }, error = function(e) {
+                mzstop <- sprintf("Error initializing MzMergeUtils: %s", e$message)
+                jinfo("[.run]", mzstop)
+                stop(mzstop)
+            })
 
             private$.mergedata <- tryCatch({
                 private$.merge_util$get_data()
