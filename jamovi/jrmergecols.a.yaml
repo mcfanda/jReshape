@@ -45,16 +45,16 @@ options:
     hidden: true
 
   - name: type
-    title: 'Keep cases in Merging Operation'
+    title: "Keep cases in Merging Operation"
     type: List
     options:
-      - title: '[outer] &#x1F539 All Cases (Rows)'
+      - title: "[outer] All Cases (Rows)"
         name: outer
-      - title: '[inner] &#x1F539 Only Cases Contained in All Merged Data Sets'
+      - title: "[inner] Only Cases Contained in All Merged Data Sets"
         name: inner
-      - title: '[left&nbsp;&nbsp;&nbsp;] &#x1F539 All Cases From the Currently Opened Data Set'
+      - title: "[left] All Cases From the Currently Opened Data Set"
         name: left
-      - title: '[right] &#x1F539 All Cases From the Data Sets To Be Added'
+      - title: "[right] All Cases From the Data Sets To Be Added"
         name: right
     default: outer
 

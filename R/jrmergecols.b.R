@@ -334,7 +334,7 @@ jrmergecolsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
             hlpFles <- paste(
                 '<h2>Getting started</h2><div style=\"text-align:justify\">',
-                '<h2>&#x1F4C2 Select file ...</h2><hr>',
+                '<h2>Select file ...</h2><hr>',
                 '<ol><li>Please, assign one or more variables that appear in all data sets to Matching Variables <b>(ID variables)</b></li>',
                 '<li>You can merge columns from a file into the current dataset by using the <b>Select file ...</b> button (<b>Ctrl+F</b>) or by typing the full path and name of the file.</li></ol><br/>',
                 '<svg width=\"130pt\" height=\"30pt\">',
@@ -348,17 +348,17 @@ jrmergecolsClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
             if(nchar(self$options$fleInp) == 0) {
                 private$.notrun=TRUE
-                hlp <- jmvcore::format(hlpFles, color='Tomato', file ='&#x1F4A2 Not Select')
+                hlp <- jmvcore::format(hlpFles, color='Tomato', file ='Not Select')
             } else {
                 hlp <- jmvcore::format(hlpFles, color='MediumSeaGreen', file=fileList)
             }
 
             if(length(self$options$varBy) == 0) {
                 private$.notrun=TRUE
-                hlp <- paste0(hlp,'<h3>&#x1F4A2 Matching variables not selected ...</h2>')
+                hlp <- paste0(hlp,'<h3>Matching variables not selected ...</h2>')
             } else if(nchar(self$options$fleInp) > 0) {
                 hlp <- paste0(hlp,
-                              '<h2>&#x1F4C1 Reshape</h2>',
+                              '<h2>Reshape</h2>',
                               'Open the modified data set in a new jamovi window, using the <b>Reshape</b> button (<b>Ctrl+R</b>)')
             }
 
