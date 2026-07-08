@@ -65,7 +65,7 @@ wide2longClass <- if (requireNamespace('jmvcore', quietly = TRUE))
                 test1 <- any(unlist(lapply(private$.deps, function(x)
                     ! is.something(x))))
                 test2 <- any(unlist(lapply(private$.deps, function(x)
-                    print(trimws(x) == ""))))
+                    trimws(x) == "")))
 
                 if (test1 || test2)  {
                     msg <- "<h2>Help</h2><div>Please give a name to the long format target variable</div>"
@@ -228,7 +228,7 @@ wide2longClass <- if (requireNamespace('jmvcore', quietly = TRUE))
                         self$results$help$setVisible(TRUE)
                         self$results$help$setContent(msg)
                     }
-                    if (class(colstorows) == "character") {
+                    if (is.character(colstorows)) {
                         colstorows <- list(colstorows)
                     }
 
